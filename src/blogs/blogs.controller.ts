@@ -54,12 +54,17 @@ export class BlogsController {
     }
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateBlogDto: InputUpdateBlogDto,
   ) {
-    return this.blogsService.update(+id, updateBlogDto);
+    try {
+      return this.blogsService.update(new Types.ObjectId(id), updateBlogDto);
+    } catch {
+      throw new HttpException({}, HttpStatus.NOT_FOUND);
+    }
   }
 
   @Delete(':id')

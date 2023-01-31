@@ -28,14 +28,24 @@ export class Blog {
   @Prop({ required: true, maxlength: 100 })
   createdAt: string;
 
-  // myUpdate: () => void;
+  update: (
+    name: string,
+    description: string,
+    websiteUrl: string,
+  ) => BlogDocument;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
 
-// BlogSchema.methods.myUpdate = function () {
-//   console.log('myUpdate');
-// };
+BlogSchema.methods.update = function (
+  name: string,
+  description: string,
+  websiteUrl: string,
+) {
+  this.name = name;
+  this.description = description;
+  this.websiteUrl = websiteUrl;
+};
 
 BlogSchema.statics.make = function (
   this: IBlogModel,
