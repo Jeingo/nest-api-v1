@@ -13,4 +13,7 @@ export class BlogsRepository {
   async save(blog: BlogDocument): Promise<BlogDocument> {
     return await blog.save();
   }
+  async delete(id: Types.ObjectId): Promise<BlogDocument> {
+    return this.blogsModel.findByIdAndDelete(id);
+  }
 }

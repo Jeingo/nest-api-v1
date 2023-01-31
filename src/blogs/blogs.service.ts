@@ -33,7 +33,10 @@ export class BlogsService {
     return true;
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} blog`;
+  async remove(id: Types.ObjectId): Promise<boolean> {
+    const blog = await this.blogsRepository.getById(id);
+    if (!blog) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    await this.blogsRepository.delete(id);
+    return true;
   }
 }

@@ -67,8 +67,13 @@ export class BlogsController {
     }
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.blogsService.remove(+id);
+    try {
+      return this.blogsService.remove(new Types.ObjectId(id));
+    } catch {
+      throw new HttpException({}, HttpStatus.NOT_FOUND);
+    }
   }
 }
