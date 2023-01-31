@@ -10,10 +10,14 @@ import {
 import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
+import { BlogsQueryRepository } from './blogs.query.repository';
 
 @Controller('blogs')
 export class BlogsController {
-  constructor(private readonly blogsService: BlogsService) {}
+  constructor(
+    private readonly blogsService: BlogsService,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+  ) {}
 
   @Post()
   create(@Body() createBlogDto: CreateBlogDto) {
