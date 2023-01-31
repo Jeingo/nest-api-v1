@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { InputCreateBlogDto } from './dto/input.create.blog.dto';
@@ -14,6 +15,8 @@ import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { BlogsQueryRepository } from './blogs.query.repository';
 import { OutputBlogDto } from './dto/output.blog.dto';
 import { HTTP_STATUSES } from '../constants/httpStatuses';
+import { QueryBlogs } from './types/blogs.type';
+import { PaginatedType } from '../helper/types.query.repository.helper';
 
 @Controller('blogs')
 export class BlogsController {
@@ -31,14 +34,17 @@ export class BlogsController {
     return await this.blogsQueryRepository.getById(createdBlogId);
   }
 
+  @HttpCode(HTTP_STATUSES.OK_200)
   @Get()
-  async findAll() {
-    return this.blogsService.findAll();
+  async findAll(
+    @Query() query: QueryBlogs,
+  ): Promise<PaginatedType<OutputBlogDto>> {
+    return await this.blogsQueryRepository.getAll(query);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.blogsService.findOne(+id);
+    // return this.blogsService.findOne(+id);
   }
 
   @Put(':id')

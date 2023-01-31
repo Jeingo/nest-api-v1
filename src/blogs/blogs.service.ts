@@ -20,14 +20,6 @@ export class BlogsService {
     return createdBlog._id;
   }
 
-  async findAll() {
-    return `This action returns all blogs`;
-  }
-
-  async findOne(id: number) {
-    return `This action returns a #${id} blog`;
-  }
-
   async update(id: number, updateBlogDto: InputUpdateBlogDto) {
     return `This action updates a #${id} blog`;
   }
