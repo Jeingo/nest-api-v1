@@ -20,27 +20,27 @@ export class BlogsController {
   ) {}
 
   @Post()
-  create(@Body() createBlogDto: CreateBlogDto) {
-    return this.blogsService.create(createBlogDto);
+  async create(@Body() createBlogDto: CreateBlogDto) {
+    const createdBlogId = await this.blogsService.create(createBlogDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.blogsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.blogsService.findOne(+id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
+  async update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
     return this.blogsService.update(+id, updateBlogDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.blogsService.remove(+id);
   }
 }

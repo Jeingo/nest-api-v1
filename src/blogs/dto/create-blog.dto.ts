@@ -1,1 +1,5 @@
-export class CreateBlogDto {}
+export class CreateBlogDto {
+  name: string;
+  description: string;
+  websiteUrl: string;
+}
