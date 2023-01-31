@@ -13,6 +13,7 @@ import { InputCreateBlogDto } from './dto/input.create.blog.dto';
 import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { BlogsQueryRepository } from './blogs.query.repository';
 import { OutputBlogDto } from './dto/output.blog.dto';
+import { HTTP_STATUSES } from '../constants/httpStatuses';
 
 @Controller('blogs')
 export class BlogsController {
@@ -21,7 +22,7 @@ export class BlogsController {
     private readonly blogsQueryRepository: BlogsQueryRepository,
   ) {}
 
-  @HttpCode(201)
+  @HttpCode(HTTP_STATUSES.CREATED_201)
   @Post()
   async create(
     @Body() createBlogDto: InputCreateBlogDto,
