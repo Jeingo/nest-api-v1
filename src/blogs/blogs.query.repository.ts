@@ -45,7 +45,6 @@ export class BlogsQueryRepository {
   }
   async getById(id: Types.ObjectId): Promise<OutputBlogDto | null> {
     const result = await this.blogsModel.findById(id);
-    if (!result) return null;
     return this._getOutputBlogDto(result);
   }
   private _getOutputBlogDto(blog: BlogDocument): OutputBlogDto {
