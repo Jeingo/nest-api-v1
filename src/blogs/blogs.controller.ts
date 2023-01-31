@@ -6,11 +6,13 @@ import {
   Param,
   Delete,
   Put,
+  HttpCode,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
-import { CreateBlogDto } from './dto/create-blog.dto';
-import { UpdateBlogDto } from './dto/update-blog.dto';
+import { InputCreateBlogDto } from './dto/input.create.blog.dto';
+import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { BlogsQueryRepository } from './blogs.query.repository';
+import { OutputBlogDto } from './dto/output.blog.dto';
 
 @Controller('blogs')
 export class BlogsController {
@@ -19,9 +21,13 @@ export class BlogsController {
     private readonly blogsQueryRepository: BlogsQueryRepository,
   ) {}
 
+  @HttpCode(201)
   @Post()
-  async create(@Body() createBlogDto: CreateBlogDto) {
+  async create(
+    @Body() createBlogDto: InputCreateBlogDto,
+  ): Promise<OutputBlogDto> {
     const createdBlogId = await this.blogsService.create(createBlogDto);
+    return await this.blogsQueryRepository.getById(createdBlogId);
   }
 
   @Get()
@@ -35,7 +41,10 @@ export class BlogsController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateBlogDto: InputUpdateBlogDto,
+  ) {
     return this.blogsService.update(+id, updateBlogDto);
   }
 
