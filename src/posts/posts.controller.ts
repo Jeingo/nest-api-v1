@@ -17,6 +17,7 @@ import { PostsQueryRepository } from './posts.query.repository';
 import { OutputPostDto } from './dto/output.post.dto';
 import { QueryPosts } from './types/posts.type';
 import { PaginatedType } from '../helper/types.query.repository.helper';
+import { Types } from 'mongoose';
 
 @Controller('posts')
 export class PostsController {
@@ -42,9 +43,10 @@ export class PostsController {
     return await this.postsQueryRepository.getAll(query);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    //
+    return await this.postsQueryRepository.getById(new Types.ObjectId(id));
   }
 
   @Patch(':id')
