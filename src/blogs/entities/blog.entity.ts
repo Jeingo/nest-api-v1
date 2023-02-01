@@ -3,7 +3,7 @@ import { HydratedDocument, Model } from 'mongoose';
 
 export type BlogDocument = HydratedDocument<Blog>;
 
-type StaticMethods = {
+type StaticBlogMethods = {
   make: (
     this: IBlogModel,
     name: string,
@@ -12,7 +12,7 @@ type StaticMethods = {
   ) => BlogDocument;
 };
 
-export type IBlogModel = Model<BlogDocument> & StaticMethods;
+export type IBlogModel = Model<BlogDocument> & StaticBlogMethods;
 
 @Schema()
 export class Blog {
@@ -37,16 +37,6 @@ export class Blog {
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
 
-BlogSchema.methods.update = function (
-  name: string,
-  description: string,
-  websiteUrl: string,
-) {
-  this.name = name;
-  this.description = description;
-  this.websiteUrl = websiteUrl;
-};
-
 BlogSchema.statics.make = function (
   this: IBlogModel,
   name: string,
@@ -59,4 +49,14 @@ BlogSchema.statics.make = function (
     websiteUrl: websiteUrl,
     createdAt: new Date().toISOString(),
   });
+};
+
+BlogSchema.methods.update = function (
+  name: string,
+  description: string,
+  websiteUrl: string,
+) {
+  this.name = name;
+  this.description = description;
+  this.websiteUrl = websiteUrl;
 };
