@@ -1,3 +1,5 @@
+import { StatusLikeType } from '../../types/types';
+
 export class OutputPostDto {
   id: string;
   title: string;
@@ -19,5 +21,3 @@ type NewestLikesType = {
   userId: string;
   login: string;
 };
-
-type StatusLikeType = 'None' | 'Like' | 'Dislike';
