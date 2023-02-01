@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument, IBlogModel } from './entities/blog.entity';
 import { Types } from 'mongoose';
@@ -45,6 +45,7 @@ export class BlogsQueryRepository {
   }
   async getById(id: Types.ObjectId): Promise<OutputBlogDto | null> {
     const result = await this.blogsModel.findById(id);
+    if (!result) throw new NotFoundException();
     return this._getOutputBlogDto(result);
   }
   private _getOutputBlogDto(blog: BlogDocument): OutputBlogDto {

@@ -9,7 +9,6 @@ import {
   HttpCode,
   Query,
   HttpStatus,
-  HttpException,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { InputCreateBlogDto } from './dto/input.create.blog.dto';
@@ -47,11 +46,7 @@ export class BlogsController {
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    try {
-      return await this.blogsQueryRepository.getById(new Types.ObjectId(id));
-    } catch {
-      throw new HttpException({}, HttpStatus.NOT_FOUND);
-    }
+    return await this.blogsQueryRepository.getById(new Types.ObjectId(id));
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -60,20 +55,12 @@ export class BlogsController {
     @Param('id') id: string,
     @Body() updateBlogDto: InputUpdateBlogDto,
   ) {
-    try {
-      return this.blogsService.update(new Types.ObjectId(id), updateBlogDto);
-    } catch {
-      throw new HttpException({}, HttpStatus.NOT_FOUND);
-    }
+    return this.blogsService.update(new Types.ObjectId(id), updateBlogDto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    try {
-      return this.blogsService.remove(new Types.ObjectId(id));
-    } catch {
-      throw new HttpException({}, HttpStatus.NOT_FOUND);
-    }
+    return this.blogsService.remove(new Types.ObjectId(id));
   }
 }

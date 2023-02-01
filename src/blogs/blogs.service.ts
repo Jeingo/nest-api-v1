@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InputCreateBlogDto } from './dto/input.create.blog.dto';
 import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { BlogsRepository } from './blogs.repository';
@@ -27,7 +27,7 @@ export class BlogsService {
   ): Promise<boolean> {
     const { name, description, websiteUrl } = updateBlogDto;
     const blog = await this.blogsRepository.getById(id);
-    if (!blog) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    if (!blog) throw new NotFoundException();
     blog.update(name, description, websiteUrl);
     await this.blogsRepository.save(blog);
     return true;
@@ -35,7 +35,7 @@ export class BlogsService {
 
   async remove(id: Types.ObjectId): Promise<boolean> {
     const blog = await this.blogsRepository.getById(id);
-    if (!blog) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    if (!blog) throw new NotFoundException();
     await this.blogsRepository.delete(id);
     return true;
   }
