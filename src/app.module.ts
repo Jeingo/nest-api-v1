@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { settings } from './settings/settings';
 import { BlogsModule } from './blogs/blogs.module';
 import { TestingModule } from './testing/testing.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { TestingModule } from './testing/testing.module';
     }),
     BlogsModule,
     TestingModule,
+    PostsModule,
   ],
   controllers: [],
   providers: [],

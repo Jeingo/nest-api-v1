@@ -1,5 +1,3 @@
-export class InputUpdateBlogDto {
-  name: string;
-  description: string;
-  websiteUrl: string;
-}
+import { InputCreateBlogDto } from './input.create.blog.dto';
+
+export class InputUpdateBlogDto extends InputCreateBlogDto {}
