@@ -1,13 +1,9 @@
-import { Types } from 'mongoose';
-
-export type Direction = 'asc' | 'desc';
-
-export type BlogId = Types.ObjectId;
+import { DirectionType } from '../../types/types';
 
 export type QueryBlogs = {
   searchNameTerm?: string;
   sortBy: string;
-  sortDirection: Direction;
+  sortDirection: DirectionType;
   pageNumber: string;
   pageSize: string;
 };

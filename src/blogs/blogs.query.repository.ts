@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument, IBlogModel } from './entities/blog.entity';
-import { Types } from 'mongoose';
 import { OutputBlogDto } from './dto/output.blog.dto';
 import { QueryBlogs } from './types/blogs.type';
 import { PaginatedType } from '../helper/types.query.repository.helper';
@@ -9,6 +8,7 @@ import {
   getPaginatedType,
   makeDirectionToNumber,
 } from '../helper/query.repository.helper';
+import { DbId } from '../types/types';
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -43,7 +43,7 @@ export class BlogsQueryRepository {
       countAllDocuments,
     );
   }
-  async getById(id: Types.ObjectId): Promise<OutputBlogDto | null> {
+  async getById(id: DbId): Promise<OutputBlogDto | null> {
     const result = await this.blogsModel.findById(id);
     if (!result) throw new NotFoundException();
     return this._getOutputBlogDto(result);

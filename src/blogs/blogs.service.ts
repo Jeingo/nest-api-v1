@@ -4,8 +4,7 @@ import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { BlogsRepository } from './blogs.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, IBlogModel } from './entities/blog.entity';
-import { BlogId } from './types/blogs.type';
-import { Types } from 'mongoose';
+import { DbId } from '../types/types';
 
 @Injectable()
 export class BlogsService {
@@ -14,17 +13,14 @@ export class BlogsService {
     @InjectModel(Blog.name) private blogsModel: IBlogModel,
   ) {}
 
-  async create(createBlogDto: InputCreateBlogDto): Promise<BlogId> {
+  async create(createBlogDto: InputCreateBlogDto): Promise<DbId> {
     const { name, description, websiteUrl } = createBlogDto;
     const createdBlog = this.blogsModel.make(name, description, websiteUrl);
     await this.blogsRepository.save(createdBlog);
     return createdBlog._id;
   }
 
-  async update(
-    id: Types.ObjectId,
-    updateBlogDto: InputUpdateBlogDto,
-  ): Promise<boolean> {
+  async update(id: DbId, updateBlogDto: InputUpdateBlogDto): Promise<boolean> {
     const { name, description, websiteUrl } = updateBlogDto;
     const blog = await this.blogsRepository.getById(id);
     if (!blog) throw new NotFoundException();
@@ -33,7 +29,7 @@ export class BlogsService {
     return true;
   }
 
-  async remove(id: Types.ObjectId): Promise<boolean> {
+  async remove(id: DbId): Promise<boolean> {
     const blog = await this.blogsRepository.getById(id);
     if (!blog) throw new NotFoundException();
     await this.blogsRepository.delete(id);
