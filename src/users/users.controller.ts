@@ -5,37 +5,44 @@ import {
   Body,
   Param,
   Delete,
-  Put
+  Put,
+  HttpCode,
+  HttpStatus,
+  Query
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { InputCreateUserDto } from './dto/input.create.user.dto';
+import { OutputUserDto } from './dto/output.user.dto';
+import { UsersQueryRepository } from './users.query.repository';
+import { QueryUsers } from './types/users.type';
+import { PaginatedType } from '../helper/types.query.repository.helper';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly usersQueryRepository: UsersQueryRepository
+  ) {}
 
+  @HttpCode(HttpStatus.CREATED)
   @Post()
-  create(@Body() createUserDto: InputCreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(
+    @Body() createUserDto: InputCreateUserDto
+  ): Promise<OutputUserDto> {
+    const createdUserId = await this.usersService.create(createUserDto);
+    return await this.usersQueryRepository.getById(createdUserId);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async findAll(
+    @Query() query: QueryUsers
+  ): Promise<PaginatedType<OutputUserDto>> {
+    return await this.usersQueryRepository.getAll(query);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
 }

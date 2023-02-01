@@ -1,1 +1,65 @@
-export class UsersQueryRepository {}
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { IUserModel, User, UserDocument } from './entities/user.entity';
+import { DbId } from '../types/types';
+import { OutputUserDto } from './dto/output.user.dto';
+import { QueryUsers } from './types/users.type';
+import { PaginatedType } from '../helper/types.query.repository.helper';
+import {
+  getPaginatedType,
+  makeDirectionToNumber
+} from '../helper/query.repository.helper';
+
+@Injectable()
+export class UsersQueryRepository {
+  constructor(@InjectModel(User.name) private usersModel: IUserModel) {}
+
+  async getAll(query: QueryUsers): Promise<PaginatedType<OutputUserDto>> {
+    const {
+      searchLoginTerm = null,
+      searchEmailTerm = null,
+      sortBy = 'createdAt',
+      sortDirection = 'desc',
+      pageNumber = 1,
+      pageSize = 10
+    } = query;
+    const sortDirectionNumber = makeDirectionToNumber(sortDirection);
+    const skipNumber = (+pageNumber - 1) * +pageSize;
+    const countAllDocuments = await this.usersModel.countDocuments({});
+
+    const filter = (a: any, b: any) => ({ $or: [a, b] });
+    const loginFilter = searchLoginTerm
+      ? { login: { $regex: new RegExp(searchLoginTerm, 'gi') } }
+      : {};
+    const emailFilter = searchEmailTerm
+      ? { email: { $regex: new RegExp(searchEmailTerm, 'gi') } }
+      : {};
+    const filterMain = filter(loginFilter, emailFilter);
+
+    const result = await this.usersModel
+      .find(filterMain)
+      .sort({ [sortBy]: sortDirectionNumber })
+      .skip(skipNumber)
+      .limit(+pageSize);
+    const mappedUser = result.map(this._getOutputUser);
+    return getPaginatedType(
+      mappedUser,
+      +pageSize,
+      +pageNumber,
+      countAllDocuments
+    );
+  }
+  async getById(id: DbId): Promise<OutputUserDto> {
+    const result = await this.usersModel.findById(id);
+    if (!result) throw new NotFoundException();
+    return this._getOutputUser(result);
+  }
+  private _getOutputUser(user: UserDocument): OutputUserDto {
+    return {
+      id: user._id.toString(),
+      login: user.login,
+      email: user.email,
+      createdAt: user.createdAt
+    };
+  }
+}
