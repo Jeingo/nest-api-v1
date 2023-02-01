@@ -5,7 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  Put,
   HttpCode,
   HttpStatus,
   Query

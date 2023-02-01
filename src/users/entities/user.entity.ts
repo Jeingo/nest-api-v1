@@ -63,15 +63,15 @@ export class User {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.statics.make = async function (
+UserSchema.statics.make = function (
   this: IUserModel,
   login: string,
   password: string,
   email: string,
   isConfirmed: boolean
 ) {
-  const passwordSalt = await bcrypt.genSalt(10);
-  const passwordHash = await bcrypt.hash(password, passwordSalt);
+  const passwordSalt = bcrypt.genSaltSync(10); //FIXME throw Error
+  const passwordHash = bcrypt.hashSync(password, passwordSalt);
   const newDate = new Date();
   return new this({
     login: login,
