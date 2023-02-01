@@ -33,11 +33,23 @@ export class PostsService {
     return createdPost._id;
   }
 
-  async update(id: number, updatePostDto: InputUpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: DbId, updatePostDto: InputUpdatePostDto): Promise<boolean> {
+    const { title, shortDescription, content, blogId } = updatePostDto;
+    const foundBlog = await this.blogsRepository.getById(
+      new Types.ObjectId(blogId)
+    );
+    if (!foundBlog) throw new NotFoundException();
+    const post = await this.postsRepository.getById(id);
+    if (!post) throw new NotFoundException();
+    post.update(title, shortDescription, content, blogId, foundBlog.name);
+    await this.postsRepository.save(post);
+    return true;
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: DbId): Promise<boolean> {
+    const post = await this.postsRepository.getById(id);
+    if (!post) throw new NotFoundException();
+    await this.postsRepository.delete(id);
+    return true;
   }
 }

@@ -3,12 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpCode,
   HttpStatus,
-  Query
+  Query,
+  Put
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { InputCreatePostDto } from './dto/input.create.post.dto';
@@ -49,16 +49,18 @@ export class PostsController {
     return await this.postsQueryRepository.getById(new Types.ObjectId(id));
   }
 
-  @Patch(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updatePostDto: InputUpdatePostDto
   ) {
-    return this.postsService.update(+id, updatePostDto);
+    return this.postsService.update(new Types.ObjectId(id), updatePostDto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.postsService.remove(+id);
+    return this.postsService.remove(new Types.ObjectId(id));
   }
 }
