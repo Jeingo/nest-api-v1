@@ -30,7 +30,7 @@ export class PostsQueryRepository {
       .skip(skipNumber)
       .limit(+pageSize);
     const mappedPost = result.map(this._getOutputPostDto);
-    // const mappedPostWithStatusLike = await TODO after like
+    //TODO after like
     return getPaginatedType(
       mappedPost,
       +pageSize,
@@ -41,6 +41,7 @@ export class PostsQueryRepository {
   async getById(id: DbId): Promise<OutputPostDto> {
     const result = await this.postsModel.findById(id);
     if (!result) throw new NotFoundException();
+    //TODO after like
     return this._getOutputPostDto(result);
   }
   private _getOutputPostDto(post: PostDocument): OutputPostDto {

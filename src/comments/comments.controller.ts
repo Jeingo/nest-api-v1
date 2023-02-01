@@ -1,20 +1,17 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete
-} from '@nestjs/common';
-import { CommentsService } from './comments.service';
+import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
+import { CommentsQueryRepository } from './comments.query.repository';
+import { Types } from 'mongoose';
+import { OutputCommentDto } from './dto/output.comment.dto';
 
 @Controller('comments')
 export class CommentsController {
-  constructor(private readonly commentsService: CommentsService) {}
+  constructor(
+    private readonly commentsQueryRepository: CommentsQueryRepository
+  ) {}
 
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentsService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<OutputCommentDto> {
+    return this.commentsQueryRepository.getById(new Types.ObjectId(id));
   }
 }

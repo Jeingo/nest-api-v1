@@ -45,7 +45,7 @@ export class BlogsController {
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<OutputBlogDto> {
     return await this.blogsQueryRepository.getById(new Types.ObjectId(id));
   }
 

@@ -45,7 +45,7 @@ export class PostsController {
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<OutputPostDto> {
     return await this.postsQueryRepository.getById(new Types.ObjectId(id));
   }
 

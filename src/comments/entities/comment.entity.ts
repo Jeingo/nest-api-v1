@@ -3,6 +3,8 @@ import { HydratedDocument, Model } from 'mongoose';
 
 export type CommentDocument = HydratedDocument<Comment>;
 
+export type ICommentModel = Model<CommentDocument>;
+
 class CommentatorInfo {
   @Prop({ required: true })
   userId: string;
