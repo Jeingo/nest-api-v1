@@ -15,7 +15,7 @@ export class OutputPostDto {
         addedAt: string;
         userId: string;
         login: string;
-      },
+      }
     ];
   };
 }

@@ -10,7 +10,7 @@ import { DbId } from '../types/types';
 export class BlogsService {
   constructor(
     private readonly blogsRepository: BlogsRepository,
-    @InjectModel(Blog.name) private blogsModel: IBlogModel,
+    @InjectModel(Blog.name) private blogsModel: IBlogModel
   ) {}
 
   async create(createBlogDto: InputCreateBlogDto): Promise<DbId> {

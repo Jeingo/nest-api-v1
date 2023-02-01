@@ -10,7 +10,7 @@ type StaticPostMethods = {
     description: string,
     content: string,
     blogId: string,
-    blogName: string,
+    blogName: string
   ) => PostDocument;
 };
 
@@ -48,7 +48,7 @@ export class Post {
     description: string,
     content: string,
     blogId: string,
-    blogName: string,
+    blogName: string
   ) => PostDocument;
 }
 
@@ -60,7 +60,7 @@ PostSchema.statics.make = function (
   description: string,
   content: string,
   blogId: string,
-  blogName: string,
+  blogName: string
 ) {
   return new this({
     title: title,
@@ -71,8 +71,8 @@ PostSchema.statics.make = function (
     createdAt: new Date().toISOString(),
     extendedLikesInfo: {
       likesCount: 0,
-      dislikesCount: 0,
-    },
+      dislikesCount: 0
+    }
   });
 };
 
@@ -81,7 +81,7 @@ PostSchema.methods.update = function (
   description: string,
   content: string,
   blogId: string,
-  blogName: string,
+  blogName: string
 ) {
   this.title = title;
   this.shortDescription = description;

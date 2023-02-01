@@ -6,9 +6,9 @@ import { Blog, BlogSchema } from '../blogs/entities/blog.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
+    MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }])
   ],
   controllers: [TestingController],
-  providers: [TestingService],
+  providers: [TestingService]
 })
 export class TestingModule {}

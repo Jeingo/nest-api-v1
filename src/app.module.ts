@@ -10,13 +10,13 @@ import { PostsModule } from './posts/posts.module';
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(settings.MONGO_URL, {
-      dbName: settings.DB_NAME,
+      dbName: settings.DB_NAME
     }),
     BlogsModule,
     TestingModule,
-    PostsModule,
+    PostsModule
   ],
   controllers: [],
-  providers: [],
+  providers: []
 })
 export class AppModule {}

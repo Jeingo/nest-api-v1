@@ -8,7 +8,7 @@ type StaticBlogMethods = {
     this: IBlogModel,
     name: string,
     description: string,
-    websiteUrl: string,
+    websiteUrl: string
   ) => BlogDocument;
 };
 
@@ -31,7 +31,7 @@ export class Blog {
   update: (
     name: string,
     description: string,
-    websiteUrl: string,
+    websiteUrl: string
   ) => BlogDocument;
 }
 
@@ -41,20 +41,20 @@ BlogSchema.statics.make = function (
   this: IBlogModel,
   name: string,
   description: string,
-  websiteUrl: string,
+  websiteUrl: string
 ) {
   return new this({
     name: name,
     description: description,
     websiteUrl: websiteUrl,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().toISOString()
   });
 };
 
 BlogSchema.methods.update = function (
   name: string,
   description: string,
-  websiteUrl: string,
+  websiteUrl: string
 ) {
   this.name = name;
   this.description = description;

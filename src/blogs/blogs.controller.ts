@@ -8,7 +8,7 @@ import {
   Put,
   HttpCode,
   Query,
-  HttpStatus,
+  HttpStatus
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { InputCreateBlogDto } from './dto/input.create.blog.dto';
@@ -23,13 +23,13 @@ import { Types } from 'mongoose';
 export class BlogsController {
   constructor(
     private readonly blogsService: BlogsService,
-    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(
-    @Body() createBlogDto: InputCreateBlogDto,
+    @Body() createBlogDto: InputCreateBlogDto
   ): Promise<OutputBlogDto> {
     const createdBlogId = await this.blogsService.create(createBlogDto);
     return await this.blogsQueryRepository.getById(createdBlogId);
@@ -38,7 +38,7 @@ export class BlogsController {
   @HttpCode(HttpStatus.OK)
   @Get()
   async findAll(
-    @Query() query: QueryBlogs,
+    @Query() query: QueryBlogs
   ): Promise<PaginatedType<OutputBlogDto>> {
     return await this.blogsQueryRepository.getAll(query);
   }
@@ -53,7 +53,7 @@ export class BlogsController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateBlogDto: InputUpdateBlogDto,
+    @Body() updateBlogDto: InputUpdateBlogDto
   ) {
     return this.blogsService.update(new Types.ObjectId(id), updateBlogDto);
   }

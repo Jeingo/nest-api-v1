@@ -8,9 +8,9 @@ import { BlogsRepository } from './blogs.repository';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
+    MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }])
   ],
   controllers: [BlogsController],
-  providers: [BlogsService, BlogsQueryRepository, BlogsRepository],
+  providers: [BlogsService, BlogsQueryRepository, BlogsRepository]
 })
 export class BlogsModule {}

@@ -6,7 +6,7 @@ import { QueryBlogs } from './types/blogs.type';
 import { PaginatedType } from '../helper/types.query.repository.helper';
 import {
   getPaginatedType,
-  makeDirectionToNumber,
+  makeDirectionToNumber
 } from '../helper/query.repository.helper';
 import { DbId } from '../types/types';
 
@@ -20,7 +20,7 @@ export class BlogsQueryRepository {
       sortBy = 'createdAt',
       sortDirection = 'desc',
       pageNumber = 1,
-      pageSize = 10,
+      pageSize = 10
     } = query;
 
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
@@ -40,7 +40,7 @@ export class BlogsQueryRepository {
       result.map(this._getOutputBlogDto),
       +pageSize,
       +pageNumber,
-      countAllDocuments,
+      countAllDocuments
     );
   }
   async getById(id: DbId): Promise<OutputBlogDto | null> {
@@ -54,7 +54,7 @@ export class BlogsQueryRepository {
       name: blog.name,
       description: blog.description,
       websiteUrl: blog.websiteUrl,
-      createdAt: blog.createdAt,
+      createdAt: blog.createdAt
     };
   }
 }

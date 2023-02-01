@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  Delete
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { InputCreatePostDto } from './dto/input.create.post.dto';
