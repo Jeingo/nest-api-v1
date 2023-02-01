@@ -5,6 +5,7 @@ import { settings } from './settings/settings';
 import { BlogsModule } from './blogs/blogs.module';
 import { TestingModule } from './testing/testing.module';
 import { PostsModule } from './posts/posts.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { PostsModule } from './posts/posts.module';
     }),
     BlogsModule,
     TestingModule,
-    PostsModule
+    PostsModule,
+    CommentsModule
   ],
   controllers: [],
   providers: []
