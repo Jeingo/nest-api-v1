@@ -16,6 +16,14 @@ type StaticPostMethods = {
 
 export type IPostModel = Model<PostDocument> & StaticPostMethods;
 
+class ExtendedLikesInfo {
+  @Prop({ required: true })
+  likesCount: number;
+
+  @Prop({ required: true })
+  dislikesCount: number;
+}
+
 @Schema()
 export class Post {
   @Prop({ required: true, maxlength: 30 })
@@ -37,11 +45,7 @@ export class Post {
   createdAt: string;
 
   @Prop({ required: true })
-  extendedLikesInfo: {
-    likesCount: number;
-
-    dislikesCount: number;
-  };
+  extendedLikesInfo: ExtendedLikesInfo;
 
   update: (
     title: string,
