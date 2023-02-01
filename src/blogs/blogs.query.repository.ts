@@ -43,7 +43,7 @@ export class BlogsQueryRepository {
       countAllDocuments
     );
   }
-  async getById(id: DbId): Promise<OutputBlogDto | null> {
+  async getById(id: DbId): Promise<OutputBlogDto> {
     const result = await this.blogsModel.findById(id);
     if (!result) throw new NotFoundException();
     return this._getOutputBlogDto(result);

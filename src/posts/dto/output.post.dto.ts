@@ -10,14 +10,14 @@ export class OutputPostDto {
     likesCount: number;
     dislikesCount: number;
     myStatus: StatusLikeType;
-    newestLikes: [
-      {
-        addedAt: string;
-        userId: string;
-        login: string;
-      }
-    ];
+    newestLikes: Array<NewestLikesType>;
   };
 }
+
+type NewestLikesType = {
+  addedAt: string;
+  userId: string;
+  login: string;
+};
 
 type StatusLikeType = 'None' | 'Like' | 'Dislike';
