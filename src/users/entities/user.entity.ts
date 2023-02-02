@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
-import add from 'date-fns/add';
+import { add } from 'date-fns';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -70,7 +70,7 @@ UserSchema.statics.make = function (
   email: string,
   isConfirmed: boolean
 ) {
-  const passwordSalt = bcrypt.genSaltSync(10); //FIXME throw Error
+  const passwordSalt = bcrypt.genSaltSync(10);
   const passwordHash = bcrypt.hashSync(password, passwordSalt);
   const newDate = new Date();
   return new this({
