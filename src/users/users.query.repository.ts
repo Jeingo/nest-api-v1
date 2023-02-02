@@ -34,9 +34,7 @@ export class UsersQueryRepository {
       ? { email: { $regex: new RegExp(searchEmailTerm, 'gi') } }
       : {};
     const filterMain = filter(loginFilter, emailFilter);
-    const countAllDocuments = await this.usersModel.countDocuments({
-      filterMain
-    });
+    const countAllDocuments = await this.usersModel.countDocuments(filterMain);
     const result = await this.usersModel
       .find(filterMain)
       .sort({ [sortBy]: sortDirectionNumber })
