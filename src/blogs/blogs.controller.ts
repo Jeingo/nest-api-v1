@@ -18,12 +18,18 @@ import { OutputBlogDto } from './dto/output.blog.dto';
 import { QueryBlogs } from './types/blogs.type';
 import { PaginatedType } from '../helper/types.query.repository.helper';
 import { Types } from 'mongoose';
+import { InputCreatePostInBlogsDto } from './dto/input.create.post.dto';
+import { OutputPostDto } from '../posts/dto/output.post.dto';
+import { PostsService } from '../posts/posts.service';
+import { PostsQueryRepository } from '../posts/posts.query.repository';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
     private readonly blogsService: BlogsService,
-    private readonly blogsQueryRepository: BlogsQueryRepository
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly postsService: PostsService,
+    private readonly postsQueryRepository: PostsQueryRepository
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
@@ -62,5 +68,18 @@ export class BlogsController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.blogsService.remove(new Types.ObjectId(id));
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Post(':blogId/posts')
+  async createPost(
+    @Param('blogId') blogId: string,
+    @Body() createPostDto: InputCreatePostInBlogsDto
+  ): Promise<OutputPostDto> {
+    const createdPostId = await this.postsService.createInBlogs(
+      createPostDto,
+      blogId
+    );
+    return await this.postsQueryRepository.getById(createdPostId);
   }
 }

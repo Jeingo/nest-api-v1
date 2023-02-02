@@ -7,6 +7,7 @@ import { IPostModel, Post } from './entities/post.entity';
 import { DbId } from '../types/types';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
+import { InputCreatePostInBlogsDto } from '../blogs/dto/input.create.post.dto';
 
 @Injectable()
 export class PostsService {
@@ -18,6 +19,26 @@ export class PostsService {
 
   async create(createPostDto: InputCreatePostDto): Promise<DbId> {
     const { title, shortDescription, content, blogId } = createPostDto;
+    const foundBlog = await this.blogsRepository.getById(
+      new Types.ObjectId(blogId)
+    );
+    if (!foundBlog) throw new NotFoundException();
+    const createdPost = this.postsModel.make(
+      title,
+      shortDescription,
+      content,
+      blogId,
+      foundBlog.name
+    );
+    await this.postsRepository.save(createdPost);
+    return createdPost._id;
+  }
+
+  async createInBlogs(
+    createPostDto: InputCreatePostInBlogsDto,
+    blogId: string
+  ): Promise<DbId> {
+    const { title, shortDescription, content } = createPostDto;
     const foundBlog = await this.blogsRepository.getById(
       new Types.ObjectId(blogId)
     );
