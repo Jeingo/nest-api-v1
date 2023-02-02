@@ -19,9 +19,9 @@ import { QueryBlogs } from './types/blogs.type';
 import { PaginatedType } from '../helper/types.query.repository.helper';
 import { Types } from 'mongoose';
 import { InputCreatePostInBlogsDto } from './dto/input.create.post.dto';
-import { OutputPostDto } from '../posts/dto/output.post.dto';
 import { PostsService } from '../posts/posts.service';
 import { PostsQueryRepository } from '../posts/posts.query.repository';
+import { OutputPostInBlogsDto } from './dto/output.post.dto';
 
 @Controller('blogs')
 export class BlogsController {
@@ -75,7 +75,7 @@ export class BlogsController {
   async createPost(
     @Param('blogId') blogId: string,
     @Body() createPostDto: InputCreatePostInBlogsDto
-  ): Promise<OutputPostDto> {
+  ): Promise<OutputPostInBlogsDto> {
     const createdPostId = await this.postsService.createInBlogs(
       createPostDto,
       blogId
