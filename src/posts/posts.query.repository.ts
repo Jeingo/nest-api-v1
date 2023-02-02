@@ -9,10 +9,15 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query.repository.helper';
+import { BlogsRepository } from '../blogs/blogs.repository';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class PostsQueryRepository {
-  constructor(@InjectModel(Post.name) private postsModel: IPostModel) {}
+  constructor(
+    @InjectModel(Post.name) private postsModel: IPostModel,
+    private readonly blogsRepository: BlogsRepository
+  ) {}
 
   async getAll(query: QueryPosts): Promise<PaginatedType<OutputPostDto>> {
     const {
@@ -26,6 +31,35 @@ export class PostsQueryRepository {
     const countAllDocuments = await this.postsModel.countDocuments({});
     const result = await this.postsModel
       .find({})
+      .sort({ [sortBy]: sortDirectionNumber })
+      .skip(skipNumber)
+      .limit(+pageSize);
+    const mappedPost = result.map(this._getOutputPostDto);
+    //TODO after like
+    return getPaginatedType(
+      mappedPost,
+      +pageSize,
+      +pageNumber,
+      countAllDocuments
+    );
+  }
+  async getAllByBlogId(
+    query: QueryPosts,
+    blogId: string
+  ): Promise<PaginatedType<OutputPostDto>> {
+    const blog = await this.blogsRepository.getById(new Types.ObjectId(blogId));
+    if (!blog) throw new NotFoundException();
+    const {
+      sortBy = 'createdAt',
+      sortDirection = 'desc',
+      pageNumber = 1,
+      pageSize = 10
+    } = query;
+    const sortDirectionNumber = makeDirectionToNumber(sortDirection);
+    const skipNumber = (+pageNumber - 1) * +pageSize;
+    const countAllDocuments = await this.postsModel.countDocuments({});
+    const result = await this.postsModel
+      .find({ blogId: blogId })
       .sort({ [sortBy]: sortDirectionNumber })
       .skip(skipNumber)
       .limit(+pageSize);
