@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InputCreateUserDto } from './dto/input.create.user.dto';
 import { DbId } from '../types/types';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,7 +19,10 @@ export class UsersService {
     return createdUser._id;
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: DbId): Promise<boolean> {
+    const user = await this.usersRepository.getById(id);
+    if (!user) throw new NotFoundException();
+    await this.usersRepository.delete(id);
+    return true;
   }
 }

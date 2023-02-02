@@ -15,6 +15,7 @@ import { OutputUserDto } from './dto/output.user.dto';
 import { UsersQueryRepository } from './users.query.repository';
 import { QueryUsers } from './types/users.type';
 import { PaginatedType } from '../helper/types.query.repository.helper';
+import { Types } from 'mongoose';
 
 @Controller('users')
 export class UsersController {
@@ -40,8 +41,9 @@ export class UsersController {
     return await this.usersQueryRepository.getAll(query);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(new Types.ObjectId(id));
   }
 }
