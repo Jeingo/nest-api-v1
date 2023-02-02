@@ -25,7 +25,6 @@ export class UsersQueryRepository {
     } = query;
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
     const skipNumber = (+pageNumber - 1) * +pageSize;
-    const countAllDocuments = await this.usersModel.countDocuments({});
 
     const filter = (a: any, b: any) => ({ $or: [a, b] });
     const loginFilter = searchLoginTerm
@@ -35,7 +34,9 @@ export class UsersQueryRepository {
       ? { email: { $regex: new RegExp(searchEmailTerm, 'gi') } }
       : {};
     const filterMain = filter(loginFilter, emailFilter);
-
+    const countAllDocuments = await this.usersModel.countDocuments({
+      filterMain
+    });
     const result = await this.usersModel
       .find(filterMain)
       .sort({ [sortBy]: sortDirectionNumber })
