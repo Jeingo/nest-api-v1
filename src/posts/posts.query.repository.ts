@@ -57,7 +57,9 @@ export class PostsQueryRepository {
     } = query;
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
     const skipNumber = (+pageNumber - 1) * +pageSize;
-    const countAllDocuments = await this.postsModel.countDocuments({});
+    const countAllDocuments = await this.postsModel.countDocuments({
+      blogId: blogId
+    });
     const result = await this.postsModel
       .find({ blogId: blogId })
       .sort({ [sortBy]: sortDirectionNumber })
