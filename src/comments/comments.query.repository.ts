@@ -7,12 +7,53 @@ import {
   CommentDocument,
   ICommentModel
 } from './entities/comment.entity';
+import { QueryComments } from './types/comments.type';
+import { PaginatedType } from '../helper/types.query.repository.helper';
+import { Types } from 'mongoose';
+import { PostsRepository } from '../posts/posts.repository';
+import {
+  getPaginatedType,
+  makeDirectionToNumber
+} from '../helper/query.repository.helper';
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(
-    @InjectModel(Comment.name) private commentsModel: ICommentModel
+    @InjectModel(Comment.name) private commentsModel: ICommentModel,
+    private readonly postsRepository: PostsRepository
   ) {}
+
+  async getAllByPostId(
+    query: QueryComments,
+    postId: string
+  ): Promise<PaginatedType<OutputCommentDto>> {
+    const post = await this.postsRepository.getById(new Types.ObjectId(postId));
+    if (!post) throw new NotFoundException();
+    const {
+      sortBy = 'createdAt',
+      sortDirection = 'desc',
+      pageNumber = 1,
+      pageSize = 10
+    } = query;
+    const sortDirectionNumber = makeDirectionToNumber(sortDirection);
+    const skipNumber = (+pageNumber - 1) * +pageSize;
+    const countAllDocuments = await this.commentsModel.countDocuments({
+      postId: postId
+    });
+    const result = await this.commentsModel
+      .find({ postId: postId })
+      .sort({ [sortBy]: sortDirectionNumber })
+      .skip(skipNumber)
+      .limit(+pageSize);
+    const mappedComments = result.map(this._getOutputComment);
+    //TODO after like
+    return getPaginatedType(
+      mappedComments,
+      +pageSize,
+      +pageNumber,
+      countAllDocuments
+    );
+  }
   async getById(id: DbId): Promise<OutputCommentDto> {
     const result = await this.commentsModel.findById(id);
     if (!result) throw new NotFoundException();

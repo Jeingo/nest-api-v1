@@ -86,7 +86,7 @@ export class BlogsController {
 
   @HttpCode(HttpStatus.OK)
   @Get(':blogId/posts')
-  async findAllPosts(
+  async findAllPostsByBlogId(
     @Query() query: QueryPosts,
     @Param('blogId') blogId: string
   ): Promise<PaginatedType<OutputPostDto>> {

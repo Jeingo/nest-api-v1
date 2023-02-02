@@ -18,12 +18,16 @@ import { OutputPostDto } from './dto/output.post.dto';
 import { QueryPosts } from './types/posts.type';
 import { PaginatedType } from '../helper/types.query.repository.helper';
 import { Types } from 'mongoose';
+import { CommentsQueryRepository } from '../comments/comments.query.repository';
+import { QueryComments } from '../comments/types/comments.type';
+import { OutputCommentDto } from '../comments/dto/output.comment.dto';
 
 @Controller('posts')
 export class PostsController {
   constructor(
     private readonly postsService: PostsService,
-    private readonly postsQueryRepository: PostsQueryRepository
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
@@ -62,5 +66,14 @@ export class PostsController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.postsService.remove(new Types.ObjectId(id));
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(':postId/comments')
+  async findAllCommentsByPostId(
+    @Query() query: QueryComments,
+    @Param('postId') postId: string
+  ): Promise<PaginatedType<OutputCommentDto>> {
+    return await this.commentsQueryRepository.getAllByPostId(query, postId);
   }
 }
