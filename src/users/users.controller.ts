@@ -14,8 +14,8 @@ import { InputCreateUserDto } from './dto/input.create.user.dto';
 import { OutputUserDto } from './dto/output.user.dto';
 import { UsersQueryRepository } from './users.query.repository';
 import { QueryUsers } from './types/users.type';
-import { PaginatedType } from '../helper/types.query.repository.helper';
 import { Types } from 'mongoose';
+import { PaginatedType } from '../helper/query/types.query.repository.helper';
 
 @Controller('users')
 export class UsersController {

@@ -16,7 +16,7 @@ import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { PostsQueryRepository } from './posts.query.repository';
 import { OutputPostDto } from './dto/output.post.dto';
 import { QueryPosts } from './types/posts.type';
-import { PaginatedType } from '../helper/types.query.repository.helper';
+import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import { Types } from 'mongoose';
 import { CommentsQueryRepository } from '../comments/comments.query.repository';
 import { QueryComments } from '../comments/types/comments.type';

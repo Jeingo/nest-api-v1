@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument, IBlogModel } from './entities/blog.entity';
 import { OutputBlogDto } from './dto/output.blog.dto';
 import { QueryBlogs } from './types/blogs.type';
-import { PaginatedType } from '../helper/types.query.repository.helper';
+import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
   getPaginatedType,
   makeDirectionToNumber
-} from '../helper/query.repository.helper';
+} from '../helper/query/query.repository.helper';
 import { DbId } from '../types/types';
 
 @Injectable()

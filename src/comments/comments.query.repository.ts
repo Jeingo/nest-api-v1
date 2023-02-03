@@ -8,13 +8,13 @@ import {
   ICommentModel
 } from './entities/comment.entity';
 import { QueryComments } from './types/comments.type';
-import { PaginatedType } from '../helper/types.query.repository.helper';
+import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import { Types } from 'mongoose';
 import { PostsRepository } from '../posts/posts.repository';
 import {
   getPaginatedType,
   makeDirectionToNumber
-} from '../helper/query.repository.helper';
+} from '../helper/query/query.repository.helper';
 
 @Injectable()
 export class CommentsQueryRepository {

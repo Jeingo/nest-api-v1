@@ -4,11 +4,11 @@ import { IUserModel, User, UserDocument } from './entities/user.entity';
 import { DbId } from '../types/types';
 import { OutputUserDto } from './dto/output.user.dto';
 import { QueryUsers } from './types/users.type';
-import { PaginatedType } from '../helper/types.query.repository.helper';
+import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
   getPaginatedType,
   makeDirectionToNumber
-} from '../helper/query.repository.helper';
+} from '../helper/query/query.repository.helper';
 
 @Injectable()
 export class UsersQueryRepository {

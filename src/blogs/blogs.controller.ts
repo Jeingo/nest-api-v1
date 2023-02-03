@@ -16,7 +16,7 @@ import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { BlogsQueryRepository } from './blogs.query.repository';
 import { OutputBlogDto } from './dto/output.blog.dto';
 import { QueryBlogs } from './types/blogs.type';
-import { PaginatedType } from '../helper/types.query.repository.helper';
+import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import { Types } from 'mongoose';
 import { InputCreatePostInBlogsDto } from './dto/input.create.post.dto';
 import { PostsService } from '../posts/posts.service';

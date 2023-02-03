@@ -4,11 +4,11 @@ import { IPostModel, Post, PostDocument } from './entities/post.entity';
 import { DbId } from '../types/types';
 import { OutputPostDto } from './dto/output.post.dto';
 import { QueryPosts } from './types/posts.type';
-import { PaginatedType } from '../helper/types.query.repository.helper';
+import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
   getPaginatedType,
   makeDirectionToNumber
-} from '../helper/query.repository.helper';
+} from '../helper/query/query.repository.helper';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
 
