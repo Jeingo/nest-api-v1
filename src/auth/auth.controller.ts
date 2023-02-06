@@ -30,6 +30,7 @@ import { OutputUserMeDto } from './dto/output.user.me.dto';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
 import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 import { InputEmailDto } from './dto/input.email.dto';
+import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
 
 const limit = 5;
 const ttl = 10;
@@ -148,6 +149,14 @@ export class AuthController {
   @Post('registration-email-resending')
   async registrationEmailResending(@Body() emailDto: InputEmailDto) {
     await this.authService.resendEmail(emailDto);
+    return;
+  }
+
+  @Throttle(limit, ttl)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('password-recovery')
+  async passwordRecovery(@Body() recoveryEmailDto: InputRecoveryEmailDto) {
+    await this.authService.recoveryPassword(recoveryEmailDto);
     return;
   }
 }

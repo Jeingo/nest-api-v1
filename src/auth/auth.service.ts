@@ -12,6 +12,7 @@ import { IUserModel, User } from '../users/entities/user.entity';
 import { EmailManager } from '../infrastructure/email/email.manager';
 import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 import { InputEmailDto } from './dto/input.email.dto';
+import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
 
 @Injectable()
 export class AuthService {
@@ -108,6 +109,18 @@ export class AuthService {
     user.updateConfirmationCode();
     await this.usersRepository.save(user);
     await this.emailManager.sendRegistrationEmailConfirmation(user);
+    return true;
+  }
+  async recoveryPassword(
+    recoveryEmailDto: InputRecoveryEmailDto
+  ): Promise<boolean> {
+    const user = await this.usersRepository.getByUniqueField(
+      recoveryEmailDto.email
+    );
+    if (!user) return false;
+    user.updatePasswordRecoveryConfirmationCode();
+    await this.usersRepository.save(user);
+    await this.emailManager.sendPasswordRecoveryEmailConfirmation(user);
     return true;
   }
 }
