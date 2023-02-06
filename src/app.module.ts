@@ -37,10 +37,10 @@ const configService = new ConfigService<IConfigType>();
   ],
   controllers: [],
   providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard
-    // }
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
   ]
 })
 export class AppModule {}
