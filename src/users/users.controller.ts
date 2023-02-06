@@ -7,7 +7,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Query
+  Query,
+  UseGuards
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { InputCreateUserDto } from './dto/input.create.user.dto';
@@ -16,7 +17,9 @@ import { UsersQueryRepository } from './users.query.repository';
 import { QueryUsers } from './types/users.type';
 import { Types } from 'mongoose';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
+import { BasicGuard } from '../helper/guards/basic.guard';
 
+@UseGuards(BasicGuard)
 @Controller('users')
 export class UsersController {
   constructor(
