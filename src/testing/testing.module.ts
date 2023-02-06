@@ -6,6 +6,7 @@ import { Blog, BlogSchema } from '../blogs/entities/blog.entity';
 import { Post, PostSchema } from '../posts/entities/post.entity';
 import { User, UserSchema } from '../users/entities/user.entity';
 import { Comment, CommentSchema } from '../comments/entities/comment.entity';
+import { Session, SessionSchema } from '../sessions/entities/session.entity';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { Comment, CommentSchema } from '../comments/entities/comment.entity';
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },
       { name: User.name, schema: UserSchema },
-      { name: Comment.name, schema: CommentSchema }
+      { name: Comment.name, schema: CommentSchema },
+      { name: Session.name, schema: SessionSchema }
     ])
   ],
   controllers: [TestingController],

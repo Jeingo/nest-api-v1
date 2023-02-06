@@ -27,6 +27,10 @@ import { Cookies } from '../helper/decorators/cookie.decorator';
 import { BearerGuard } from '../helper/guards/bearer.guard';
 import { UsersQueryRepository } from '../users/users.query.repository';
 import { OutputUserMeDto } from './dto/output.user.me.dto';
+import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
+
+const limit = 5;
+const ttl = 10;
 
 @Controller('auth')
 export class AuthController {
@@ -39,7 +43,7 @@ export class AuthController {
     private readonly usersQueryRepository: UsersQueryRepository
   ) {}
 
-  @Throttle(5, 10)
+  @Throttle(limit, ttl)
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(
@@ -116,5 +120,13 @@ export class AuthController {
   @Get('me')
   async me(@Req() req): Promise<OutputUserMeDto> {
     return await this.usersQueryRepository.getMeById(req.user._id);
+  }
+
+  @Throttle(limit, ttl)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('registration')
+  async registration(@Body() registrationUserDto: InputRegistrationUserDto) {
+    await this.authService.checkLoginAndEmail(registrationUserDto);
+    await this.authService.registration(registrationUserDto);
   }
 }
