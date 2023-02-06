@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ISessionModel, Session } from './entities/session.entity';
 import { SessionsRepository } from './sessions.repository';
 import { DbId } from '../types/types';
+import { Token } from '../infrastructure/types/jwt.type';
 
 @Injectable()
 export class SessionsService {
@@ -38,5 +39,23 @@ export class SessionsService {
     );
     await this.sessionsRepository.save(session);
     return session._id;
+  }
+  async updateSession(refreshToken: Token): Promise<boolean> {
+    const result = this.jwtService.verify(refreshToken, {
+      secret: this.configService.get('JWT_REFRESH_SECRET')
+    });
+    const issueAt = new Date(result.iat * 1000).toISOString();
+    const expireAt = new Date(result.exp * 1000).toISOString();
+    const deviceId = result.deviceId;
+    return await this.sessionsRepository.updateSession(
+      issueAt,
+      expireAt,
+      deviceId
+    );
+  }
+  async isActiveSession(deviceId: string, iat: string): Promise<boolean> {
+    const result = await this.sessionsRepository.get(iat);
+    if (!result) return false;
+    return result.deviceId === deviceId;
   }
 }

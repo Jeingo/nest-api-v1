@@ -20,6 +20,7 @@ import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
 import { Throttle } from '@nestjs/throttler';
+import { Cookies } from '../helper/decorators/cookie.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -51,6 +52,32 @@ export class AuthController {
     );
 
     await this.sessionsService.saveSession(refreshToken, ip, deviceName);
+    const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == true;
+    await response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: cookieMode
+    });
+    return { accessToken: accessToken };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('refresh-token')
+  async refreshToken(
+    @Cookies('refreshToken') gotRefreshToken: string,
+    @Res({ passthrough: true }) response: Response
+  ): Promise<OutputAccessTokenDto> {
+    const payload = await this.authService.checkAuthorizationAndGetPayload(
+      gotRefreshToken
+    );
+    if (!payload) {
+      response.clearCookie('refreshToken');
+      throw new UnauthorizedException();
+    }
+    const { accessToken, refreshToken } = await this.jwtService.getTokens(
+      payload.userId,
+      payload.deviceId
+    );
+    await this.sessionsService.updateSession(refreshToken);
     const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == true;
     await response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
