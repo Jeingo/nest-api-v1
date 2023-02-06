@@ -28,8 +28,12 @@ export class IJwtService {
       return false;
     }
   }
-  getPayload(token: Token): TokenPayloadType {
-    return this.jwtService.decode(token) as TokenPayloadType;
+  getPayload(token: Token): TokenPayloadType | null {
+    try {
+      return this.jwtService.decode(token) as TokenPayloadType;
+    } catch {
+      return null;
+    }
   }
   private createJWT(userId: string): Token {
     return this.jwtService.sign(

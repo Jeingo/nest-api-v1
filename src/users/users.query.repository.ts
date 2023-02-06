@@ -9,6 +9,7 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
+import { OutputUserMeDto } from '../auth/dto/output.user.me.dto';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -53,12 +54,24 @@ export class UsersQueryRepository {
     if (!result) throw new NotFoundException();
     return this._getOutputUser(result);
   }
+  async getMeById(id: DbId): Promise<OutputUserMeDto> {
+    const result = await this.usersModel.findById(id);
+    if (!result) throw new NotFoundException();
+    return this._getOutputMeUser(result);
+  }
   private _getOutputUser(user: UserDocument): OutputUserDto {
     return {
       id: user._id.toString(),
       login: user.login,
       email: user.email,
       createdAt: user.createdAt
+    };
+  }
+  private _getOutputMeUser(user: UserDocument): OutputUserMeDto {
+    return {
+      email: user.email,
+      login: user.login,
+      userId: user._id.toString()
     };
   }
 }

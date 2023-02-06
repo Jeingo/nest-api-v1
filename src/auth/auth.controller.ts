@@ -7,7 +7,10 @@ import {
   Post,
   UnauthorizedException,
   Headers,
-  Res
+  Res,
+  Get,
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { InputLoginUserDto } from './dto/input.login.user.dto';
@@ -21,6 +24,9 @@ import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
 import { Throttle } from '@nestjs/throttler';
 import { Cookies } from '../helper/decorators/cookie.decorator';
+import { BearerGuard } from '../helper/guards/bearer.guard';
+import { UsersQueryRepository } from '../users/users.query.repository';
+import { OutputUserMeDto } from './dto/output.user.me.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +35,8 @@ export class AuthController {
     private readonly usersService: UsersService,
     private readonly jwtService: IJwtService,
     private readonly sessionsService: SessionsService,
-    private readonly configService: ConfigService<IConfigType>
+    private readonly configService: ConfigService<IConfigType>,
+    private readonly usersQueryRepository: UsersQueryRepository
   ) {}
 
   @Throttle(5, 10)
@@ -102,5 +109,12 @@ export class AuthController {
     await this.sessionsService.deleteSession(payload.iat);
     response.clearCookie('refreshToken');
     return;
+  }
+
+  @UseGuards(BearerGuard)
+  @HttpCode(HttpStatus.OK)
+  @Get('me')
+  async me(@Req() req): Promise<OutputUserMeDto> {
+    return await this.usersQueryRepository.getMeById(req.user._id);
   }
 }

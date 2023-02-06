@@ -11,6 +11,7 @@ import { SessionsService } from '../sessions/sessions.service';
 import { SessionsRepository } from '../sessions/sessions.repository';
 import { Session, SessionSchema } from '../sessions/entities/session.entity';
 import { ConfigService } from '@nestjs/config';
+import { UsersQueryRepository } from '../users/users.query.repository';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { ConfigService } from '@nestjs/config';
     JwtService,
     SessionsService,
     SessionsRepository,
-    ConfigService
+    ConfigService,
+    UsersQueryRepository
   ]
 })
 export class AuthModule {}
