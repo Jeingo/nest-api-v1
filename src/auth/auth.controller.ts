@@ -19,6 +19,7 @@ import { OutputAccessTokenDto } from './dto/output.token.dto';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -30,6 +31,7 @@ export class AuthController {
     private readonly configService: ConfigService<IConfigType>
   ) {}
 
+  @Throttle(5, 10)
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(

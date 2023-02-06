@@ -11,6 +11,8 @@ import { IConfigType } from './configuration/configuration';
 import { AuthModule } from './auth/auth.module';
 import { InfrastructureModule } from './infrastructure/infrastructureModule';
 import { SessionsModule } from './sessions/sessions.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -23,6 +25,7 @@ const configService = new ConfigService<IConfigType>();
     MongooseModule.forRoot(configService.get('MONGO_URL'), {
       dbName: configService.get('DB_NAME')
     }),
+    ThrottlerModule.forRoot(),
     BlogsModule,
     TestingModule,
     PostsModule,
@@ -33,6 +36,11 @@ const configService = new ConfigService<IConfigType>();
     SessionsModule
   ],
   controllers: [],
-  providers: []
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
+  ]
 })
 export class AppModule {}
