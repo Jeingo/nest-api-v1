@@ -10,6 +10,7 @@ import { DbId } from '../types/types';
 import { InjectModel } from '@nestjs/mongoose';
 import { IUserModel, User } from '../users/entities/user.entity';
 import { EmailManager } from '../infrastructure/email/email.manager';
+import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 
 @Injectable()
 export class AuthService {
@@ -70,5 +71,28 @@ export class AuthService {
     await this.usersRepository.save(createdUser);
     await this.emailManager.sendRegistrationEmailConfirmation(createdUser);
     return createdUser._id;
+  }
+  async confirmEmail(
+    confirmationCodeDto: InputConfirmationCodeDto
+  ): Promise<boolean> {
+    const user = await this.usersRepository.getByUniqueField(
+      confirmationCodeDto.code
+    );
+    if (!user) {
+      throw new BadRequestException(['code code is wrong']);
+    }
+    if (user.emailConfirmation.confirmationCode !== confirmationCodeDto.code) {
+      throw new BadRequestException(['code code is wrong']);
+    }
+    if (user.emailConfirmation.isConfirmed) {
+      throw new BadRequestException(['code Account is already confirmed']);
+    }
+    if (user.emailConfirmation.expirationDate < new Date()) {
+      throw new BadRequestException(['code code is expired']);
+    }
+
+    user.updateEmailConfirmationStatus(confirmationCodeDto.code);
+    await this.usersRepository.save(user);
+    return true;
   }
 }

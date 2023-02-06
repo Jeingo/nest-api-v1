@@ -59,6 +59,11 @@ export class User {
 
   @Prop({ required: true })
   emailConfirmation: EmailConfirmation;
+
+  updateEmailConfirmationStatus: (code: string) => UserDocument;
+  updateConfirmationCode: () => UserDocument;
+  updatePasswordRecoveryConfirmationCode: () => UserDocument;
+  updatePassword: (newPassword: string) => UserDocument;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -93,4 +98,27 @@ UserSchema.statics.make = function (
       isConfirmed: isConfirmed
     }
   });
+};
+
+UserSchema.methods.updateEmailConfirmationStatus = function (code: string) {
+  this.emailConfirmation.confirmationCode = code;
+  this.emailConfirmation.isConfirmed = true;
+};
+
+UserSchema.methods.updateConfirmationCode = function () {
+  this.emailConfirmation.confirmationCode = v4();
+};
+
+UserSchema.methods.updatePasswordRecoveryConfirmationCode = function () {
+  this.passwordRecoveryConfirmation.passwordRecoveryCode = v4();
+  this.passwordRecoveryConfirmation.isConfirmed = false;
+  this.passwordRecoveryConfirmation.expirationDate = add(new Date(), {
+    hours: 1
+  });
+};
+
+UserSchema.methods.updatePassword = function (newPassword: string) {
+  const passwordSalt = bcrypt.genSaltSync(10);
+  this.hash = bcrypt.hashSync(newPassword, passwordSalt);
+  this.passwordRecoveryConfirmation.isConfirmed = true;
 };

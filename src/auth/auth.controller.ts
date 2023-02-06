@@ -28,6 +28,7 @@ import { BearerGuard } from '../helper/guards/bearer.guard';
 import { UsersQueryRepository } from '../users/users.query.repository';
 import { OutputUserMeDto } from './dto/output.user.me.dto';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
+import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 
 const limit = 5;
 const ttl = 10;
@@ -128,6 +129,16 @@ export class AuthController {
   async registration(@Body() registrationUserDto: InputRegistrationUserDto) {
     await this.authService.checkLoginAndEmail(registrationUserDto);
     await this.authService.registration(registrationUserDto);
+    return;
+  }
+
+  @Throttle(limit, ttl)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('registration-confirmation')
+  async registrationConfirmation(
+    @Body() confirmationCodeDto: InputConfirmationCodeDto
+  ) {
+    await this.authService.confirmEmail(confirmationCodeDto);
     return;
   }
 }
