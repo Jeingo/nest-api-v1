@@ -128,5 +128,6 @@ export class AuthController {
   async registration(@Body() registrationUserDto: InputRegistrationUserDto) {
     await this.authService.checkLoginAndEmail(registrationUserDto);
     await this.authService.registration(registrationUserDto);
+    return;
   }
 }

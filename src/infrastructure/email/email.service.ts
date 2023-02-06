@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EmailForm } from '../types/email.type';
-import nodemailer from 'nodemailer';
+import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../../configuration/configuration';
 

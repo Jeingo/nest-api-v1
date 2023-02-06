@@ -13,6 +13,7 @@ import { Session, SessionSchema } from '../sessions/entities/session.entity';
 import { ConfigService } from '@nestjs/config';
 import { UsersQueryRepository } from '../users/users.query.repository';
 import { EmailManager } from '../infrastructure/email/email.manager';
+import { EmailService } from '../infrastructure/email/email.service';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { EmailManager } from '../infrastructure/email/email.manager';
     SessionsRepository,
     ConfigService,
     UsersQueryRepository,
-    EmailManager
+    EmailManager,
+    EmailService
   ]
 })
 export class AuthModule {}
