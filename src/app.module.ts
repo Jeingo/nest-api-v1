@@ -8,6 +8,9 @@ import { CommentsModule } from './comments/comments.module';
 import { UsersModule } from './users/users.module';
 import configuration from './configuration/configuration';
 import { IConfigType } from './configuration/configuration';
+import { AuthModule } from './auth/auth.module';
+import { InfrastructureModule } from './infrastructure/infrastructureModule';
+import { SessionsModule } from './sessions/sessions.module';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -24,7 +27,10 @@ const configService = new ConfigService<IConfigType>();
     TestingModule,
     PostsModule,
     CommentsModule,
-    UsersModule
+    UsersModule,
+    AuthModule,
+    InfrastructureModule,
+    SessionsModule
   ],
   controllers: [],
   providers: []

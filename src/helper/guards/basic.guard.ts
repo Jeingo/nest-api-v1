@@ -17,7 +17,7 @@ export class BasicGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const authorization = request.headers.authorization;
-    if (authorization) {
+    if (!authorization) {
       throw new UnauthorizedException();
     }
     const authorizationField = authorization.split(' ');
