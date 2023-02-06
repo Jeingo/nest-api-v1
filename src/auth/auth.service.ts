@@ -11,6 +11,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { IUserModel, User } from '../users/entities/user.entity';
 import { EmailManager } from '../infrastructure/email/email.manager';
 import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
+import { InputEmailDto } from './dto/input.email.dto';
 
 @Injectable()
 export class AuthService {
@@ -93,6 +94,20 @@ export class AuthService {
 
     user.updateEmailConfirmationStatus(confirmationCodeDto.code);
     await this.usersRepository.save(user);
+    return true;
+  }
+  async resendEmail(emailDto: InputEmailDto): Promise<boolean> {
+    const user = await this.usersRepository.getByUniqueField(emailDto.email);
+    if (!user) {
+      throw new BadRequestException(['email email is wrong']);
+    }
+    if (user.emailConfirmation.isConfirmed) {
+      throw new BadRequestException(['email account is already confirmed']);
+    }
+
+    user.updateConfirmationCode();
+    await this.usersRepository.save(user);
+    await this.emailManager.sendRegistrationEmailConfirmation(user);
     return true;
   }
 }
