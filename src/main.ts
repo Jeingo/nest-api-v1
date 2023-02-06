@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { IConfigType } from './configuration/configuration';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './helper/expceptionFilter/exception.filter';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,7 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.use(cookieParser());
   await app.listen(configService.get('PORT'));
 }
 bootstrap();
