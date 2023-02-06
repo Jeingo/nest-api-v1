@@ -6,7 +6,8 @@ import {
   Ip,
   Post,
   UnauthorizedException,
-  Headers
+  Headers,
+  Res
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { InputLoginUserDto } from './dto/input.login.user.dto';
@@ -15,6 +16,9 @@ import { IJwtService } from '../infrastructure/jwt/jwt.service';
 import { v4 } from 'uuid';
 import { SessionsService } from '../sessions/sessions.service';
 import { OutputAccessTokenDto } from './dto/output.token.dto';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { IConfigType } from '../configuration/configuration';
 
 @Controller('auth')
 export class AuthController {
@@ -22,25 +26,34 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly jwtService: IJwtService,
-    private readonly sessionsService: SessionsService
+    private readonly sessionsService: SessionsService,
+    private readonly configService: ConfigService<IConfigType>
   ) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(
     @Body() loginUserDto: InputLoginUserDto,
-    @Ip() ip,
-    @Headers('user-agent') deviceName
+    @Ip() ip: string,
+    @Headers('user-agent') deviceName: string,
+    @Res({ passthrough: true }) response: Response
   ): Promise<OutputAccessTokenDto> {
     const userId = await this.authService.checkCredentials(loginUserDto);
     if (!userId) {
+      response.clearCookie('refreshToken');
       throw new UnauthorizedException();
     }
     const { accessToken, refreshToken } = await this.jwtService.getTokens(
       userId,
       v4()
     );
+
     await this.sessionsService.saveSession(refreshToken, ip, deviceName);
+    const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == true;
+    await response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: cookieMode
+    });
     return { accessToken: accessToken };
   }
 }

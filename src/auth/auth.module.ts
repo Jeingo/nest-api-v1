@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SessionsService } from '../sessions/sessions.service';
 import { SessionsRepository } from '../sessions/sessions.repository';
 import { Session, SessionSchema } from '../sessions/entities/session.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { Session, SessionSchema } from '../sessions/entities/session.entity';
     IJwtService,
     JwtService,
     SessionsService,
-    SessionsRepository
+    SessionsRepository,
+    ConfigService
   ]
 })
 export class AuthModule {}
