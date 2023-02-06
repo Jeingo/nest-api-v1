@@ -13,6 +13,7 @@ import { EmailManager } from '../infrastructure/email/email.manager';
 import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 import { InputEmailDto } from './dto/input.email.dto';
 import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
+import { InputNewPasswordDto } from './dto/input.newpassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -121,6 +122,29 @@ export class AuthService {
     user.updatePasswordRecoveryConfirmationCode();
     await this.usersRepository.save(user);
     await this.emailManager.sendPasswordRecoveryEmailConfirmation(user);
+    return true;
+  }
+  async setNewPassword(newPasswordDto: InputNewPasswordDto): Promise<boolean> {
+    const { recoveryCode, newPassword } = newPasswordDto;
+    const user = await this.usersRepository.getByUniqueField(recoveryCode);
+    if (!user) {
+      throw new BadRequestException(['recoveryCode code is wrong']);
+    }
+    if (
+      user.passwordRecoveryConfirmation.passwordRecoveryCode !== recoveryCode
+    ) {
+      throw new BadRequestException(['recoveryCode code is wrong']);
+    }
+    if (user.passwordRecoveryConfirmation.isConfirmed) {
+      throw new BadRequestException([
+        'recoveryCode Password is already changed'
+      ]);
+    }
+    if (user.passwordRecoveryConfirmation.expirationDate < new Date()) {
+      throw new BadRequestException(['recoveryCode code is expired']);
+    }
+    user.updatePassword(newPassword);
+    await this.usersRepository.save(user);
     return true;
   }
 }

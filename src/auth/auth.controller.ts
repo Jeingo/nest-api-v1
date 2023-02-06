@@ -31,6 +31,7 @@ import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
 import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 import { InputEmailDto } from './dto/input.email.dto';
 import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
+import { InputNewPasswordDto } from './dto/input.newpassword.dto';
 
 const limit = 5;
 const ttl = 10;
@@ -157,6 +158,14 @@ export class AuthController {
   @Post('password-recovery')
   async passwordRecovery(@Body() recoveryEmailDto: InputRecoveryEmailDto) {
     await this.authService.recoveryPassword(recoveryEmailDto);
+    return;
+  }
+
+  @Throttle(limit, ttl)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('new-password')
+  async newPassword(@Body() newPasswordDto: InputNewPasswordDto) {
+    await this.authService.setNewPassword(newPasswordDto);
     return;
   }
 }
