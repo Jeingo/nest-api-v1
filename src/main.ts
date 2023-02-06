@@ -12,7 +12,7 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
-  // app.use(cookieParser());
+  app.use(cookieParser);
   await app.listen(configService.get('PORT'));
 }
 bootstrap();
