@@ -25,7 +25,7 @@ const configService = new ConfigService<IConfigType>();
     MongooseModule.forRoot(configService.get('MONGO_URL'), {
       dbName: configService.get('DB_NAME')
     }),
-    ThrottlerModule.forRoot(),
+    // ThrottlerModule.forRoot(),
     BlogsModule,
     TestingModule,
     PostsModule,
