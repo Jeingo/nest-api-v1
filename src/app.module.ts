@@ -25,7 +25,7 @@ const configService = new ConfigService<IConfigType>();
     MongooseModule.forRoot(configService.get('MONGO_URL'), {
       dbName: configService.get('DB_NAME')
     }),
-    // ThrottlerModule.forRoot(),
+    ThrottlerModule.forRoot(),
     BlogsModule,
     TestingModule,
     PostsModule,
@@ -37,10 +37,10 @@ const configService = new ConfigService<IConfigType>();
   ],
   controllers: [],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard
-    }
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard
+    // }
   ]
 })
 export class AppModule {}
