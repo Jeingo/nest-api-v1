@@ -28,4 +28,10 @@ export class SessionsRepository {
     );
     return !!result;
   }
+  async deleteSession(issueAt: string): Promise<boolean> {
+    const result = await this.sessionsModel.findOneAndDelete({
+      issueAt: issueAt
+    });
+    return !!result;
+  }
 }

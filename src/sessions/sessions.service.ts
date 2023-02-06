@@ -58,4 +58,8 @@ export class SessionsService {
     if (!result) return false;
     return result.deviceId === deviceId;
   }
+  async deleteSession(iat: number): Promise<boolean> {
+    const issueAt = new Date(iat * 1000).toISOString();
+    return await this.sessionsRepository.deleteSession(issueAt);
+  }
 }

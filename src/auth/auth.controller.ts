@@ -85,4 +85,22 @@ export class AuthController {
     });
     return { accessToken: accessToken };
   }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('logout')
+  async logout(
+    @Cookies('refreshToken') gotRefreshToken: string,
+    @Res({ passthrough: true }) response: Response
+  ) {
+    const payload = await this.authService.checkAuthorizationAndGetPayload(
+      gotRefreshToken
+    );
+    if (!payload) {
+      response.clearCookie('refreshToken');
+      throw new UnauthorizedException();
+    }
+    await this.sessionsService.deleteSession(payload.iat);
+    response.clearCookie('refreshToken');
+    return;
+  }
 }
