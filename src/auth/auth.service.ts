@@ -6,13 +6,19 @@ import { Token, TokenPayloadType } from '../infrastructure/types/jwt.type';
 import { IJwtService } from '../infrastructure/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
+import { DbId } from '../types/types';
+import { InjectModel } from '@nestjs/mongoose';
+import { IUserModel, User } from '../users/entities/user.entity';
+import { EmailManager } from '../infrastructure/email/email.manager';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly jwtService: IJwtService,
-    private readonly sessionsService: SessionsService
+    private readonly sessionsService: SessionsService,
+    private readonly emailManager: EmailManager,
+    @InjectModel(User.name) private usersModel: IUserModel
   ) {}
 
   async checkCredentials(
@@ -58,8 +64,11 @@ export class AuthService {
   }
   async registration(
     registrationUserDto: InputRegistrationUserDto
-    // ): Promise<DbId> {
-  ) {
-    return 1;
+  ): Promise<DbId> {
+    const { login, password, email } = registrationUserDto;
+    const createdUser = this.usersModel.make(login, password, email, false);
+    await this.usersRepository.save(createdUser);
+    await this.emailManager.sendRegistrationEmailConfirmation(createdUser);
+    return createdUser._id;
   }
 }
