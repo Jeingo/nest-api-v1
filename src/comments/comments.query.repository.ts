@@ -52,7 +52,7 @@ export class CommentsQueryRepository {
     const mappedComments = result.map(this._getOutputComment);
     const mappedCommentsWithStatusLike = await this._setStatusLike(
       mappedComments,
-      user._id.toString()
+      user?._id.toString()
     );
     return getPaginatedType(
       mappedCommentsWithStatusLike,
@@ -65,9 +65,9 @@ export class CommentsQueryRepository {
     const result = await this.commentsModel.findById(id);
     if (!result) throw new NotFoundException();
     const mappedResult = this._getOutputComment(result);
-    if (user._id && mappedResult) {
+    if (user?._id && mappedResult) {
       const like = await this.commentLikesQueryRepository.getLike(
-        user._id.toString(),
+        user?._id.toString(),
         mappedResult.id
       );
       if (like) {

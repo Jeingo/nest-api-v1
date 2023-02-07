@@ -28,3 +28,28 @@ export function IsLike(validationOptions?: ValidationOptions) {
     });
   };
 }
+// @Injectable()
+// @ValidatorConstraint({ async: true })
+// export class IsBlogIdConstraint implements ValidatorConstraintInterface {
+//   constructor(@InjectModel(Blog.name) private blogsModel: IBlogModel) {}
+//
+//   async validate(blogId: any, args: ValidationArguments) {
+//     const blog = await this.blogsModel.findById(new Types.ObjectId(blogId));
+//     return !!blog;
+//   }
+//   defaultMessage(args: ValidationArguments) {
+//     return `blogId it isn't correct`;
+//   }
+// }
+//
+// export function IsBlogId(validationOptions?: ValidationOptions) {
+//   return function (object: object, propertyName: string) {
+//     registerDecorator({
+//       target: object.constructor,
+//       propertyName: propertyName,
+//       options: validationOptions,
+//       constraints: [],
+//       validator: IsBlogIdConstraint
+//     });
+//   };
+// }

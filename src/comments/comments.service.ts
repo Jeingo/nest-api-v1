@@ -39,7 +39,7 @@ export class CommentsService {
     if (!post) throw new NotFoundException();
     const createdComment = this.commentsModel.make(
       createCommentDto.content,
-      user._id.toString(),
+      user?._id.toString(),
       user.login,
       postId
     );

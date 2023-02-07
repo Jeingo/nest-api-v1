@@ -43,7 +43,7 @@ export class PostsQueryRepository {
     const mappedPost = result.map(this._getOutputPostDto);
     const mappedPostWithStatusLike = await this._setStatusLike(
       mappedPost,
-      user._id.toString()
+      user?._id.toString()
     );
     const mappedFinishPost = await this._setThreeLastUser(
       mappedPostWithStatusLike
@@ -81,7 +81,7 @@ export class PostsQueryRepository {
     const mappedPost = result.map(this._getOutputPostDto);
     const mappedPostWithStatusLike = await this._setStatusLike(
       mappedPost,
-      user._id.toString()
+      user?._id.toString()
     );
     const mappedFinishPost = await this._setThreeLastUser(
       mappedPostWithStatusLike
@@ -99,7 +99,7 @@ export class PostsQueryRepository {
     const mappedResult = this._getOutputPostDto(result);
     if (user && mappedResult) {
       const like = await this.postLikesQueryRepository.getLike(
-        user._id.toString(),
+        user?._id.toString(),
         mappedResult.id
       );
       if (like) {
