@@ -68,7 +68,7 @@ export class AuthController {
     );
 
     await this.sessionsService.saveSession(refreshToken, ip, deviceName);
-    const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == true;
+    const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == 'true';
     await response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: cookieMode
@@ -94,7 +94,7 @@ export class AuthController {
       payload.deviceId
     );
     await this.sessionsService.updateSession(refreshToken);
-    const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == true;
+    const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == 'true';
     await response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: cookieMode
