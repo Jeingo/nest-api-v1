@@ -94,7 +94,7 @@ export class AuthService {
       throw new BadRequestException(['code code is expired']);
     }
 
-    user.updateEmailConfirmationStatus(confirmationCodeDto.code);
+    user.updateEmailConfirmationStatus();
     await this.usersRepository.save(user);
     return true;
   }

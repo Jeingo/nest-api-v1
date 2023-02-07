@@ -18,6 +18,7 @@ type StaticUserMethods = {
 
 export type IUserModel = Model<UserDocument> & StaticUserMethods;
 
+@Schema()
 class PasswordRecoveryConfirmation {
   @Prop({ required: true })
   passwordRecoveryCode: string;
@@ -29,6 +30,7 @@ class PasswordRecoveryConfirmation {
   isConfirmed: boolean;
 }
 
+@Schema()
 class EmailConfirmation {
   @Prop({ required: true })
   confirmationCode: string;
@@ -57,10 +59,10 @@ export class User {
   @Prop({ required: true })
   passwordRecoveryConfirmation: PasswordRecoveryConfirmation;
 
-  @Prop({ required: true })
+  @Prop({ type: EmailConfirmation, required: true })
   emailConfirmation: EmailConfirmation;
 
-  updateEmailConfirmationStatus: (code: string) => UserDocument;
+  updateEmailConfirmationStatus: () => UserDocument;
   updateConfirmationCode: () => UserDocument;
   updatePasswordRecoveryConfirmationCode: () => UserDocument;
   updatePassword: (newPassword: string) => UserDocument;
@@ -100,8 +102,7 @@ UserSchema.statics.make = function (
   });
 };
 
-UserSchema.methods.updateEmailConfirmationStatus = function (code: string) {
-  this.emailConfirmation.confirmationCode = code;
+UserSchema.methods.updateEmailConfirmationStatus = function () {
   this.emailConfirmation.isConfirmed = true;
 };
 

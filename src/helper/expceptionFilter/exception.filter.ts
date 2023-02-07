@@ -10,7 +10,6 @@ export class HttpExceptionFilter {
 
     switch (status) {
       case HttpStatus.BAD_REQUEST:
-        console.log(exception.response.message);
         const messageAndField = exception.response.message.map(this.getError);
         result = { errorsMessages: messageAndField };
     }

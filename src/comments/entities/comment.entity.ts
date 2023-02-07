@@ -5,6 +5,7 @@ export type CommentDocument = HydratedDocument<Comment>;
 
 export type ICommentModel = Model<CommentDocument>;
 
+@Schema()
 class CommentatorInfo {
   @Prop({ required: true })
   userId: string;
@@ -13,6 +14,7 @@ class CommentatorInfo {
   userLogin: string;
 }
 
+@Schema()
 class LikesInfo {
   @Prop({ required: true })
   likesCount: number;

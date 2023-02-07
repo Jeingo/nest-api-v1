@@ -16,6 +16,7 @@ type StaticPostMethods = {
 
 export type IPostModel = Model<PostDocument> & StaticPostMethods;
 
+@Schema()
 class ExtendedLikesInfo {
   @Prop({ required: true })
   likesCount: number;

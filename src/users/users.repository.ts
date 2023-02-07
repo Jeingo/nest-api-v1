@@ -20,7 +20,7 @@ export class UsersRepository {
       ]);
   }
   async save(user: UserDocument): Promise<UserDocument> {
-    return user.save();
+    return await user.save();
   }
   async delete(id: DbId): Promise<UserDocument> {
     return this.usersModel.findByIdAndDelete(id);
