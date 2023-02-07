@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { IConfigType } from './configuration/configuration';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './helper/expceptionFilter/exception.filter';
-// import * as cookieParser from 'cookie-parser';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieParser = require('cookie-parser');
 
