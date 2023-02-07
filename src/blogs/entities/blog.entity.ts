@@ -28,6 +28,9 @@ export class Blog {
   @Prop({ required: true, maxlength: 100 })
   createdAt: string;
 
+  @Prop({ required: true })
+  isMembership: boolean;
+
   update: (
     name: string,
     description: string,
@@ -47,7 +50,8 @@ BlogSchema.statics.make = function (
     name: name,
     description: description,
     websiteUrl: websiteUrl,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    isMembership: false
   });
 };
 
