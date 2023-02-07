@@ -15,6 +15,11 @@ import {
 } from '../post-likes/entities/post.like.entity';
 import { PostLikesQueryRepository } from '../post-likes/post.likes.query.repository';
 import { PostLikesRepository } from '../post-likes/post.likes.repository';
+import { CommentLikesQueryRepository } from '../comment-likes/comment.like.query.repository';
+import {
+  CommentLike,
+  CommentLikeSchema
+} from '../comment-likes/entities/comment.like.entity';
 
 @Module({
   imports: [
@@ -22,7 +27,8 @@ import { PostLikesRepository } from '../post-likes/post.likes.repository';
       { name: Post.name, schema: PostSchema },
       { name: Blog.name, schema: BlogSchema },
       { name: Comment.name, schema: CommentSchema },
-      { name: PostLike.name, schema: PostLikeSchema }
+      { name: PostLike.name, schema: PostLikeSchema },
+      { name: CommentLike.name, schema: CommentLikeSchema }
     ])
   ],
   controllers: [PostsController],
@@ -33,7 +39,8 @@ import { PostLikesRepository } from '../post-likes/post.likes.repository';
     BlogsRepository,
     CommentsQueryRepository,
     PostLikesQueryRepository,
-    PostLikesRepository
+    PostLikesRepository,
+    CommentLikesQueryRepository
   ]
 })
 export class PostsModule {}

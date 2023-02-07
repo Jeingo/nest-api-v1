@@ -15,12 +15,15 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
+import { UserDocument } from '../users/entities/user.entity';
+import { CommentLikesQueryRepository } from '../comment-likes/comment.like.query.repository';
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(
     @InjectModel(Comment.name) private commentsModel: ICommentModel,
-    private readonly postsRepository: PostsRepository
+    private readonly postsRepository: PostsRepository,
+    private readonly commentLikesQueryRepository: CommentLikesQueryRepository
   ) {}
 
   async getAllByPostId(
@@ -54,11 +57,20 @@ export class CommentsQueryRepository {
       countAllDocuments
     );
   }
-  async getById(id: DbId): Promise<OutputCommentDto> {
+  async getById(id: DbId, user?: UserDocument): Promise<OutputCommentDto> {
     const result = await this.commentsModel.findById(id);
     if (!result) throw new NotFoundException();
-    //TODO after like
-    return this._getOutputComment(result);
+    const mappedResult = this._getOutputComment(result);
+    if (user._id && mappedResult) {
+      const like = await this.commentLikesQueryRepository.getLike(
+        user._id.toString(),
+        mappedResult.id
+      );
+      if (like) {
+        mappedResult.likesInfo.myStatus = like.myStatus;
+      }
+    }
+    return mappedResult;
   }
   private _getOutputComment(comment: CommentDocument): OutputCommentDto {
     return {

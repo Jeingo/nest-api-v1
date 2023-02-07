@@ -8,7 +8,7 @@ import {
 import { OutputCommentLikeDto } from './dto/output.comment.like.dto';
 
 @Injectable()
-export class CommentLikeQueryRepository {
+export class CommentLikesQueryRepository {
   constructor(
     @InjectModel(CommentLike.name) private commentLikesModel: ICommentLikeModel
   ) {}

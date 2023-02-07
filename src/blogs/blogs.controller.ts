@@ -106,7 +106,6 @@ export class BlogsController {
     @Param('blogId') blogId: string,
     @Req() req
   ): Promise<PaginatedType<OutputPostDto>> {
-    console.log(req.user);
     return await this.postsQueryRepository.getAllByBlogId(query, blogId);
   }
 }
