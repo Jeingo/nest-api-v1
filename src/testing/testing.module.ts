@@ -7,6 +7,10 @@ import { Post, PostSchema } from '../posts/entities/post.entity';
 import { User, UserSchema } from '../users/entities/user.entity';
 import { Comment, CommentSchema } from '../comments/entities/comment.entity';
 import { Session, SessionSchema } from '../sessions/entities/session.entity';
+import {
+  PostLike,
+  PostLikeSchema
+} from '../post-likes/entities/post.like.entity';
 
 @Module({
   imports: [
@@ -15,7 +19,8 @@ import { Session, SessionSchema } from '../sessions/entities/session.entity';
       { name: Post.name, schema: PostSchema },
       { name: User.name, schema: UserSchema },
       { name: Comment.name, schema: CommentSchema },
-      { name: Session.name, schema: SessionSchema }
+      { name: Session.name, schema: SessionSchema },
+      { name: PostLike.name, schema: PostLikeSchema }
     ])
   ],
   controllers: [TestingController],

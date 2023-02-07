@@ -5,6 +5,10 @@ import { IUserModel, User } from '../users/entities/user.entity';
 import { IPostModel, Post } from '../posts/entities/post.entity';
 import { Comment, ICommentModel } from '../comments/entities/comment.entity';
 import { ISessionModel, Session } from '../sessions/entities/session.entity';
+import {
+  IPostLikeModel,
+  PostLike
+} from '../post-likes/entities/post.like.entity';
 
 @Injectable()
 export class TestingService {
@@ -13,7 +17,8 @@ export class TestingService {
     @InjectModel(User.name) private usersModel: IUserModel,
     @InjectModel(Post.name) private postsModel: IPostModel,
     @InjectModel(Comment.name) private commentsModel: ICommentModel,
-    @InjectModel(Session.name) private sessionsModel: ISessionModel
+    @InjectModel(Session.name) private sessionsModel: ISessionModel,
+    @InjectModel(PostLike.name) private postLikesModel: IPostLikeModel
   ) {}
 
   async removeAll() {
@@ -22,5 +27,6 @@ export class TestingService {
     await this.postsModel.deleteMany({});
     await this.commentsModel.deleteMany({});
     await this.sessionsModel.deleteMany({});
+    await this.postLikesModel.deleteMany({});
   }
 }
