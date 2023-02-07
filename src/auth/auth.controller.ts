@@ -55,8 +55,7 @@ export class AuthController {
     @Ip() ip: string,
     @Headers('user-agent') deviceName: string,
     @Res({ passthrough: true }) response: Response
-    // ): Promise<OutputAccessTokenDto> {
-  ) {
+  ): Promise<OutputAccessTokenDto> {
     const userId = await this.authService.checkCredentials(loginUserDto);
     if (!userId) {
       response.clearCookie('refreshToken');
@@ -73,7 +72,7 @@ export class AuthController {
       httpOnly: true,
       secure: cookieMode
     });
-    return { accessToken: accessToken, mode: cookieMode };
+    return { accessToken: accessToken };
   }
 
   @HttpCode(HttpStatus.OK)
