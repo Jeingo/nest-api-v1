@@ -16,6 +16,8 @@ import { UserDocument } from '../users/entities/user.entity';
 import { CommentsRepository } from './comments.repository';
 import { InputUpdateLikeDto } from './dto/input.update.like.dto';
 import { Types } from 'mongoose';
+import { PostsRepository } from '../posts/posts.repository';
+import { ICommentModel, Comment } from './entities/comment.entity';
 
 @Injectable()
 export class CommentsService {
@@ -23,8 +25,27 @@ export class CommentsService {
     private readonly commentLikesQueryRepository: CommentLikesQueryRepository,
     private readonly commentLikesRepository: CommentLikesRepository,
     private readonly commentRepository: CommentsRepository,
-    @InjectModel(CommentLike.name) private commentLikesModel: ICommentLikeModel
+    private readonly postsRepository: PostsRepository,
+    @InjectModel(CommentLike.name) private commentLikesModel: ICommentLikeModel,
+    @InjectModel(Comment.name) private commentsModel: ICommentModel
   ) {}
+
+  async create(
+    createCommentDto: InputCreateCommentDto,
+    postId: string,
+    user: UserDocument
+  ): Promise<DbId> {
+    const post = await this.postsRepository.getById(new Types.ObjectId(postId));
+    if (!post) throw new NotFoundException();
+    const createdComment = this.commentsModel.make(
+      createCommentDto.content,
+      user._id.toString(),
+      user.login,
+      postId
+    );
+    await this.commentRepository.save(createdComment);
+    return createdComment._id;
+  }
   async update(
     id: DbId,
     createCommentDto: InputCreateCommentDto,

@@ -20,6 +20,13 @@ import {
   CommentLike,
   CommentLikeSchema
 } from '../comment-likes/entities/comment.like.entity';
+import { User, UserSchema } from '../users/entities/user.entity';
+import { IJwtService } from '../infrastructure/jwt/jwt.service';
+import { UsersRepository } from '../users/users.repository';
+import { JwtService } from '@nestjs/jwt';
+import { CommentsService } from '../comments/comments.service';
+import { CommentsRepository } from '../comments/comments.repository';
+import { CommentLikesRepository } from '../comment-likes/comment.likes.repository';
 
 @Module({
   imports: [
@@ -28,7 +35,8 @@ import {
       { name: Blog.name, schema: BlogSchema },
       { name: Comment.name, schema: CommentSchema },
       { name: PostLike.name, schema: PostLikeSchema },
-      { name: CommentLike.name, schema: CommentLikeSchema }
+      { name: CommentLike.name, schema: CommentLikeSchema },
+      { name: User.name, schema: UserSchema }
     ])
   ],
   controllers: [PostsController],
@@ -40,7 +48,13 @@ import {
     CommentsQueryRepository,
     PostLikesQueryRepository,
     PostLikesRepository,
-    CommentLikesQueryRepository
+    CommentLikesQueryRepository,
+    IJwtService,
+    UsersRepository,
+    JwtService,
+    CommentsService,
+    CommentsRepository,
+    CommentLikesRepository
   ]
 })
 export class PostsModule {}

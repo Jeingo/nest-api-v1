@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { InputCreatePostDto } from './dto/input.create.post.dto';
 import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -29,10 +33,12 @@ export class PostsService {
 
   async create(createPostDto: InputCreatePostDto): Promise<DbId> {
     const { title, shortDescription, content, blogId } = createPostDto;
+    if (!Types.ObjectId.isValid(blogId))
+      throw new BadRequestException(['blogId ID is bad']);
     const foundBlog = await this.blogsRepository.getById(
       new Types.ObjectId(blogId)
     );
-    if (!foundBlog) throw new NotFoundException();
+    if (!foundBlog) throw new BadRequestException(['blogId ID not found']);
     const createdPost = this.postsModel.make(
       title,
       shortDescription,
@@ -66,10 +72,12 @@ export class PostsService {
 
   async update(id: DbId, updatePostDto: InputUpdatePostDto): Promise<boolean> {
     const { title, shortDescription, content, blogId } = updatePostDto;
+    if (!Types.ObjectId.isValid(blogId))
+      throw new BadRequestException(['blogId ID is bad']);
     const foundBlog = await this.blogsRepository.getById(
       new Types.ObjectId(blogId)
     );
-    if (!foundBlog) throw new NotFoundException();
+    if (!foundBlog) throw new BadRequestException(['blogId ID not found']);
     const post = await this.postsRepository.getById(id);
     if (!post) throw new NotFoundException();
     post.update(title, shortDescription, content, blogId, foundBlog.name);

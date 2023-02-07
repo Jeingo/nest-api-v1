@@ -28,7 +28,8 @@ export class CommentsQueryRepository {
 
   async getAllByPostId(
     query: QueryComments,
-    postId: string
+    postId: string,
+    user?: UserDocument
   ): Promise<PaginatedType<OutputCommentDto>> {
     const post = await this.postsRepository.getById(new Types.ObjectId(postId));
     if (!post) throw new NotFoundException();
@@ -49,9 +50,12 @@ export class CommentsQueryRepository {
       .skip(skipNumber)
       .limit(+pageSize);
     const mappedComments = result.map(this._getOutputComment);
-    //TODO after like
-    return getPaginatedType(
+    const mappedCommentsWithStatusLike = await this._setStatusLike(
       mappedComments,
+      user._id.toString()
+    );
+    return getPaginatedType(
+      mappedCommentsWithStatusLike,
       +pageSize,
       +pageNumber,
       countAllDocuments
@@ -87,5 +91,21 @@ export class CommentsQueryRepository {
         myStatus: 'None'
       }
     };
+  }
+  private async _setStatusLike(
+    comments: Array<OutputCommentDto>,
+    userId: string
+  ) {
+    if (!userId) return comments;
+    for (let i = 0; i < comments.length; i++) {
+      const like = await this.commentLikesQueryRepository.getLike(
+        userId,
+        comments[i].id
+      );
+      if (like) {
+        comments[i].likesInfo.myStatus = like.myStatus;
+      }
+    }
+    return comments;
   }
 }
