@@ -13,13 +13,20 @@ import { IJwtService } from '../infrastructure/jwt/jwt.service';
 import { UsersRepository } from '../users/users.repository';
 import { User, UserSchema } from '../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { PostLikesQueryRepository } from '../post-likes/post.likes.query.repository';
+import {
+  PostLike,
+  PostLikeSchema
+} from '../post-likes/entities/post.like.entity';
+import { PostLikesRepository } from '../post-likes/post.likes.repository';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },
-      { name: User.name, schema: UserSchema }
+      { name: User.name, schema: UserSchema },
+      { name: PostLike.name, schema: PostLikeSchema }
     ])
   ],
   controllers: [BlogsController],
@@ -32,7 +39,9 @@ import { JwtService } from '@nestjs/jwt';
     PostsRepository,
     IJwtService,
     UsersRepository,
-    JwtService
+    JwtService,
+    PostLikesQueryRepository,
+    PostLikesRepository
   ]
 })
 export class BlogsModule {}
