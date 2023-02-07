@@ -76,6 +76,7 @@ export class CommentsController {
   }
 
   @UseGuards(BearerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req) {
     if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
