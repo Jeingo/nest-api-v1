@@ -14,7 +14,7 @@ import { SessionsModule } from './sessions/sessions.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { PostLikesModule } from './post-likes/post.likes.module';
-import { CommentLikesModule } from './comment-likes/comment-likes.module';
+import { CommentLikesModule } from './comment-likes/comment.likes.module';
 
 const configService = new ConfigService<IConfigType>();
 
