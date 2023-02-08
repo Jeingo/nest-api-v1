@@ -190,7 +190,6 @@ describe('BlogsController (e2e)', () => {
         .auth('admin', 'qwerty')
         .send(correctPostById)
         .expect(HttpStatus.CREATED);
-      createdPost = response.body;
       expect(response.body).toEqual({
         id: expect.any(String),
         ...correctPostById,
