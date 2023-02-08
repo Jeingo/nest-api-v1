@@ -14,8 +14,10 @@ export class SessionsRepository {
   async save(session: SessionDocument): Promise<SessionDocument> {
     return session.save();
   }
-  async get(iat: string): Promise<SessionDocument> {
-    return this.sessionsModel.findOne({ issueAt: iat });
+  async get(iatOrDeviceId: string): Promise<SessionDocument> {
+    return this.sessionsModel
+      .findOne()
+      .or([{ issueAt: iatOrDeviceId }, { deviceId: iatOrDeviceId }]);
   }
   async updateSession(
     issueAt: string,
@@ -32,6 +34,16 @@ export class SessionsRepository {
     const result = await this.sessionsModel.findOneAndDelete({
       issueAt: issueAt
     });
+    return !!result;
+  }
+  async deleteSessionsWithoutCurrent(
+    userId: string,
+    issueAt: string
+  ): Promise<boolean> {
+    const result = await this.sessionsModel
+      .deleteMany({ userId: userId })
+      .where('issueAt')
+      .ne(issueAt);
     return !!result;
   }
 }
