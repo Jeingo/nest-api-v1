@@ -48,7 +48,7 @@ export class AuthService {
       payload.deviceId,
       payload.iat.toString()
     );
-    if (statusSession) return false;
+    if (!statusSession) return false;
     return payload;
   }
   async checkLoginAndEmail(
