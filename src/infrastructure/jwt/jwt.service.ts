@@ -18,10 +18,20 @@ export class IJwtService {
       refreshToken: refreshToken
     };
   }
-  checkExpiration(token: Token): boolean {
+  checkExpirationRefreshToken(token: Token): boolean {
     try {
       this.jwtService.verify(token, {
         secret: this.configService.get('JWT_REFRESH_SECRET')
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  checkExpirationAccessToken(token: Token): boolean {
+    try {
+      this.jwtService.verify(token, {
+        secret: this.configService.get('JWT_SECRET')
       });
       return true;
     } catch {

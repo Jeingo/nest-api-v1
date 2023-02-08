@@ -26,14 +26,23 @@ export class BearerGuard implements CanActivate {
     if (authorizationField[0] !== 'Bearer') {
       throw new UnauthorizedException();
     }
-
+    const checkResult = this.jwtService.checkExpirationAccessToken(
+      authorizationField[1]
+    );
+    if (!checkResult) {
+      throw new UnauthorizedException();
+    }
     const payload = this.jwtService.getPayload(authorizationField[1]);
     if (!payload) {
       throw new UnauthorizedException();
     }
-    request.user = await this.usersRepository.getById(
+    const user = await this.usersRepository.getById(
       new Types.ObjectId(payload.userId)
     );
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    request.user = user;
     return true;
   }
 }

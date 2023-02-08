@@ -41,7 +41,7 @@ export class AuthService {
   async checkAuthorizationAndGetPayload(
     refreshToken: Token
   ): Promise<TokenPayloadType | false> {
-    const result = this.jwtService.checkExpiration(refreshToken);
+    const result = this.jwtService.checkExpirationRefreshToken(refreshToken);
     if (!result) return false;
     const payload = this.jwtService.getPayload(refreshToken);
     const statusSession = await this.sessionsService.isActiveSession(
