@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { Trim } from '../../helper/pipes/validation.pipe';
 
 export class InputCreatePostDto {
@@ -20,6 +20,7 @@ export class InputCreatePostDto {
   @Trim()
   content: string;
 
+  @IsMongoId()
   @IsString()
   @IsNotEmpty()
   @Trim()
