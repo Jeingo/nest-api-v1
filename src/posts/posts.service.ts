@@ -113,6 +113,14 @@ export class PostsService {
       await this.postLikesRepository.save(postLike);
       lastStatus = likeInfo.myStatus;
     }
+    //todo refactoring
+    //post.addLike(like)
+    //add like -> like.update(postId, status)
+    //like update -> this.postId = postId...
+    //virtual like
+    //repo.addLikeToPost(post, like)
+    //post.save()
+    //post.virtualLike.save()
     return await this.postsRepository.updateLikeInPost(
       post,
       lastStatus,
