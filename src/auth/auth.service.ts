@@ -46,7 +46,7 @@ export class AuthService {
     const payload = this.jwtService.getPayload(refreshToken);
     const statusSession = await this.sessionsService.isActiveSession(
       payload.deviceId,
-      payload.iat.toString()
+      new Date(payload.iat * 1000).toISOString()
     );
     if (!statusSession) return false;
     return payload;
