@@ -1,5 +1,6 @@
-import { IsMongoId, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, Validate } from 'class-validator';
 import { Trim } from '../../helper/pipes/validation.pipe';
+import { IsBlogIdConstraint } from '../blogId.validator';
 
 export class InputCreatePostDto {
   @MaxLength(30)
@@ -20,7 +21,7 @@ export class InputCreatePostDto {
   @Trim()
   content: string;
 
-  @IsMongoId()
+  @Validate(IsBlogIdConstraint)
   @IsString()
   @IsNotEmpty()
   @Trim()

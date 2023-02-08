@@ -27,6 +27,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CommentsService } from '../comments/comments.service';
 import { CommentsRepository } from '../comments/comments.repository';
 import { CommentLikesRepository } from '../comment-likes/comment.likes.repository';
+import { IsBlogIdConstraint } from './blogId.validator';
 
 @Module({
   imports: [
@@ -54,7 +55,8 @@ import { CommentLikesRepository } from '../comment-likes/comment.likes.repositor
     JwtService,
     CommentsService,
     CommentsRepository,
-    CommentLikesRepository
+    CommentLikesRepository,
+    IsBlogIdConstraint
   ]
 })
 export class PostsModule {}
