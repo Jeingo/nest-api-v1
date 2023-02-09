@@ -14,7 +14,7 @@ import {
 } from './stubs/users.stub';
 import { errorsMessageForIncorrectUser } from './stubs/error.stub';
 
-describe.skip('UsersController (e2e)', () => {
+describe('UsersController (e2e)', () => {
   let nestApp: INestApplication;
   let app: any;
   let createdUser: any;

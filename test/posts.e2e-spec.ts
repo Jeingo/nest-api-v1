@@ -24,7 +24,7 @@ import {
   correctPostLikeStatus
 } from './stubs/post.likes.stub';
 
-describe.skip('PostsController (e2e)', () => {
+describe('PostsController (e2e)', () => {
   let nestApp: INestApplication;
   let app: any;
   let createdBlog: any;

@@ -28,7 +28,7 @@ import {
   correctCommentLikeStatus
 } from './stubs/comment.likes.stub';
 
-describe.skip('CommentsController (e2e)', () => {
+describe('CommentsController (e2e)', () => {
   let nestApp: INestApplication;
   let app: any;
   let createdComment: any;

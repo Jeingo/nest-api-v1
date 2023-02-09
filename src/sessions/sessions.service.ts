@@ -57,10 +57,9 @@ export class SessionsService {
       deviceId
     );
   }
-  async isActiveSession(deviceId: string, iat: string): Promise<boolean> {
-    const result = await this.sessionsRepository.get(iat);
-    if (!result) return false;
-    return result.deviceId === deviceId;
+  async isActiveSession(deviceId: string): Promise<boolean> {
+    const result = await this.sessionsRepository.get(deviceId);
+    return !!result;
   }
   async deleteSession(iat: number): Promise<boolean> {
     const issueAt = new Date(iat * 1000).toISOString();

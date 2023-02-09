@@ -21,7 +21,7 @@ import {
   incorrectPostById
 } from './stubs/posts.stub';
 
-describe.skip('BlogsController (e2e)', () => {
+describe('BlogsController (e2e)', () => {
   let nestApp: INestApplication;
   let app: any;
   let createdBlog: any;

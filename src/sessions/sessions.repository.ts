@@ -14,10 +14,8 @@ export class SessionsRepository {
   async save(session: SessionDocument): Promise<SessionDocument> {
     return session.save();
   }
-  async get(iatOrDeviceId: string): Promise<SessionDocument> {
-    return this.sessionsModel
-      .findOne()
-      .or([{ issueAt: iatOrDeviceId }, { deviceId: iatOrDeviceId }]);
+  async get(deviceId: string): Promise<SessionDocument> {
+    return this.sessionsModel.findOne({ deviceId: deviceId });
   }
   async updateSession(
     issueAt: string,
