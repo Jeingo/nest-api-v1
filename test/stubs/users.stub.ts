@@ -4,6 +4,12 @@ export const correctUser = {
   email: 'email@gmail.com'
 };
 
+export const incorrectUser = {
+  login: '',
+  password: '',
+  email: ''
+};
+
 export const correctLogin = {
   loginOrEmail: 'login',
   password: 'password'
@@ -29,4 +35,25 @@ export const correctUser2 = {
 export const correctLogin2 = {
   loginOrEmail: 'login2',
   password: 'password2'
+};
+
+export const emptyUsers = {
+  pagesCount: 0,
+  page: 1,
+  pageSize: 10,
+  totalCount: 0,
+  items: []
+};
+
+export const someQuery = {
+  pageNumber: 2,
+  pageSize: 5
+};
+
+export const emptyUsersWithQuery = {
+  pagesCount: 0,
+  page: 2,
+  pageSize: 5,
+  totalCount: 0,
+  items: []
 };

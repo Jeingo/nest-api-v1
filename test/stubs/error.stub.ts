@@ -79,3 +79,20 @@ export const errorsMessageForIncorrectCommentLike = {
     }
   ]
 };
+
+export const errorsMessageForIncorrectUser = {
+  errorsMessages: [
+    {
+      message: 'should not be empty',
+      field: 'login'
+    },
+    {
+      message: 'should not be empty',
+      field: 'password'
+    },
+    {
+      message: 'should not be empty',
+      field: 'email'
+    }
+  ]
+};

@@ -8,7 +8,8 @@ import {
   HttpCode,
   HttpStatus,
   Query,
-  UseGuards
+  UseGuards,
+  NotFoundException
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { InputCreateUserDto } from './dto/input.create.user.dto';
@@ -47,6 +48,7 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id') id: string) {
+    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
     return this.usersService.remove(new Types.ObjectId(id));
   }
 }
