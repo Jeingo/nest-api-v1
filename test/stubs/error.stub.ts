@@ -31,3 +31,33 @@ export const errorsMessageForIncorrectPost = {
     }
   ]
 };
+
+export const errorsMessageForIncorrectPostWithBlogId = {
+  errorsMessages: [
+    {
+      message: 'should not be empty',
+      field: 'title'
+    },
+    {
+      message: 'should not be empty',
+      field: 'shortDescription'
+    },
+    {
+      message: 'should not be empty',
+      field: 'content'
+    },
+    {
+      message: 'should not be empty',
+      field: 'blogId'
+    }
+  ]
+};
+
+export const errorsMessageForIncorrectComment = {
+  errorsMessages: [
+    {
+      message: 'should not be empty',
+      field: 'content'
+    }
+  ]
+};

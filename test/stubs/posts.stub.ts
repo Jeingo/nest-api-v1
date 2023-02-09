@@ -12,6 +12,13 @@ export const correctNewPost = {
   blogId: '1'
 };
 
+export const incorrectPost = {
+  title: '',
+  shortDescription: '',
+  content: '',
+  blogId: ''
+};
+
 export const correctPostById = {
   title: 'Title',
   shortDescription: 'Short Description',
