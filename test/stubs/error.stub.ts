@@ -96,3 +96,69 @@ export const errorsMessageForIncorrectUser = {
     }
   ]
 };
+
+export const errorsMessageForIncorrectLogin = {
+  errorsMessages: [
+    {
+      message: 'should not be empty',
+      field: 'loginOrEmail'
+    },
+    {
+      message: 'should not be empty',
+      field: 'password'
+    }
+  ]
+};
+
+export const errorsMessageForRegistration = {
+  errorsMessages: [
+    {
+      message: 'is already exist',
+      field: 'login'
+    },
+    {
+      message: 'is already exist',
+      field: 'email'
+    }
+  ]
+};
+
+export const errorsMessageForConfirmation = {
+  errorsMessages: [
+    {
+      message: 'code is wrong',
+      field: 'code'
+    }
+  ]
+};
+
+export const errorsMessageForEmailResending = {
+  errorsMessages: [
+    {
+      message: 'email is wrong',
+      field: 'email'
+    }
+  ]
+};
+
+export const errorsMessageForPasswordRecovery = {
+  errorsMessages: [
+    {
+      message: 'must be an email',
+      field: 'email'
+    }
+  ]
+};
+
+export const errorsMessageForNewPassword = {
+  errorsMessages: [
+    {
+      message: 'must be longer than or equal to 6 characters',
+      field: 'newPassword'
+    },
+    {
+      message: 'should not be empty',
+      field: 'recoveryCode'
+    }
+  ]
+};

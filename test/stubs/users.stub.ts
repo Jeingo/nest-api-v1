@@ -15,6 +15,16 @@ export const correctLogin = {
   password: 'password'
 };
 
+export const incorrectLogin = {
+  login: '',
+  password: ''
+};
+
+export const correctBadLogin = {
+  loginOrEmail: 'login',
+  password: 'bad-password'
+};
+
 export const correctUser1 = {
   login: 'login1',
   password: 'password',
@@ -29,7 +39,7 @@ export const correctLogin1 = {
 export const correctUser2 = {
   login: 'login2',
   password: 'password2',
-  email: 'email@gmail.com'
+  email: 'email2@gmail.com'
 };
 
 export const correctLogin2 = {
