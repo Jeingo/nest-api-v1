@@ -61,3 +61,21 @@ export const errorsMessageForIncorrectComment = {
     }
   ]
 };
+
+export const errorsMessageForIncorrectPostLike = {
+  errorsMessages: [
+    {
+      message: 'should not be empty',
+      field: 'likeStatus'
+    }
+  ]
+};
+
+export const errorsMessageForIncorrectCommentLike = {
+  errorsMessages: [
+    {
+      message: 'should not be empty',
+      field: 'likeStatus'
+    }
+  ]
+};

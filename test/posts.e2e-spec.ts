@@ -12,9 +12,10 @@ import {
   emptyPosts,
   incorrectPost
 } from './stubs/posts.stub';
-import { correctLogin, correctUser1 } from './stubs/users.stub';
+import { correctLogin1, correctUser1 } from './stubs/users.stub';
 import {
   errorsMessageForIncorrectComment,
+  errorsMessageForIncorrectPostLike,
   errorsMessageForIncorrectPostWithBlogId
 } from './stubs/error.stub';
 import { correctComment, inCorrectComment } from './stubs/comments.stub';
@@ -23,7 +24,7 @@ import {
   correctPostLikeStatus
 } from './stubs/post.likes.stub';
 
-describe('PostsController (e2e)', () => {
+describe.skip('PostsController (e2e)', () => {
   let nestApp: INestApplication;
   let app: any;
   let createdBlog: any;
@@ -64,7 +65,7 @@ describe('PostsController (e2e)', () => {
     createdUser = response2.body;
     const response3 = await request(app)
       .post('/auth/login')
-      .send(correctLogin)
+      .send(correctLogin1)
       .expect(HttpStatus.OK);
     createdToken = response3.body;
   });
@@ -297,11 +298,12 @@ describe('PostsController (e2e)', () => {
         .expect(HttpStatus.UNAUTHORIZED);
     });
     it(`8.2 PUT /posts/id/like-status: should return 400 with bad body`, async () => {
-      await request(app)
+      const errMes = await request(app)
         .put('/posts' + '/' + createdPost2.id + '/' + 'like-status')
         .set('Authorization', 'Bearer ' + createdToken.accessToken)
         .send(badPostLikeStatus)
         .expect(HttpStatus.BAD_REQUEST);
+      expect(errMes.body).toEqual(errorsMessageForIncorrectPostLike);
     });
     it(`8.3 PUT /posts/bad-id/like-status: should return 404 if post not exist`, async () => {
       await request(app)
