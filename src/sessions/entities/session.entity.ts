@@ -51,6 +51,7 @@ SessionSchema.statics.make = function (
   userId: string,
   expireAt: string
 ) {
+  deviceName = deviceName ? deviceName : 'some device';
   return new this({
     issueAt: issueAt,
     deviceId: deviceId,

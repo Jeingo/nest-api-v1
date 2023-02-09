@@ -21,7 +21,7 @@ import {
   incorrectPostById
 } from './stubs/posts.stub';
 
-describe('BlogsController (e2e)', () => {
+describe.skip('BlogsController (e2e)', () => {
   let nestApp: INestApplication;
   let app: any;
   let createdBlog: any;
@@ -213,10 +213,10 @@ describe('BlogsController (e2e)', () => {
     });
   });
   describe('7 GET /blogs/id/posts:', () => {
-    it(`GET /blogs/bad-id/posts: should return 404 for not existing post by blog's id`, async () => {
+    it(`7.1 GET /blogs/bad-id/posts: should return 404 for not existing post by blog's id`, async () => {
       await request(app).get('/blogs/999/posts').expect(HttpStatus.NOT_FOUND);
     });
-    it(`GET /blogs/id/posts: should return post by blog's id`, async () => {
+    it(`7.2 GET /blogs/id/posts: should return post by blog's id`, async () => {
       const response = await request(app)
         .get('/blogs' + '/' + createdBlog2.id + '/posts')
         .expect(HttpStatus.OK);

@@ -53,7 +53,8 @@ export class AuthController {
   async login(
     @Body() loginUserDto: InputLoginUserDto,
     @Ip() ip: string,
-    @Headers('user-agent') deviceName: string,
+    @Headers('user-agent')
+    deviceName: string,
     @Res({ passthrough: true }) response: Response
   ): Promise<OutputAccessTokenDto> {
     const userId = await this.authService.checkCredentials(loginUserDto);
