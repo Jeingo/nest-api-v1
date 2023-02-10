@@ -1,7 +1,7 @@
-import { LikeStatus } from '../../types/types';
+import { LikeStatus } from '../../global-types/global.types';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Trim } from '../../helper/pipes/validation.pipe';
-import { IsLike } from '../../helper/decorators/isLike.decorator';
+import { Trim } from '../../helper/decorators/to.trim.decorator';
+import { IsLike } from '../../helper/decorators/is.like.decorator';
 
 export class InputUpdatePostLikeDto {
   @IsLike()

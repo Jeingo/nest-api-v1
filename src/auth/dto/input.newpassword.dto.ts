@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, Length } from 'class-validator';
-import { Trim } from '../../helper/pipes/validation.pipe';
+import { Trim } from '../../helper/decorators/to.trim.decorator';
 
 export class InputNewPasswordDto {
   @Length(6, 20)

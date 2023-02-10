@@ -5,7 +5,7 @@ import {
   PostLike,
   PostLikeDocument
 } from './entities/post.like.entity';
-import { DbId } from '../types/types';
+import { DbId } from '../global-types/global.types';
 
 @Injectable()
 export class PostLikesRepository {

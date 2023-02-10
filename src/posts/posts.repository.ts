@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IPostModel, Post, PostDocument } from './entities/post.entity';
-import { DbId, LikeStatus } from '../types/types';
+import { DbId, LikeStatus } from '../global-types/global.types';
 import { getUpdatedLike } from '../helper/query/post.like.repository.helper';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IUserModel, User, UserDocument } from './entities/user.entity';
-import { DbId, Direction } from '../types/types';
+import { DbId, Direction } from '../global-types/global.types';
 import { OutputUserDto } from './dto/output.user.dto';
 import { QueryUsers } from './types/users.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';

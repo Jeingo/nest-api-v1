@@ -10,7 +10,7 @@ import {
 } from '../comment-likes/entities/comment.like.entity';
 import { CommentLikesRepository } from '../comment-likes/comment.likes.repository';
 import { CommentLikesQueryRepository } from '../comment-likes/comment.like.query.repository';
-import { DbId, LikeStatus } from '../types/types';
+import { DbId, LikeStatus } from '../global-types/global.types';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
 import { UserDocument } from '../users/entities/user.entity';
 import { CommentsRepository } from './comments.repository';

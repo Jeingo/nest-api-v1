@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DbId, Direction, LikeStatus } from '../types/types';
+import { DbId, Direction, LikeStatus } from '../global-types/global.types';
 import { OutputCommentDto } from './dto/output.comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import {

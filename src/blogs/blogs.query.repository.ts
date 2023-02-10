@@ -8,7 +8,7 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
-import { DbId, Direction } from '../types/types';
+import { DbId, Direction } from '../global-types/global.types';
 
 @Injectable()
 export class BlogsQueryRepository {

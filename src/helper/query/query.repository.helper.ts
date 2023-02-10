@@ -1,5 +1,5 @@
 import { PaginatedType } from './types.query.repository.helper';
-import { Direction } from '../../types/types';
+import { Direction } from '../../global-types/global.types';
 
 export const getPaginatedType = <T>(
   items: T[],

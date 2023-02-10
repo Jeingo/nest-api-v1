@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtAdapter } from '../../infrastructure/jwt/jwt.service';
+import { JwtAdapter } from '../../adapters/jwt/jwt.service';
 import { UsersRepository } from '../../users/users.repository';
 import { Types } from 'mongoose';
 

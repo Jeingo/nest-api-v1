@@ -1,4 +1,4 @@
-import { LikeStatus } from '../../types/types';
+import { LikeStatus } from '../../global-types/global.types';
 
 export type LikesInfoType = {
   likesCount: number;

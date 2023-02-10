@@ -1,18 +1,17 @@
 import {
   registerDecorator,
-  ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface
 } from 'class-validator';
+import { LikeStatus } from '../../global-types/global.types';
 
 @ValidatorConstraint()
 export class IsLikeConstraint implements ValidatorConstraintInterface {
-  validate(like: any, args: ValidationArguments) {
-    const availableStatus = ['None', 'Like', 'Dislike'];
-    return availableStatus.indexOf(like) !== -1;
+  validate(like: LikeStatus) {
+    return Object.values(LikeStatus).includes(like);
   }
-  defaultMessage(args: ValidationArguments) {
+  defaultMessage() {
     return `likeStatus it isn't available like status`;
   }
 }

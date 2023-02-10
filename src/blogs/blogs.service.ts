@@ -4,7 +4,7 @@ import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { BlogsRepository } from './blogs.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, IBlogModel } from './entities/blog.entity';
-import { DbId } from '../types/types';
+import { DbId } from '../global-types/global.types';
 
 @Injectable()
 export class BlogsService {

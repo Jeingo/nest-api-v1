@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsString, MaxLength, Validate } from 'class-validator';
-import { Trim } from '../../helper/pipes/validation.pipe';
-import { IsBlogIdConstraint } from '../../helper/pipes/blogId.validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { Trim } from '../../helper/decorators/to.trim.decorator';
+import { IsBlogId } from '../../helper/decorators/is.blog.id.decorator';
 
 export class InputCreatePostDto {
   @MaxLength(30)
@@ -21,7 +21,7 @@ export class InputCreatePostDto {
   @Trim()
   content: string;
 
-  @Validate(IsBlogIdConstraint)
+  @IsBlogId()
   @IsString()
   @IsNotEmpty()
   @Trim()

@@ -9,8 +9,8 @@ import { IConfigType } from '../configuration/configuration';
 import { InjectModel } from '@nestjs/mongoose';
 import { ISessionModel, Session } from './entities/session.entity';
 import { SessionsRepository } from './sessions.repository';
-import { DbId } from '../types/types';
-import { Token } from '../infrastructure/types/jwt.type';
+import { DbId } from '../global-types/global.types';
+import { Token } from '../adapters/jwt/types/jwt.type';
 
 @Injectable()
 export class SessionsService {

@@ -15,7 +15,7 @@ import {
 import { AuthService } from './auth.service';
 import { InputLoginUserDto } from './dto/input.login.user.dto';
 import { UsersService } from '../users/users.service';
-import { JwtAdapter } from '../infrastructure/jwt/jwt.service';
+import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { v4 } from 'uuid';
 import { SessionsService } from '../sessions/sessions.service';
 import { OutputAccessTokenDto } from './dto/output.token.dto';
@@ -24,7 +24,7 @@ import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
 import { Throttle } from '@nestjs/throttler';
 import { Cookies } from '../helper/decorators/cookie.decorator';
-import { BearerGuard } from '../helper/guards/bearer.guard';
+import { BearerGuard } from './guards/bearer.guard';
 import { UsersQueryRepository } from '../users/users.query.repository';
 import { OutputUserMeDto } from './dto/output.user.me.dto';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';

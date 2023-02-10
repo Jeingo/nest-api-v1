@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, IsUrl, MaxLength } from 'class-validator';
-import { Trim } from '../../helper/pipes/validation.pipe';
+import { Trim } from '../../helper/decorators/to.trim.decorator';
 
 export class InputCreateBlogDto {
   @MaxLength(15)

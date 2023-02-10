@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { DbId } from '../types/types';
+import { DbId } from '../global-types/global.types';
 import {
   CommentLike,
   CommentLikeDocument,

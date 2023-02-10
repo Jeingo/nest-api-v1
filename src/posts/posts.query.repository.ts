@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IPostModel, Post, PostDocument } from './entities/post.entity';
-import { DbId, Direction, LikeStatus } from '../types/types';
+import { DbId, Direction, LikeStatus } from '../global-types/global.types';
 import { OutputPostDto } from './dto/output.post.dto';
 import { QueryPosts } from './types/posts.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';

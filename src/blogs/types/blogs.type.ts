@@ -1,4 +1,4 @@
-import { Direction } from '../../types/types';
+import { Direction } from '../../global-types/global.types';
 
 export type QueryBlogs = {
   searchNameTerm?: string;

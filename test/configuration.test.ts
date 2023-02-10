@@ -2,7 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { useContainer } from 'class-validator';
-import { HttpExceptionFilter } from '../src/helper/expceptionFilter/exception.filter';
+import { HttpExceptionFilter } from '../src/helper/expception-filter/exception.filter';
 import cookieParser from 'cookie-parser';
 
 export async function setConfigNestApp(): Promise<INestApplication> {

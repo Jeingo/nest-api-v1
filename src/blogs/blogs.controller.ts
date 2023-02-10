@@ -25,8 +25,8 @@ import { PostsService } from '../posts/posts.service';
 import { PostsQueryRepository } from '../posts/posts.query.repository';
 import { QueryPosts } from '../posts/types/posts.type';
 import { OutputPostDto } from '../posts/dto/output.post.dto';
-import { BasicGuard } from '../helper/guards/basic.guard';
-import { GetUserGuard } from '../helper/guards/get.user.guard';
+import { BasicGuard } from '../auth/guards/basic.guard';
+import { GetUserGuard } from '../auth/guards/get.user.guard';
 import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
 
 @Controller('blogs')

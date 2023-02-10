@@ -1,4 +1,6 @@
 import {
+  registerDecorator,
+  ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface
 } from 'class-validator';
@@ -6,7 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { BlogsRepository } from '../../blogs/blogs.repository';
 
-@ValidatorConstraint({ name: 'blogId', async: true })
+@ValidatorConstraint({ async: true })
 @Injectable()
 export class IsBlogIdConstraint implements ValidatorConstraintInterface {
   constructor(private readonly blogsRepository: BlogsRepository) {}
@@ -18,4 +20,16 @@ export class IsBlogIdConstraint implements ValidatorConstraintInterface {
   defaultMessage() {
     return `blogId it isn't correct`;
   }
+}
+
+export function IsBlogId(validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsBlogIdConstraint
+    });
+  };
 }

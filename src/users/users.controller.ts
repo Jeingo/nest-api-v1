@@ -17,7 +17,7 @@ import { UsersQueryRepository } from './users.query.repository';
 import { QueryUsers } from './types/users.type';
 import { Types } from 'mongoose';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
-import { BasicGuard } from '../helper/guards/basic.guard';
+import { BasicGuard } from '../auth/guards/basic.guard';
 import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
 
 @UseGuards(BasicGuard)

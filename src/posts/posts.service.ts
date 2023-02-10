@@ -8,7 +8,7 @@ import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostsRepository } from './posts.repository';
 import { IPostModel, Post } from './entities/post.entity';
-import { DbId, LikeStatus } from '../types/types';
+import { DbId, LikeStatus } from '../global-types/global.types';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
 import { InputCreatePostInBlogsDto } from '../blogs/dto/input.create.post.dto';
