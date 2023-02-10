@@ -1,4 +1,4 @@
-import { StatusLikeType } from '../../types/types';
+import { LikeStatus } from '../../types/types';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Trim } from '../../helper/pipes/validation.pipe';
 import { IsLike } from '../../helper/decorators/isLike.decorator';
@@ -8,5 +8,5 @@ export class InputUpdateLikeDto {
   @IsString()
   @IsNotEmpty()
   @Trim()
-  likeStatus: StatusLikeType;
+  likeStatus: LikeStatus;
 }

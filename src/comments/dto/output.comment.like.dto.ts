@@ -1,8 +1,8 @@
-import { StatusLikeType } from '../../types/types';
+import { LikeStatus } from '../../types/types';
 
 export class OutputCommentLikeDto {
   id: string;
   userId: string;
   commentId: string;
-  myStatus: StatusLikeType;
+  myStatus: LikeStatus;
 }

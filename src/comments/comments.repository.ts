@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { DbId, StatusLikeType } from '../types/types';
+import { DbId, LikeStatus } from '../types/types';
 import {
   CommentDocument,
   ICommentModel,
@@ -24,8 +24,8 @@ export class CommentsRepository {
   }
   async updateLikeInComment(
     comment: CommentDocument,
-    lastStatus: StatusLikeType,
-    newStatus: StatusLikeType
+    lastStatus: LikeStatus,
+    newStatus: LikeStatus
   ): Promise<boolean> {
     const newLikesInfo = getUpdatedLike(
       {

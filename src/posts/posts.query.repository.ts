@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IPostModel, Post, PostDocument } from './entities/post.entity';
-import { DbId } from '../types/types';
+import { DbId, LikeStatus } from '../types/types';
 import { OutputPostDto } from './dto/output.post.dto';
 import { QueryPosts } from './types/posts.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
@@ -127,7 +127,7 @@ export class PostsQueryRepository {
       extendedLikesInfo: {
         likesCount: post.extendedLikesInfo.likesCount,
         dislikesCount: post.extendedLikesInfo.dislikesCount,
-        myStatus: 'None',
+        myStatus: LikeStatus.None,
         newestLikes: []
       }
     };

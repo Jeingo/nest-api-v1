@@ -1,4 +1,4 @@
-import { StatusLikeType } from '../../types/types';
+import { LikeStatus } from '../../types/types';
 
 export type LikesInfoType = {
   likesCount: number;
@@ -7,29 +7,29 @@ export type LikesInfoType = {
 
 export function getUpdatedLike(
   likesInfo: LikesInfoType,
-  lastStatus: StatusLikeType,
-  newStatus: StatusLikeType
+  lastStatus: LikeStatus,
+  newStatus: LikeStatus
 ) {
-  if (newStatus === 'None' && lastStatus === 'Like') {
+  if (newStatus === LikeStatus.None && lastStatus === LikeStatus.Like) {
     return { ...likesInfo, likesCount: --likesInfo.likesCount };
   }
-  if (newStatus === 'None' && lastStatus === 'Dislike') {
+  if (newStatus === LikeStatus.None && lastStatus === LikeStatus.DisLike) {
     return { ...likesInfo, dislikesCount: --likesInfo.dislikesCount };
   }
-  if (newStatus === 'Like' && lastStatus === 'None') {
+  if (newStatus === LikeStatus.Like && lastStatus === LikeStatus.None) {
     return { ...likesInfo, likesCount: ++likesInfo.likesCount };
   }
-  if (newStatus === 'Like' && lastStatus === 'Dislike') {
+  if (newStatus === LikeStatus.Like && lastStatus === LikeStatus.DisLike) {
     return {
       ...likesInfo,
       likesCount: ++likesInfo.likesCount,
       dislikesCount: --likesInfo.dislikesCount
     };
   }
-  if (newStatus === 'Dislike' && lastStatus === 'None') {
+  if (newStatus === LikeStatus.DisLike && lastStatus === LikeStatus.None) {
     return { ...likesInfo, dislikesCount: ++likesInfo.dislikesCount };
   }
-  if (newStatus === 'Dislike' && lastStatus === 'Like') {
+  if (newStatus === LikeStatus.DisLike && lastStatus === LikeStatus.Like) {
     return {
       ...likesInfo,
       likesCount: --likesInfo.likesCount,

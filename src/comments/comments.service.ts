@@ -10,7 +10,7 @@ import {
 } from '../comment-likes/entities/comment.like.entity';
 import { CommentLikesRepository } from '../comment-likes/comment.likes.repository';
 import { CommentLikesQueryRepository } from '../comment-likes/comment.like.query.repository';
-import { DbId, StatusLikeType } from '../types/types';
+import { DbId, LikeStatus } from '../types/types';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
 import { UserDocument } from '../users/entities/user.entity';
 import { CommentsRepository } from './comments.repository';
@@ -69,9 +69,9 @@ export class CommentsService {
   async updateStatusLike(
     user: UserDocument,
     commentId: string,
-    newLikeStatus: StatusLikeType
+    newLikeStatus: LikeStatus
   ): Promise<boolean> {
-    let lastLikeStatus: StatusLikeType = 'None';
+    let lastLikeStatus: LikeStatus = LikeStatus.None;
     const comment = await this.commentRepository.getById(
       new Types.ObjectId(commentId)
     );

@@ -1,4 +1,4 @@
-import { StatusLikeType } from '../../types/types';
+import { LikeStatus } from '../../types/types';
 
 export class OutputCommentDto {
   id: string;
@@ -11,6 +11,6 @@ export class OutputCommentDto {
   likesInfo: {
     likesCount: number;
     dislikesCount: number;
-    myStatus: StatusLikeType;
+    myStatus: LikeStatus;
   };
 }

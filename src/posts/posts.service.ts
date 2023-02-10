@@ -8,7 +8,7 @@ import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostsRepository } from './posts.repository';
 import { IPostModel, Post } from './entities/post.entity';
-import { DbId, StatusLikeType } from '../types/types';
+import { DbId, LikeStatus } from '../types/types';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
 import { InputCreatePostInBlogsDto } from '../blogs/dto/input.create.post.dto';
@@ -94,9 +94,9 @@ export class PostsService {
     userId: string,
     postId: string,
     login: string,
-    newLikeStatus: StatusLikeType
+    newLikeStatus: LikeStatus
   ): Promise<boolean> {
-    let lastStatus: StatusLikeType = 'None';
+    let lastStatus: LikeStatus = LikeStatus.None;
     const post = await this.postsRepository.getById(new Types.ObjectId(postId));
     if (!post) throw new NotFoundException();
     const likeInfo = await this.postLikesQueryRepository.getLike(

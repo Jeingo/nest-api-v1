@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DbId } from '../types/types';
+import { DbId, LikeStatus } from '../types/types';
 import { OutputCommentDto } from './dto/output.comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import {
@@ -88,7 +88,7 @@ export class CommentsQueryRepository {
       likesInfo: {
         likesCount: comment.likesInfo.likesCount,
         dislikesCount: comment.likesInfo.dislikesCount,
-        myStatus: 'None'
+        myStatus: LikeStatus.None
       }
     };
   }

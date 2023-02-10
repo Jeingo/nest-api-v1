@@ -1,10 +1,10 @@
-import { StatusLikeType } from '../../types/types';
+import { LikeStatus } from '../../types/types';
 
 export class OutputPostLikeDto {
   id: string;
   userId: string;
   postId: string;
-  myStatus: StatusLikeType;
+  myStatus: LikeStatus;
   login: string;
   addedAt: string;
 }

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { StatusLikeType } from '../../types/types';
+import { LikeStatus } from '../../types/types';
 
 export type PostLikeDocument = HydratedDocument<PostLike>;
 
@@ -9,7 +9,7 @@ type StaticPostLikeMethods = {
     this: IPostLikeModel,
     userId: string,
     postId: string,
-    myStatus: StatusLikeType,
+    myStatus: LikeStatus,
     login: string
   ) => PostLikeDocument;
 };
@@ -25,7 +25,7 @@ export class PostLike {
   postId: string;
 
   @Prop({ required: true })
-  myStatus: StatusLikeType;
+  myStatus: LikeStatus;
 
   @Prop({ required: true })
   login: string;
@@ -33,7 +33,7 @@ export class PostLike {
   @Prop({ required: true })
   addedAt: string;
 
-  update: (myStatus: StatusLikeType) => PostLikeDocument;
+  update: (myStatus: LikeStatus) => PostLikeDocument;
 }
 
 export const PostLikeSchema = SchemaFactory.createForClass(PostLike);
@@ -42,7 +42,7 @@ PostLikeSchema.statics.make = function (
   this: IPostLikeModel,
   userId: string,
   postId: string,
-  myStatus: StatusLikeType,
+  myStatus: LikeStatus,
   login: string
 ) {
   return new this({
@@ -54,6 +54,6 @@ PostLikeSchema.statics.make = function (
   });
 };
 
-PostLikeSchema.methods.update = function (myStatus: StatusLikeType) {
+PostLikeSchema.methods.update = function (myStatus: LikeStatus) {
   this.myStatus = myStatus;
 };

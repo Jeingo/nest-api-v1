@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { StatusLikeType } from '../../types/types';
+import { LikeStatus } from '../../types/types';
 
 export type CommentLikeDocument = HydratedDocument<CommentLike>;
 
@@ -9,7 +9,7 @@ type StaticCommentLikeMethods = {
     this: ICommentLikeModel,
     userId: string,
     commentId: string,
-    myStatus: StatusLikeType
+    myStatus: LikeStatus
   ) => CommentLikeDocument;
 };
 
@@ -25,9 +25,9 @@ export class CommentLike {
   commentId: string;
 
   @Prop({ required: true })
-  myStatus: StatusLikeType;
+  myStatus: LikeStatus;
 
-  update: (myStatus: StatusLikeType) => CommentLikeDocument;
+  update: (myStatus: LikeStatus) => CommentLikeDocument;
 }
 
 export const CommentLikeSchema = SchemaFactory.createForClass(CommentLike);
@@ -36,7 +36,7 @@ CommentLikeSchema.statics.make = function (
   this: ICommentLikeModel,
   userId: string,
   commentId: string,
-  myStatus: StatusLikeType
+  myStatus: LikeStatus
 ) {
   return new this({
     userId: userId,
@@ -45,6 +45,6 @@ CommentLikeSchema.statics.make = function (
   });
 };
 
-CommentLikeSchema.methods.update = function (myStatus: StatusLikeType) {
+CommentLikeSchema.methods.update = function (myStatus: LikeStatus) {
   this.myStatus = myStatus;
 };

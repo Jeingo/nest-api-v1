@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IPostModel, Post, PostDocument } from './entities/post.entity';
-import { DbId, StatusLikeType } from '../types/types';
+import { DbId, LikeStatus } from '../types/types';
 import { getUpdatedLike } from '../helper/query/post.like.repository.helper';
 
 @Injectable()
@@ -19,8 +19,8 @@ export class PostsRepository {
   }
   async updateLikeInPost(
     post: PostDocument,
-    lastStatus: StatusLikeType,
-    newStatus: StatusLikeType
+    lastStatus: LikeStatus,
+    newStatus: LikeStatus
   ): Promise<boolean> {
     const newLikesInfo = getUpdatedLike(
       {

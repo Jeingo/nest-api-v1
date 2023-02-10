@@ -1,4 +1,4 @@
-import { StatusLikeType } from '../../types/types';
+import { LikeStatus } from '../../types/types';
 import { NewestLikesType } from '../types/posts.type';
 
 export class OutputPostDto {
@@ -12,7 +12,7 @@ export class OutputPostDto {
   extendedLikesInfo: {
     likesCount: number;
     dislikesCount: number;
-    myStatus: StatusLikeType;
+    myStatus: LikeStatus;
     newestLikes: Array<NewestLikesType>;
   };
 }
