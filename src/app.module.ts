@@ -45,12 +45,13 @@ import { CommentsService } from './comments/comments.service';
 import { CommentsQueryRepository } from './comments/comments.query.repository';
 import { CommentsRepository } from './comments/comments.repository';
 import { PostsController } from './posts/posts.controller';
-import { IsBlogIdConstraint } from './posts/blogId.validator';
+import { IsBlogIdConstraint } from './helper/pipes/blogId.validator';
 import { SecurityDevicesController } from './sessions/security.devices.controller';
 import { SessionsQueryRepository } from './sessions/sessions.query.repository';
 import { TestingController } from './testing/testing.controller';
 import { TestingService } from './testing/testing.service';
 import { UsersController } from './users/users.controller';
+import { CheckIdValidationPipe } from './helper/pipes/check.id.validator.pipe';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -81,7 +82,8 @@ const providers = [
   CommentLikesQueryRepository,
   IsBlogIdConstraint,
   SessionsQueryRepository,
-  TestingService
+  TestingService,
+  CheckIdValidationPipe
 ];
 const controllers = [
   AuthController,

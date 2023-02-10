@@ -9,7 +9,6 @@ import {
   HttpCode,
   Query,
   HttpStatus,
-  NotFoundException,
   UseGuards,
   Req
 } from '@nestjs/common';
@@ -28,6 +27,7 @@ import { QueryPosts } from '../posts/types/posts.type';
 import { OutputPostDto } from '../posts/dto/output.post.dto';
 import { BasicGuard } from '../helper/guards/basic.guard';
 import { GetUserGuard } from '../helper/guards/get.user.guard';
+import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
 
 @Controller('blogs')
 export class BlogsController {
@@ -58,8 +58,9 @@ export class BlogsController {
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<OutputBlogDto> {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
+  async findOne(
+    @Param('id', new CheckIdValidationPipe()) id: string
+  ): Promise<OutputBlogDto> {
     return await this.blogsQueryRepository.getById(new Types.ObjectId(id));
   }
 
@@ -67,10 +68,9 @@ export class BlogsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new CheckIdValidationPipe()) id: string,
     @Body() updateBlogDto: InputUpdateBlogDto
   ) {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
     await this.blogsService.update(new Types.ObjectId(id), updateBlogDto);
     return;
   }
@@ -78,8 +78,7 @@ export class BlogsController {
   @UseGuards(BasicGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
+  async remove(@Param('id', new CheckIdValidationPipe()) id: string) {
     return this.blogsService.remove(new Types.ObjectId(id));
   }
 
@@ -87,10 +86,9 @@ export class BlogsController {
   @HttpCode(HttpStatus.CREATED)
   @Post(':blogId/posts')
   async createPost(
-    @Param('blogId') blogId: string,
+    @Param('blogId', new CheckIdValidationPipe()) blogId: string,
     @Body() createPostDto: InputCreatePostInBlogsDto
   ): Promise<OutputPostDto> {
-    if (!Types.ObjectId.isValid(blogId)) throw new NotFoundException();
     const createdPostId = await this.postsService.createInBlogs(
       createPostDto,
       blogId
@@ -103,10 +101,9 @@ export class BlogsController {
   @Get(':blogId/posts')
   async findAllPostsByBlogId(
     @Query() query: QueryPosts,
-    @Param('blogId') blogId: string,
+    @Param('blogId', new CheckIdValidationPipe()) blogId: string,
     @Req() req
   ): Promise<PaginatedType<OutputPostDto>> {
-    if (!Types.ObjectId.isValid(blogId)) throw new NotFoundException();
     return await this.postsQueryRepository.getAllByBlogId(
       query,
       blogId,

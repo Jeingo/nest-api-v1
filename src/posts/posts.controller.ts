@@ -30,6 +30,7 @@ import { BearerGuard } from '../helper/guards/bearer.guard';
 import { InputCreateCommentDto } from '../comments/dto/input.create.comment.dto';
 import { CommentsService } from '../comments/comments.service';
 import { InputUpdatePostLikeDto } from './dto/input.update.post.like.dto';
+import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
 
 @Controller('posts')
 export class PostsController {
@@ -112,11 +113,10 @@ export class PostsController {
   @HttpCode(HttpStatus.CREATED)
   @Post(':postId/comments')
   async createCommentByPostId(
-    @Param('postId') postId: string,
+    @Param('postId', new CheckIdValidationPipe()) postId: string,
     @Body() createCommentDto: InputCreateCommentDto,
     @Req() req
   ): Promise<OutputCommentDto> {
-    if (!Types.ObjectId.isValid(postId)) throw new NotFoundException();
     const createdCommentId = await this.commentsService.create(
       createCommentDto,
       postId,
@@ -129,11 +129,10 @@ export class PostsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':postId/like-status')
   async updateStatusLike(
-    @Param('postId') postId: string,
+    @Param('postId', new CheckIdValidationPipe()) postId: string,
     @Body() updatePostLikeDto: InputUpdatePostLikeDto,
     @Req() req
   ) {
-    if (!Types.ObjectId.isValid(postId)) throw new NotFoundException();
     await this.postsService.updateStatusLike(
       req.user._id.toString(),
       postId,

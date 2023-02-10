@@ -5,7 +5,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
   Put,
   Req,
@@ -19,6 +18,7 @@ import { BearerGuard } from '../helper/guards/bearer.guard';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
 import { CommentsService } from './comments.service';
 import { InputUpdateLikeDto } from './dto/input.update.like.dto';
+import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
 
 @Controller('comments')
 export class CommentsController {
@@ -31,10 +31,9 @@ export class CommentsController {
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   async findOne(
-    @Param('id') id: string,
+    @Param('id', new CheckIdValidationPipe()) id: string,
     @Req() req
   ): Promise<OutputCommentDto> {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
     return this.commentsQueryRepository.getById(
       new Types.ObjectId(id),
       req.user
@@ -45,11 +44,10 @@ export class CommentsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new CheckIdValidationPipe()) id: string,
     @Body() createCommentDto: InputCreateCommentDto,
     @Req() req
   ) {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
     await this.commentService.update(
       new Types.ObjectId(id),
       createCommentDto,
@@ -62,11 +60,10 @@ export class CommentsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':commentId/like-status')
   async updateStatusLike(
-    @Param('commentId') commentId: string,
+    @Param('commentId', new CheckIdValidationPipe()) commentId: string,
     @Body() updateLikeDto: InputUpdateLikeDto,
     @Req() req
   ) {
-    if (!Types.ObjectId.isValid(commentId)) throw new NotFoundException();
     await this.commentService.updateStatusLike(
       req.user,
       commentId,
@@ -78,8 +75,10 @@ export class CommentsController {
   @UseGuards(BearerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async remove(@Param('id') id: string, @Req() req) {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
+  async remove(
+    @Param('id', new CheckIdValidationPipe()) id: string,
+    @Req() req
+  ) {
     await this.commentService.delete(new Types.ObjectId(id), req.user);
     return;
   }

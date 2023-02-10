@@ -8,8 +8,7 @@ import {
   HttpCode,
   HttpStatus,
   Query,
-  UseGuards,
-  NotFoundException
+  UseGuards
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { InputCreateUserDto } from './dto/input.create.user.dto';
@@ -19,6 +18,7 @@ import { QueryUsers } from './types/users.type';
 import { Types } from 'mongoose';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import { BasicGuard } from '../helper/guards/basic.guard';
+import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
 
 @UseGuards(BasicGuard)
 @Controller('users')
@@ -47,8 +47,7 @@ export class UsersController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
+  async remove(@Param('id', new CheckIdValidationPipe()) id: string) {
     return this.usersService.remove(new Types.ObjectId(id));
   }
 }
