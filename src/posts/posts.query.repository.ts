@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IPostModel, Post, PostDocument } from './entities/post.entity';
-import { DbId, LikeStatus } from '../types/types';
+import { DbId, Direction, LikeStatus } from '../types/types';
 import { OutputPostDto } from './dto/output.post.dto';
 import { QueryPosts } from './types/posts.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
@@ -28,7 +28,7 @@ export class PostsQueryRepository {
   ): Promise<PaginatedType<OutputPostDto>> {
     const {
       sortBy = 'createdAt',
-      sortDirection = 'desc',
+      sortDirection = Direction.DESC,
       pageNumber = 1,
       pageSize = 10
     } = query;
@@ -64,7 +64,7 @@ export class PostsQueryRepository {
     if (!blog) throw new NotFoundException();
     const {
       sortBy = 'createdAt',
-      sortDirection = 'desc',
+      sortDirection = Direction.DESC,
       pageNumber = 1,
       pageSize = 10
     } = query;

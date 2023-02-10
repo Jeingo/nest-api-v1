@@ -8,7 +8,7 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
-import { DbId } from '../types/types';
+import { DbId, Direction } from '../types/types';
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -18,7 +18,7 @@ export class BlogsQueryRepository {
     const {
       searchNameTerm = null,
       sortBy = 'createdAt',
-      sortDirection = 'desc',
+      sortDirection = Direction.DESC,
       pageNumber = 1,
       pageSize = 10
     } = query;

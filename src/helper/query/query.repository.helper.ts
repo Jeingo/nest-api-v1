@@ -1,4 +1,5 @@
 import { PaginatedType } from './types.query.repository.helper';
+import { Direction } from '../../types/types';
 
 export const getPaginatedType = <T>(
   items: T[],
@@ -15,4 +16,5 @@ export const getPaginatedType = <T>(
   };
 };
 
-export const makeDirectionToNumber = (val: string) => (val === 'desc' ? -1 : 1);
+export const makeDirectionToNumber = (val: Direction) =>
+  val === Direction.DESC ? -1 : 1;

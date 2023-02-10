@@ -1,8 +1,8 @@
-import { DirectionType } from '../../types/types';
+import { Direction } from '../../types/types';
 
 export type QueryPosts = {
   sortBy: string;
-  sortDirection: DirectionType;
+  sortDirection: Direction;
   pageNumber: string;
   pageSize: string;
 };

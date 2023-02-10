@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IUserModel, User, UserDocument } from './entities/user.entity';
-import { DbId } from '../types/types';
+import { DbId, Direction } from '../types/types';
 import { OutputUserDto } from './dto/output.user.dto';
 import { QueryUsers } from './types/users.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
@@ -20,7 +20,7 @@ export class UsersQueryRepository {
       searchLoginTerm = null,
       searchEmailTerm = null,
       sortBy = 'createdAt',
-      sortDirection = 'desc',
+      sortDirection = Direction.DESC,
       pageNumber = 1,
       pageSize = 10
     } = query;

@@ -1,9 +1,9 @@
-import { DirectionType } from '../../types/types';
+import { Direction } from '../../types/types';
 
 export type QueryBlogs = {
   searchNameTerm?: string;
   sortBy: string;
-  sortDirection: DirectionType;
+  sortDirection: Direction;
   pageNumber: string;
   pageSize: string;
 };

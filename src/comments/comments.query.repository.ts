@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DbId, LikeStatus } from '../types/types';
+import { DbId, Direction, LikeStatus } from '../types/types';
 import { OutputCommentDto } from './dto/output.comment.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import {
@@ -35,7 +35,7 @@ export class CommentsQueryRepository {
     if (!post) throw new NotFoundException();
     const {
       sortBy = 'createdAt',
-      sortDirection = 'desc',
+      sortDirection = Direction.DESC,
       pageNumber = 1,
       pageSize = 10
     } = query;
