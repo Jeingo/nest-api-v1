@@ -4,14 +4,14 @@ import {
   Injectable,
   UnauthorizedException
 } from '@nestjs/common';
-import { IJwtService } from '../../infrastructure/jwt/jwt.service';
+import { JwtAdapter } from '../../infrastructure/jwt/jwt.service';
 import { UsersRepository } from '../../users/users.repository';
 import { Types } from 'mongoose';
 
 @Injectable()
 export class BearerGuard implements CanActivate {
   constructor(
-    private readonly jwtService: IJwtService,
+    private readonly jwtAdapter: JwtAdapter,
     private readonly usersRepository: UsersRepository
   ) {}
 
@@ -26,13 +26,13 @@ export class BearerGuard implements CanActivate {
     if (authorizationField[0] !== 'Bearer') {
       throw new UnauthorizedException();
     }
-    const checkResult = this.jwtService.checkExpirationAccessToken(
+    const checkResult = this.jwtAdapter.checkExpirationAccessToken(
       authorizationField[1]
     );
     if (!checkResult) {
       throw new UnauthorizedException();
     }
-    const payload = this.jwtService.getPayload(authorizationField[1]);
+    const payload = this.jwtAdapter.getPayload(authorizationField[1]);
     if (!payload) {
       throw new UnauthorizedException();
     }

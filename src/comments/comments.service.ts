@@ -14,7 +14,6 @@ import { DbId, StatusLikeType } from '../types/types';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
 import { UserDocument } from '../users/entities/user.entity';
 import { CommentsRepository } from './comments.repository';
-import { InputUpdateLikeDto } from './dto/input.update.like.dto';
 import { Types } from 'mongoose';
 import { PostsRepository } from '../posts/posts.repository';
 import { ICommentModel, Comment } from './entities/comment.entity';
@@ -70,9 +69,9 @@ export class CommentsService {
   async updateStatusLike(
     user: UserDocument,
     commentId: string,
-    updateLikeDto: InputUpdateLikeDto
+    newLikeStatus: StatusLikeType
   ): Promise<boolean> {
-    let lastStatus: StatusLikeType = 'None';
+    let lastLikeStatus: StatusLikeType = 'None';
     const comment = await this.commentRepository.getById(
       new Types.ObjectId(commentId)
     );
@@ -85,21 +84,21 @@ export class CommentsService {
       const newLike = await this.commentLikesModel.make(
         user._id.toString(),
         commentId,
-        updateLikeDto.likeStatus
+        newLikeStatus
       );
       await this.commentLikesRepository.save(newLike);
     } else {
       const commentLike = await this.commentLikesRepository.getById(
         new Types.ObjectId(likeInfo.id)
       );
-      commentLike.update(updateLikeDto.likeStatus);
+      commentLike.update(newLikeStatus);
       await this.commentLikesRepository.save(commentLike);
-      lastStatus = likeInfo.myStatus;
+      lastLikeStatus = likeInfo.myStatus;
     }
     return await this.commentRepository.updateLikeInComment(
       comment,
-      lastStatus,
-      updateLikeDto.likeStatus
+      lastLikeStatus,
+      newLikeStatus
     );
   }
 }

@@ -1,4 +1,5 @@
 import { StatusLikeType } from '../../types/types';
+import { NewestLikesType } from '../types/posts.type';
 
 export class OutputPostDto {
   id: string;
@@ -15,9 +16,3 @@ export class OutputPostDto {
     newestLikes: Array<NewestLikesType>;
   };
 }
-
-type NewestLikesType = {
-  addedAt: string;
-  userId: string;
-  login: string;
-};

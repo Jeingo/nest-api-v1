@@ -29,7 +29,7 @@ import { BasicGuard } from '../helper/guards/basic.guard';
 import { BearerGuard } from '../helper/guards/bearer.guard';
 import { InputCreateCommentDto } from '../comments/dto/input.create.comment.dto';
 import { CommentsService } from '../comments/comments.service';
-import { InputUpdatePostLikeDto } from '../post-likes/dto/input.update.post.like.dto';
+import { InputUpdatePostLikeDto } from './dto/input.update.post.like.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -134,13 +134,12 @@ export class PostsController {
     @Req() req
   ) {
     if (!Types.ObjectId.isValid(postId)) throw new NotFoundException();
-    const likeDto = {
-      userId: req.user._id.toString(),
-      postId: postId,
-      myStatus: updatePostLikeDto.likeStatus,
-      login: req.user.login
-    };
-    await this.postsService.updateStatusLike(likeDto);
+    await this.postsService.updateStatusLike(
+      req.user._id.toString(),
+      postId,
+      req.user.login,
+      updatePostLikeDto.likeStatus
+    );
     return;
   }
 }

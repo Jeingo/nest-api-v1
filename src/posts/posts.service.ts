@@ -12,7 +12,6 @@ import { DbId, StatusLikeType } from '../types/types';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
 import { InputCreatePostInBlogsDto } from '../blogs/dto/input.create.post.dto';
-import { InputCreatePostLikeDto } from '../post-likes/dto/input.create.post.like.dto';
 import { PostLikesQueryRepository } from '../post-likes/post.likes.query.repository';
 import {
   IPostLikeModel,
@@ -92,9 +91,11 @@ export class PostsService {
     return true;
   }
   async updateStatusLike(
-    createPostLikeDto: InputCreatePostLikeDto
+    userId: string,
+    postId: string,
+    login: string,
+    newLikeStatus: StatusLikeType
   ): Promise<boolean> {
-    const { userId, login, postId, myStatus } = createPostLikeDto;
     let lastStatus: StatusLikeType = 'None';
     const post = await this.postsRepository.getById(new Types.ObjectId(postId));
     if (!post) throw new NotFoundException();
@@ -103,13 +104,18 @@ export class PostsService {
       postId
     );
     if (!likeInfo) {
-      const newLike = this.postLikesModel.make(userId, postId, myStatus, login);
+      const newLike = this.postLikesModel.make(
+        userId,
+        postId,
+        newLikeStatus,
+        login
+      );
       await this.postLikesRepository.save(newLike);
     } else {
       const postLike = await this.postLikesRepository.getById(
         new Types.ObjectId(likeInfo.id)
       );
-      postLike.update(myStatus);
+      postLike.update(newLikeStatus);
       await this.postLikesRepository.save(postLike);
       lastStatus = likeInfo.myStatus;
     }
@@ -124,7 +130,7 @@ export class PostsService {
     return await this.postsRepository.updateLikeInPost(
       post,
       lastStatus,
-      myStatus
+      newLikeStatus
     );
   }
 }

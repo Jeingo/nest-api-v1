@@ -1,12 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { IJwtService } from '../../infrastructure/jwt/jwt.service';
+import { JwtAdapter } from '../../infrastructure/jwt/jwt.service';
 import { UsersRepository } from '../../users/users.repository';
 import { Types } from 'mongoose';
 
 @Injectable()
 export class GetUserGuard implements CanActivate {
   constructor(
-    private readonly jwtService: IJwtService,
+    private readonly jwtAdapter: JwtAdapter,
     private readonly usersRepository: UsersRepository
   ) {}
 
@@ -22,7 +22,7 @@ export class GetUserGuard implements CanActivate {
       return true;
     }
 
-    const payload = this.jwtService.getPayload(authorizationField[1]);
+    const payload = this.jwtAdapter.getPayload(authorizationField[1]);
     if (!payload) {
       return true;
     }

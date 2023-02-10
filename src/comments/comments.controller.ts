@@ -70,7 +70,7 @@ export class CommentsController {
     await this.commentService.updateStatusLike(
       req.user,
       commentId,
-      updateLikeDto
+      updateLikeDto.likeStatus
     );
     return;
   }

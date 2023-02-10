@@ -6,3 +6,8 @@ export type QueryPosts = {
   pageNumber: string;
   pageSize: string;
 };
+export type NewestLikesType = {
+  addedAt: string;
+  userId: string;
+  login: string;
+};

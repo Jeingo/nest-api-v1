@@ -5,7 +5,7 @@ import {
   CommentLikeDocument,
   ICommentLikeModel
 } from './entities/comment.like.entity';
-import { OutputCommentLikeDto } from './dto/output.comment.like.dto';
+import { OutputCommentLikeDto } from '../comments/dto/output.comment.like.dto';
 
 @Injectable()
 export class CommentLikesQueryRepository {

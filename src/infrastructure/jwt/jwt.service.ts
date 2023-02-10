@@ -5,7 +5,7 @@ import { IConfigType } from '../../configuration/configuration';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class IJwtService {
+export class JwtAdapter {
   constructor(
     private readonly configService: ConfigService<IConfigType>,
     private readonly jwtService: JwtService

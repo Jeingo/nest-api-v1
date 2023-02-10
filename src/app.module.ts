@@ -22,7 +22,7 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { UsersRepository } from './users/users.repository';
 import { UsersService } from './users/users.service';
-import { IJwtService } from './infrastructure/jwt/jwt.service';
+import { JwtAdapter } from './infrastructure/jwt/jwt.service';
 import { JwtService } from '@nestjs/jwt';
 import { SessionsService } from './sessions/sessions.service';
 import { SessionsRepository } from './sessions/sessions.repository';
@@ -57,7 +57,7 @@ const configService = new ConfigService<IConfigType>();
 const providers = [
   AuthService,
   UsersService,
-  IJwtService,
+  JwtAdapter,
   JwtService,
   SessionsService,
   SessionsRepository,

@@ -15,7 +15,7 @@ import {
 import { AuthService } from './auth.service';
 import { InputLoginUserDto } from './dto/input.login.user.dto';
 import { UsersService } from '../users/users.service';
-import { IJwtService } from '../infrastructure/jwt/jwt.service';
+import { JwtAdapter } from '../infrastructure/jwt/jwt.service';
 import { v4 } from 'uuid';
 import { SessionsService } from '../sessions/sessions.service';
 import { OutputAccessTokenDto } from './dto/output.token.dto';
@@ -41,7 +41,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly jwtService: IJwtService,
+    private readonly jwtAdapter: JwtAdapter,
     private readonly sessionsService: SessionsService,
     private readonly configService: ConfigService<IConfigType>,
     private readonly usersQueryRepository: UsersQueryRepository
@@ -62,7 +62,7 @@ export class AuthController {
       response.clearCookie('refreshToken');
       throw new UnauthorizedException();
     }
-    const { accessToken, refreshToken } = await this.jwtService.getTokens(
+    const { accessToken, refreshToken } = await this.jwtAdapter.getTokens(
       userId,
       v4()
     );
@@ -89,7 +89,7 @@ export class AuthController {
       response.clearCookie('refreshToken');
       throw new UnauthorizedException();
     }
-    const { accessToken, refreshToken } = await this.jwtService.getTokens(
+    const { accessToken, refreshToken } = await this.jwtAdapter.getTokens(
       payload.userId,
       payload.deviceId
     );

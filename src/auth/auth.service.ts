@@ -3,7 +3,7 @@ import { UsersRepository } from '../users/users.repository';
 import { InputLoginUserDto } from './dto/input.login.user.dto';
 import * as bcrypt from 'bcrypt';
 import { Token, TokenPayloadType } from '../infrastructure/types/jwt.type';
-import { IJwtService } from '../infrastructure/jwt/jwt.service';
+import { JwtAdapter } from '../infrastructure/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
 import { DbId } from '../types/types';
@@ -19,7 +19,7 @@ import { InputNewPasswordDto } from './dto/input.newpassword.dto';
 export class AuthService {
   constructor(
     private readonly usersRepository: UsersRepository,
-    private readonly jwtService: IJwtService,
+    private readonly jwtAdapter: JwtAdapter,
     private readonly sessionsService: SessionsService,
     private readonly emailManager: EmailManager,
     @InjectModel(User.name) private usersModel: IUserModel
@@ -41,9 +41,9 @@ export class AuthService {
   async checkAuthorizationAndGetPayload(
     refreshToken: Token
   ): Promise<TokenPayloadType | false> {
-    const result = this.jwtService.checkExpirationRefreshToken(refreshToken);
+    const result = this.jwtAdapter.checkExpirationRefreshToken(refreshToken);
     if (!result) return false;
-    const payload = this.jwtService.getPayload(refreshToken);
+    const payload = this.jwtAdapter.getPayload(refreshToken);
     const statusSession = await this.sessionsService.isActiveSession(
       payload.deviceId
     );

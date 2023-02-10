@@ -5,17 +5,15 @@ import {
   PostLike,
   PostLikeDocument
 } from './entities/post.like.entity';
-import { OutputPostLikeDto } from './dto/output.post.like.dto';
-import { OutputExtendedPostLikeDto } from './dto/output.extended.post.like.dto';
+import { OutputPostLikeDto } from '../posts/dto/output.post.like.dto';
+import { NewestLikesType } from '../posts/types/posts.type';
 
 @Injectable()
 export class PostLikesQueryRepository {
   constructor(
     @InjectModel(PostLike.name) private postLikesModel: IPostLikeModel
   ) {}
-  async getLastThreeLikes(
-    postId: string
-  ): Promise<OutputExtendedPostLikeDto[] | null> {
+  async getLastThreeLikes(postId: string): Promise<NewestLikesType[] | null> {
     const desc = -1;
     const threeLastUser = 3;
     const like = 'Like';
@@ -52,9 +50,7 @@ export class PostLikesQueryRepository {
       addedAt: like.addedAt
     };
   }
-  private _getOutputExtendedLike(
-    like: PostLikeDocument
-  ): OutputExtendedPostLikeDto {
+  private _getOutputExtendedLike(like: PostLikeDocument): NewestLikesType {
     return {
       addedAt: like.addedAt,
       userId: like.userId,
