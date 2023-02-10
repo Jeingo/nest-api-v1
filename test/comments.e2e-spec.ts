@@ -1,9 +1,4 @@
-import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '../src/app.module';
-import { useContainer } from 'class-validator';
-import { HttpExceptionFilter } from '../src/helper/expceptionFilter/exception.filter';
-import cookieParser from 'cookie-parser';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { correctBlog } from './stubs/blogs.stub';
 import { correctPost } from './stubs/posts.stub';
@@ -27,9 +22,10 @@ import {
   badCommentLikeStatus,
   correctCommentLikeStatus
 } from './stubs/comment.likes.stub';
+import { setConfigNestApp } from './configuration.test';
 
 describe('CommentsController (e2e)', () => {
-  let nestApp: INestApplication;
+  let configuredNesApp: INestApplication;
   let app: any;
   let createdComment: any;
   let createdUser: any;
@@ -38,18 +34,9 @@ describe('CommentsController (e2e)', () => {
   let createdPost: any;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
-    }).compile();
-
-    nestApp = moduleFixture.createNestApplication();
-    useContainer(nestApp.select(AppModule), { fallbackOnErrors: true });
-    nestApp.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
-    nestApp.useGlobalFilters(new HttpExceptionFilter());
-    nestApp.use(cookieParser());
-
-    await nestApp.init();
-    app = nestApp.getHttpServer();
+    configuredNesApp = await setConfigNestApp();
+    await configuredNesApp.init();
+    app = configuredNesApp.getHttpServer();
 
     await request(app).delete('/testing/all-data');
     const createdResponseBlog = await request(app)
@@ -85,7 +72,7 @@ describe('CommentsController (e2e)', () => {
   });
 
   afterAll(async () => {
-    await nestApp.close();
+    await configuredNesApp.close();
   });
 
   describe('1 GET /comments/id:', () => {
