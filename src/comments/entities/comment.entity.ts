@@ -15,7 +15,7 @@ type StaticCommentMethods = {
 
 export type ICommentModel = Model<CommentDocument> & StaticCommentMethods;
 
-@Schema()
+@Schema({ _id: false })
 class CommentatorInfo {
   @Prop({ required: true })
   userId: string;
@@ -24,7 +24,7 @@ class CommentatorInfo {
   userLogin: string;
 }
 
-@Schema()
+@Schema({ _id: false })
 class LikesInfo {
   @Prop({ required: true })
   likesCount: number;
