@@ -1,22 +1,97 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { BlogsModule } from './blogs/blogs.module';
-import { TestingModule } from './testing/testing.module';
-import { PostsModule } from './posts/posts.module';
-import { CommentsModule } from './comments/comments.module';
-import { UsersModule } from './users/users.module';
 import configuration from './configuration/configuration';
 import { IConfigType } from './configuration/configuration';
-import { AuthModule } from './auth/auth.module';
-import { InfrastructureModule } from './infrastructure/infrastructureModule';
-import { SessionsModule } from './sessions/sessions.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { PostLikesModule } from './post-likes/post.likes.module';
-import { CommentLikesModule } from './comment-likes/comment.likes.module';
+import { Blog, BlogSchema } from './blogs/entities/blog.entity';
+import { Post, PostSchema } from './posts/entities/post.entity';
+import { User, UserSchema } from './users/entities/user.entity';
+import { Comment, CommentSchema } from './comments/entities/comment.entity';
+import { Session, SessionSchema } from './sessions/entities/session.entity';
+import {
+  PostLike,
+  PostLikeSchema
+} from './post-likes/entities/post.like.entity';
+import {
+  CommentLike,
+  CommentLikeSchema
+} from './comment-likes/entities/comment.like.entity';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { UsersRepository } from './users/users.repository';
+import { UsersService } from './users/users.service';
+import { IJwtService } from './infrastructure/jwt/jwt.service';
+import { JwtService } from '@nestjs/jwt';
+import { SessionsService } from './sessions/sessions.service';
+import { SessionsRepository } from './sessions/sessions.repository';
+import { UsersQueryRepository } from './users/users.query.repository';
+import { EmailManager } from './infrastructure/email/email.manager';
+import { EmailService } from './infrastructure/email/email.service';
+import { BlogsController } from './blogs/blogs.controller';
+import { BlogsService } from './blogs/blogs.service';
+import { BlogsQueryRepository } from './blogs/blogs.query.repository';
+import { BlogsRepository } from './blogs/blogs.repository';
+import { PostsQueryRepository } from './posts/posts.query.repository';
+import { PostsService } from './posts/posts.service';
+import { PostsRepository } from './posts/posts.repository';
+import { PostLikesQueryRepository } from './post-likes/post.likes.query.repository';
+import { PostLikesRepository } from './post-likes/post.likes.repository';
+import { CommentLikesQueryRepository } from './comment-likes/comment.like.query.repository';
+import { CommentLikesRepository } from './comment-likes/comment.likes.repository';
+import { CommentsController } from './comments/comments.controller';
+import { CommentsService } from './comments/comments.service';
+import { CommentsQueryRepository } from './comments/comments.query.repository';
+import { CommentsRepository } from './comments/comments.repository';
+import { PostsController } from './posts/posts.controller';
+import { IsBlogIdConstraint } from './posts/blogId.validator';
+import { SecurityDevicesController } from './sessions/security.devices.controller';
+import { SessionsQueryRepository } from './sessions/sessions.query.repository';
+import { TestingController } from './testing/testing.controller';
+import { TestingService } from './testing/testing.service';
+import { UsersController } from './users/users.controller';
 
 const configService = new ConfigService<IConfigType>();
+
+const providers = [
+  AuthService,
+  UsersService,
+  IJwtService,
+  JwtService,
+  SessionsService,
+  SessionsRepository,
+  ConfigService,
+  UsersQueryRepository,
+  EmailManager,
+  EmailService,
+  BlogsService,
+  BlogsQueryRepository,
+  BlogsRepository,
+  PostsQueryRepository,
+  PostsService,
+  PostsRepository,
+  UsersRepository,
+  PostLikesQueryRepository,
+  PostLikesRepository,
+  CommentsService,
+  CommentsQueryRepository,
+  CommentsRepository,
+  CommentLikesRepository,
+  CommentLikesQueryRepository,
+  IsBlogIdConstraint,
+  SessionsQueryRepository,
+  TestingService
+];
+const controllers = [
+  AuthController,
+  BlogsController,
+  CommentsController,
+  PostsController,
+  SecurityDevicesController,
+  TestingController,
+  UsersController
+];
 
 @Module({
   imports: [
@@ -27,20 +102,20 @@ const configService = new ConfigService<IConfigType>();
     MongooseModule.forRoot(configService.get('MONGO_URL'), {
       dbName: configService.get('DB_NAME')
     }),
-    ThrottlerModule.forRoot(),
-    BlogsModule,
-    TestingModule,
-    PostsModule,
-    CommentsModule,
-    UsersModule,
-    AuthModule,
-    InfrastructureModule,
-    SessionsModule,
-    PostLikesModule,
-    CommentLikesModule
+    MongooseModule.forFeature([
+      { name: Blog.name, schema: BlogSchema },
+      { name: Post.name, schema: PostSchema },
+      { name: User.name, schema: UserSchema },
+      { name: Comment.name, schema: CommentSchema },
+      { name: Session.name, schema: SessionSchema },
+      { name: PostLike.name, schema: PostLikeSchema },
+      { name: CommentLike.name, schema: CommentLikeSchema }
+    ]),
+    ThrottlerModule.forRoot()
   ],
-  controllers: [],
+  controllers: [...controllers],
   providers: [
+    ...providers,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
