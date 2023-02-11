@@ -135,7 +135,6 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration')
   async registration(@Body() registrationUserDto: InputRegistrationUserDto) {
-    await this.authService.checkLoginAndEmail(registrationUserDto);
     await this.authService.registration(registrationUserDto);
     return;
   }

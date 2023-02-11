@@ -6,8 +6,11 @@ import {
   Matches
 } from 'class-validator';
 import { Trim } from '../../helper/decorators/to.trim.decorator';
+import { IsLoginExist } from '../../helper/decorators/is.login.exist.decorator';
+import { IsEmailExist } from '../../helper/decorators/is.email.exist.decorator';
 
 export class InputRegistrationUserDto {
+  @IsLoginExist()
   @Matches(/^[a-zA-Z0-9_-]*$/)
   @Length(3, 10)
   @IsString()
@@ -21,6 +24,7 @@ export class InputRegistrationUserDto {
   @Trim()
   password: string;
 
+  @IsEmailExist()
   @IsEmail()
   @IsString()
   @IsNotEmpty()
