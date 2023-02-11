@@ -22,6 +22,15 @@ export class CommentLikesRepository {
   async getById(id: DbId): Promise<CommentLikeDocument> {
     return this.commentLikesModel.findById(id);
   }
+  async getByUserIdAndCommentId(
+    userId: string,
+    commentId: string
+  ): Promise<CommentLikeDocument> {
+    return this.commentLikesModel.findOne({
+      userId: userId,
+      commentId: commentId
+    });
+  }
   async save(commentLike: CommentLikeDocument): Promise<CommentLikeDocument> {
     return await commentLike.save();
   }

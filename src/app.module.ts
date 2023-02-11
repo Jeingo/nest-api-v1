@@ -38,7 +38,6 @@ import { PostsService } from './posts/posts.service';
 import { PostsRepository } from './posts/posts.repository';
 import { PostLikesQueryRepository } from './post-likes/post.likes.query.repository';
 import { PostLikesRepository } from './post-likes/post.likes.repository';
-import { CommentLikesQueryRepository } from './comment-likes/comment.like.query.repository';
 import { CommentLikesRepository } from './comment-likes/comment.likes.repository';
 import { CommentsController } from './comments/comments.controller';
 import { CommentsService } from './comments/comments.service';
@@ -79,7 +78,6 @@ const providers = [
   CommentsQueryRepository,
   CommentsRepository,
   CommentLikesRepository,
-  CommentLikesQueryRepository,
   IsBlogIdConstraint,
   SessionsQueryRepository,
   TestingService,

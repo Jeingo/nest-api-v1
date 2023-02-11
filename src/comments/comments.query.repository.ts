@@ -15,15 +15,15 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
-import { CommentLikesQueryRepository } from '../comment-likes/comment.like.query.repository';
 import { CurrentUserType } from '../auth/types/current.user.type';
+import { CommentLikesRepository } from '../comment-likes/comment.likes.repository';
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(
     @InjectModel(Comment.name) private commentsModel: ICommentModel,
     private readonly postsRepository: PostsRepository,
-    private readonly commentLikesQueryRepository: CommentLikesQueryRepository
+    private readonly commentLikesRepository: CommentLikesRepository
   ) {}
 
   async getAllByPostId(
@@ -66,8 +66,8 @@ export class CommentsQueryRepository {
     if (!result) throw new NotFoundException();
     const mappedResult = this._getOutputComment(result);
     if (user?.userId && mappedResult) {
-      const like = await this.commentLikesQueryRepository.getLike(
-        user?.userId,
+      const like = await this.commentLikesRepository.getByUserIdAndCommentId(
+        user.userId,
         mappedResult.id
       );
       if (like) {
@@ -98,7 +98,7 @@ export class CommentsQueryRepository {
   ) {
     if (!userId) return comments;
     for (let i = 0; i < comments.length; i++) {
-      const like = await this.commentLikesQueryRepository.getLike(
+      const like = await this.commentLikesRepository.getByUserIdAndCommentId(
         userId,
         comments[i].id
       );

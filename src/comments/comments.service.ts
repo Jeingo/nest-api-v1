@@ -4,7 +4,6 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import { CommentLikesRepository } from '../comment-likes/comment.likes.repository';
-import { CommentLikesQueryRepository } from '../comment-likes/comment.like.query.repository';
 import { DbId, LikeStatus } from '../global-types/global.types';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
 import { CommentsRepository } from './comments.repository';
@@ -15,7 +14,6 @@ import { CurrentUserType } from '../auth/types/current.user.type';
 @Injectable()
 export class CommentsService {
   constructor(
-    private readonly commentLikesQueryRepository: CommentLikesQueryRepository,
     private readonly commentLikesRepository: CommentLikesRepository,
     private readonly commentRepository: CommentsRepository,
     private readonly postsRepository: PostsRepository
@@ -68,11 +66,11 @@ export class CommentsService {
       new Types.ObjectId(commentId)
     );
     if (!comment) throw new NotFoundException();
-    const likeInfo = await this.commentLikesQueryRepository.getLike(
+    const like = await this.commentLikesRepository.getByUserIdAndCommentId(
       user.userId,
       commentId
     );
-    if (!likeInfo) {
+    if (!like) {
       const newLike = await this.commentLikesRepository.create(
         user.userId,
         commentId,
@@ -80,12 +78,10 @@ export class CommentsService {
       );
       await this.commentLikesRepository.save(newLike);
     } else {
-      const commentLike = await this.commentLikesRepository.getById(
-        new Types.ObjectId(likeInfo.id)
-      );
+      const commentLike = await this.commentLikesRepository.getById(like._id);
       commentLike.update(newLikeStatus);
       await this.commentLikesRepository.save(commentLike);
-      lastLikeStatus = likeInfo.myStatus;
+      lastLikeStatus = like.myStatus;
     }
     return await this.commentRepository.updateLikeInComment(
       comment,
