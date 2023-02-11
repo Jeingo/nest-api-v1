@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { Trim } from '../../helper/decorators/to.trim.decorator';
 import { IsLoginExist } from '../../helper/decorators/is.login.exist.decorator';
-import { IsEmailExist } from '../../helper/decorators/is.email.exist.decorator';
+import { IsEmailNotExist } from '../../helper/decorators/is.email.not.exist.decorator';
 
 export class InputRegistrationUserDto {
   @IsLoginExist()
@@ -24,7 +24,7 @@ export class InputRegistrationUserDto {
   @Trim()
   password: string;
 
-  @IsEmailExist()
+  @IsEmailNotExist()
   @IsEmail()
   @IsString()
   @IsNotEmpty()

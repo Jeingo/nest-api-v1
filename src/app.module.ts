@@ -50,8 +50,10 @@ import { TestingController } from './testing/testing.controller';
 import { TestingService } from './testing/testing.service';
 import { UsersController } from './users/users.controller';
 import { CheckIdAndParseToDBId } from './helper/pipes/check.id.validator.pipe';
-import { IsEmailExistConstraint } from './helper/decorators/is.email.exist.decorator';
+import { IsEmailNotExistConstraint } from './helper/decorators/is.email.not.exist.decorator';
 import { IsLoginExistConstraint } from './helper/decorators/is.login.exist.decorator';
+import { IsConfirmationCodeCorrectConstraint } from './helper/decorators/is.confirmation.code.correct.decorator';
+import { IsEmailExistConstraint } from './helper/decorators/is.email.exist.decorator';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -79,8 +81,10 @@ const providers = [
   CommentsRepository,
   CommentLikesRepository,
   IsBlogIdConstraint,
+  IsEmailNotExistConstraint,
   IsEmailExistConstraint,
   IsLoginExistConstraint,
+  IsConfirmationCodeCorrectConstraint,
   SessionsQueryRepository,
   TestingService,
   CheckIdAndParseToDBId

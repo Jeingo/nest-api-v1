@@ -9,26 +9,26 @@ import { UsersRepository } from '../../users/users.repository';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-export class IsEmailExistConstraint implements ValidatorConstraintInterface {
+export class IsEmailNotExistConstraint implements ValidatorConstraintInterface {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async validate(email: string) {
     const user = await this.usersRepository.getByUniqueField(email);
-    return !!user;
+    return !user;
   }
   defaultMessage() {
-    return `email email is wrong`;
+    return `email is already exist`;
   }
 }
 
-export function IsEmailExist(validationOptions?: ValidationOptions) {
+export function IsEmailNotExist(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsEmailExistConstraint
+      validator: IsEmailNotExistConstraint
     });
   };
 }

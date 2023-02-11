@@ -67,28 +67,12 @@ export class AuthService {
     const user = await this.usersRepository.getByUniqueField(
       confirmationCodeDto.code
     );
-    if (!user) {
-      throw new BadRequestException(['code code is wrong']);
-    }
-    if (user.emailConfirmation.confirmationCode !== confirmationCodeDto.code) {
-      throw new BadRequestException(['code code is wrong']);
-    }
-    if (user.emailConfirmation.isConfirmed) {
-      throw new BadRequestException(['code Account is already confirmed']);
-    }
-    if (user.emailConfirmation.expirationDate < new Date()) {
-      throw new BadRequestException(['code code is expired']);
-    }
-
     user.updateEmailConfirmationStatus();
     await this.usersRepository.save(user);
     return true;
   }
   async resendEmail(emailDto: InputEmailDto): Promise<boolean> {
     const user = await this.usersRepository.getByUniqueField(emailDto.email);
-    if (!user) {
-      throw new BadRequestException(['email email is wrong']);
-    }
     if (user.emailConfirmation.isConfirmed) {
       throw new BadRequestException(['email account is already confirmed']);
     }
