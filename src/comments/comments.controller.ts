@@ -7,7 +7,6 @@ import {
   HttpStatus,
   Param,
   Put,
-  Req,
   UseGuards
 } from '@nestjs/common';
 import { CommentsQueryRepository } from './comments.query.repository';
@@ -19,6 +18,8 @@ import { InputCreateCommentDto } from './dto/input.create.comment.dto';
 import { CommentsService } from './comments.service';
 import { InputUpdateLikeDto } from './dto/input.update.like.dto';
 import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
+import { CurrentUser } from '../helper/decorators/current.user.decorator';
+import { UserDocument } from '../users/entities/user.entity';
 
 @Controller('comments')
 export class CommentsController {
@@ -32,12 +33,9 @@ export class CommentsController {
   @Get(':id')
   async findOne(
     @Param('id', new CheckIdValidationPipe()) id: string,
-    @Req() req
+    @CurrentUser() user: UserDocument
   ): Promise<OutputCommentDto> {
-    return this.commentsQueryRepository.getById(
-      new Types.ObjectId(id),
-      req.user
-    );
+    return this.commentsQueryRepository.getById(new Types.ObjectId(id), user);
   }
 
   @UseGuards(BearerGuard)
@@ -46,12 +44,12 @@ export class CommentsController {
   async update(
     @Param('id', new CheckIdValidationPipe()) id: string,
     @Body() createCommentDto: InputCreateCommentDto,
-    @Req() req
+    @CurrentUser() user: UserDocument
   ) {
     await this.commentService.update(
       new Types.ObjectId(id),
       createCommentDto,
-      req.user
+      user
     );
     return;
   }
@@ -62,10 +60,10 @@ export class CommentsController {
   async updateStatusLike(
     @Param('commentId', new CheckIdValidationPipe()) commentId: string,
     @Body() updateLikeDto: InputUpdateLikeDto,
-    @Req() req
+    @CurrentUser() user: UserDocument
   ) {
     await this.commentService.updateStatusLike(
-      req.user,
+      user,
       commentId,
       updateLikeDto.likeStatus
     );
@@ -77,9 +75,9 @@ export class CommentsController {
   @Delete(':id')
   async remove(
     @Param('id', new CheckIdValidationPipe()) id: string,
-    @Req() req
+    @CurrentUser() user: UserDocument
   ) {
-    await this.commentService.delete(new Types.ObjectId(id), req.user);
+    await this.commentService.delete(new Types.ObjectId(id), user);
     return;
   }
 }

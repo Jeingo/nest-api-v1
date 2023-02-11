@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { Trim } from '../../helper/decorators/to.trim.decorator';
 import { IsBlogId } from '../../helper/decorators/is.blog.id.decorator';
 
@@ -22,6 +22,7 @@ export class InputCreatePostDto {
   content: string;
 
   @IsBlogId()
+  @IsMongoId()
   @IsString()
   @IsNotEmpty()
   @Trim()

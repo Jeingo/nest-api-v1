@@ -10,7 +10,6 @@ import {
   Query,
   Put,
   UseGuards,
-  Req,
   NotFoundException
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
@@ -31,6 +30,8 @@ import { InputCreateCommentDto } from '../comments/dto/input.create.comment.dto'
 import { CommentsService } from '../comments/comments.service';
 import { InputUpdatePostLikeDto } from './dto/input.update.post.like.dto';
 import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
+import { CurrentUser } from '../helper/decorators/current.user.decorator';
+import { UserDocument } from '../users/entities/user.entity';
 
 @Controller('posts')
 export class PostsController {
@@ -56,19 +57,21 @@ export class PostsController {
   @Get()
   async findAll(
     @Query() query: QueryPosts,
-    @Req() req
+    @CurrentUser() user: UserDocument
   ): Promise<PaginatedType<OutputPostDto>> {
-    return await this.postsQueryRepository.getAll(query, req.user);
+    return await this.postsQueryRepository.getAll(query, user);
   }
 
   @UseGuards(GetUserGuard)
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async findOne(@Param('id') id: string, @Req() req): Promise<OutputPostDto> {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
+  async findOne(
+    @Param('id', new CheckIdValidationPipe()) id: string,
+    @CurrentUser() user: UserDocument
+  ): Promise<OutputPostDto> {
     return await this.postsQueryRepository.getById(
       new Types.ObjectId(id),
-      req.user
+      user
     );
   }
 
@@ -76,10 +79,9 @@ export class PostsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new CheckIdValidationPipe()) id: string,
     @Body() updatePostDto: InputUpdatePostDto
   ) {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
     await this.postsService.update(new Types.ObjectId(id), updatePostDto);
     return;
   }
@@ -87,8 +89,7 @@ export class PostsController {
   @UseGuards(BasicGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    if (!Types.ObjectId.isValid(id)) throw new NotFoundException();
+  async remove(@Param('id', new CheckIdValidationPipe()) id: string) {
     await this.postsService.remove(new Types.ObjectId(id));
     return;
   }
@@ -99,13 +100,13 @@ export class PostsController {
   async findAllCommentsByPostId(
     @Query() query: QueryComments,
     @Param('postId') postId: string,
-    @Req() req
+    @CurrentUser() user: UserDocument
   ): Promise<PaginatedType<OutputCommentDto>> {
     if (!Types.ObjectId.isValid(postId)) throw new NotFoundException();
     return await this.commentsQueryRepository.getAllByPostId(
       query,
       postId,
-      req.user
+      user
     );
   }
 
@@ -115,12 +116,12 @@ export class PostsController {
   async createCommentByPostId(
     @Param('postId', new CheckIdValidationPipe()) postId: string,
     @Body() createCommentDto: InputCreateCommentDto,
-    @Req() req
+    @CurrentUser() user: UserDocument
   ): Promise<OutputCommentDto> {
     const createdCommentId = await this.commentsService.create(
       createCommentDto,
       postId,
-      req.user
+      user
     );
     return await this.commentsQueryRepository.getById(createdCommentId);
   }
@@ -131,12 +132,12 @@ export class PostsController {
   async updateStatusLike(
     @Param('postId', new CheckIdValidationPipe()) postId: string,
     @Body() updatePostLikeDto: InputUpdatePostLikeDto,
-    @Req() req
+    @CurrentUser() user: UserDocument
   ) {
     await this.postsService.updateStatusLike(
-      req.user._id.toString(),
+      user._id.toString(),
       postId,
-      req.user.login,
+      user.login,
       updatePostLikeDto.likeStatus
     );
     return;

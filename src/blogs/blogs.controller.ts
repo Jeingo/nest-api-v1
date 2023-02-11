@@ -9,8 +9,7 @@ import {
   HttpCode,
   Query,
   HttpStatus,
-  UseGuards,
-  Req
+  UseGuards
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { InputCreateBlogDto } from './dto/input.create.blog.dto';
@@ -28,6 +27,8 @@ import { OutputPostDto } from '../posts/dto/output.post.dto';
 import { BasicGuard } from '../auth/guards/basic.guard';
 import { GetUserGuard } from '../auth/guards/get.user.guard';
 import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
+import { CurrentUser } from '../helper/decorators/current.user.decorator';
+import { UserDocument } from '../users/entities/user.entity';
 
 @Controller('blogs')
 export class BlogsController {
@@ -102,12 +103,8 @@ export class BlogsController {
   async findAllPostsByBlogId(
     @Query() query: QueryPosts,
     @Param('blogId', new CheckIdValidationPipe()) blogId: string,
-    @Req() req
+    @CurrentUser() user: UserDocument
   ): Promise<PaginatedType<OutputPostDto>> {
-    return await this.postsQueryRepository.getAllByBlogId(
-      query,
-      blogId,
-      req.user
-    );
+    return await this.postsQueryRepository.getAllByBlogId(query, blogId, user);
   }
 }
