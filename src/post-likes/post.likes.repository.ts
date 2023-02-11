@@ -5,13 +5,22 @@ import {
   PostLike,
   PostLikeDocument
 } from './entities/post.like.entity';
-import { DbId } from '../global-types/global.types';
+import { DbId, LikeStatus } from '../global-types/global.types';
 
 @Injectable()
 export class PostLikesRepository {
   constructor(
     @InjectModel(PostLike.name) private postLikesModel: IPostLikeModel
   ) {}
+
+  create(
+    userId: string,
+    postId: string,
+    myStatus: LikeStatus,
+    login: string
+  ): PostLikeDocument {
+    return this.postLikesModel.make(userId, postId, myStatus, login);
+  }
   async getById(id: DbId): Promise<PostLikeDocument> {
     return this.postLikesModel.findById(id);
   }

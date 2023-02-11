@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { DbId } from '../global-types/global.types';
+import { DbId, LikeStatus } from '../global-types/global.types';
 import {
   CommentLike,
   CommentLikeDocument,
@@ -12,6 +12,13 @@ export class CommentLikesRepository {
   constructor(
     @InjectModel(CommentLike.name) private commentLikesModel: ICommentLikeModel
   ) {}
+  create(
+    userId: string,
+    commentId: string,
+    myStatus: LikeStatus
+  ): CommentLikeDocument {
+    return this.commentLikesModel.make(userId, commentId, myStatus);
+  }
   async getById(id: DbId): Promise<CommentLikeDocument> {
     return this.commentLikesModel.findById(id);
   }

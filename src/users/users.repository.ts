@@ -6,6 +6,15 @@ import { DbId } from '../global-types/global.types';
 @Injectable()
 export class UsersRepository {
   constructor(@InjectModel(User.name) private usersModel: IUserModel) {}
+
+  create(
+    login: string,
+    password: string,
+    email: string,
+    isConfirmed: boolean
+  ): UserDocument {
+    return this.usersModel.make(login, password, email, isConfirmed);
+  }
   async getById(id: DbId): Promise<UserDocument> {
     return this.usersModel.findById(id);
   }

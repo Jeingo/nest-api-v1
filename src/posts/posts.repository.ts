@@ -8,6 +8,15 @@ import { getUpdatedLike } from '../helper/query/post.like.repository.helper';
 export class PostsRepository {
   constructor(@InjectModel(Post.name) private postsModel: IPostModel) {}
 
+  create(
+    title: string,
+    description: string,
+    content: string,
+    blogId: string,
+    blogName: string
+  ): PostDocument {
+    return this.postsModel.make(title, description, content, blogId, blogName);
+  }
   async getById(id: DbId): Promise<PostDocument> {
     return this.postsModel.findById(id);
   }

@@ -7,8 +7,6 @@ import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
 import { DbId } from '../global-types/global.types';
-import { InjectModel } from '@nestjs/mongoose';
-import { IUserModel, User } from '../users/entities/user.entity';
 import { EmailManager } from '../adapters/email/email.manager';
 import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 import { InputEmailDto } from './dto/input.email.dto';
@@ -21,8 +19,7 @@ export class AuthService {
     private readonly usersRepository: UsersRepository,
     private readonly jwtAdapter: JwtAdapter,
     private readonly sessionsService: SessionsService,
-    private readonly emailManager: EmailManager,
-    @InjectModel(User.name) private usersModel: IUserModel
+    private readonly emailManager: EmailManager
   ) {}
 
   async checkCredentials(
@@ -69,7 +66,12 @@ export class AuthService {
     registrationUserDto: InputRegistrationUserDto
   ): Promise<DbId> {
     const { login, password, email } = registrationUserDto;
-    const createdUser = this.usersModel.make(login, password, email, false);
+    const createdUser = this.usersRepository.create(
+      login,
+      password,
+      email,
+      false
+    );
     await this.usersRepository.save(createdUser);
     await this.emailManager.sendRegistrationEmailConfirmation(createdUser);
     return createdUser._id;

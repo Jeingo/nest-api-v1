@@ -1,44 +1,29 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InputCreatePostDto } from './dto/input.create.post.dto';
 import { InputUpdatePostDto } from './dto/input.update.post.dto';
-import { InjectModel } from '@nestjs/mongoose';
 import { PostsRepository } from './posts.repository';
-import { IPostModel, Post } from './entities/post.entity';
 import { DbId, LikeStatus } from '../global-types/global.types';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
 import { InputCreatePostInBlogsDto } from '../blogs/dto/input.create.post.dto';
 import { PostLikesQueryRepository } from '../post-likes/post.likes.query.repository';
-import {
-  IPostLikeModel,
-  PostLike
-} from '../post-likes/entities/post.like.entity';
 import { PostLikesRepository } from '../post-likes/post.likes.repository';
 
 @Injectable()
 export class PostsService {
   constructor(
     private readonly postsRepository: PostsRepository,
-    @InjectModel(Post.name) private postsModel: IPostModel,
     private readonly blogsRepository: BlogsRepository,
     private readonly postLikesQueryRepository: PostLikesQueryRepository,
-    private readonly postLikesRepository: PostLikesRepository,
-    @InjectModel(PostLike.name) private postLikesModel: IPostLikeModel
+    private readonly postLikesRepository: PostLikesRepository
   ) {}
 
   async create(createPostDto: InputCreatePostDto): Promise<DbId> {
     const { title, shortDescription, content, blogId } = createPostDto;
-    if (!Types.ObjectId.isValid(blogId))
-      throw new BadRequestException(['blogId ID is bad']);
     const foundBlog = await this.blogsRepository.getById(
       new Types.ObjectId(blogId)
     );
-    if (!foundBlog) throw new BadRequestException(['blogId ID not found']);
-    const createdPost = this.postsModel.make(
+    const createdPost = this.postsRepository.create(
       title,
       shortDescription,
       content,
@@ -58,7 +43,7 @@ export class PostsService {
       new Types.ObjectId(blogId)
     );
     if (!foundBlog) throw new NotFoundException();
-    const createdPost = this.postsModel.make(
+    const createdPost = this.postsRepository.create(
       title,
       shortDescription,
       content,
@@ -71,12 +56,9 @@ export class PostsService {
 
   async update(id: DbId, updatePostDto: InputUpdatePostDto): Promise<boolean> {
     const { title, shortDescription, content, blogId } = updatePostDto;
-    if (!Types.ObjectId.isValid(blogId))
-      throw new BadRequestException(['blogId ID is bad']);
     const foundBlog = await this.blogsRepository.getById(
       new Types.ObjectId(blogId)
     );
-    if (!foundBlog) throw new BadRequestException(['blogId ID not found']);
     const post = await this.postsRepository.getById(id);
     if (!post) throw new NotFoundException();
     post.update(title, shortDescription, content, blogId, foundBlog.name);
@@ -104,7 +86,7 @@ export class PostsService {
       postId
     );
     if (!likeInfo) {
-      const newLike = this.postLikesModel.make(
+      const newLike = this.postLikesRepository.create(
         userId,
         postId,
         newLikeStatus,

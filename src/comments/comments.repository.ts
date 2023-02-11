@@ -13,6 +13,14 @@ export class CommentsRepository {
   constructor(
     @InjectModel(Comment.name) private commentsModel: ICommentModel
   ) {}
+  create(
+    content: string,
+    userId: string,
+    userLogin: string,
+    postId: string
+  ): CommentDocument {
+    return this.commentsModel.make(content, userId, userLogin, postId);
+  }
   async getById(id: DbId): Promise<CommentDocument> {
     return this.commentsModel.findById(id);
   }

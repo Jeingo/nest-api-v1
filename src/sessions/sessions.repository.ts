@@ -11,6 +11,23 @@ export class SessionsRepository {
   constructor(
     @InjectModel(Session.name) private sessionsModel: ISessionModel
   ) {}
+  create(
+    issueAt: string,
+    deviceId: string,
+    deviceName: string,
+    ip: string,
+    userId: string,
+    expireAt: string
+  ): SessionDocument {
+    return this.sessionsModel.make(
+      issueAt,
+      deviceId,
+      deviceName,
+      ip,
+      userId,
+      expireAt
+    );
+  }
   async save(session: SessionDocument): Promise<SessionDocument> {
     return session.save();
   }

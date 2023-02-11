@@ -6,8 +6,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
-import { InjectModel } from '@nestjs/mongoose';
-import { ISessionModel, Session } from './entities/session.entity';
 import { SessionsRepository } from './sessions.repository';
 import { DbId } from '../global-types/global.types';
 import { Token } from '../adapters/jwt/types/jwt.type';
@@ -17,8 +15,7 @@ export class SessionsService {
   constructor(
     private readonly configService: ConfigService<IConfigType>,
     private readonly jwtService: JwtService,
-    private readonly sessionsRepository: SessionsRepository,
-    @InjectModel(Session.name) private sessionsModel: ISessionModel
+    private readonly sessionsRepository: SessionsRepository
   ) {}
   async saveSession(
     refreshToken: string,
@@ -33,7 +30,7 @@ export class SessionsService {
     const userId = result.userId;
     const deviceId = result.deviceId;
 
-    const session = this.sessionsModel.make(
+    const session = this.sessionsRepository.create(
       issueAt,
       deviceId,
       deviceName,

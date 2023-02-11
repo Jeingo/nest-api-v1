@@ -3,11 +3,6 @@ import {
   Injectable,
   NotFoundException
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import {
-  CommentLike,
-  ICommentLikeModel
-} from '../comment-likes/entities/comment.like.entity';
 import { CommentLikesRepository } from '../comment-likes/comment.likes.repository';
 import { CommentLikesQueryRepository } from '../comment-likes/comment.like.query.repository';
 import { DbId, LikeStatus } from '../global-types/global.types';
@@ -16,7 +11,6 @@ import { UserDocument } from '../users/entities/user.entity';
 import { CommentsRepository } from './comments.repository';
 import { Types } from 'mongoose';
 import { PostsRepository } from '../posts/posts.repository';
-import { ICommentModel, Comment } from './entities/comment.entity';
 
 @Injectable()
 export class CommentsService {
@@ -24,9 +18,7 @@ export class CommentsService {
     private readonly commentLikesQueryRepository: CommentLikesQueryRepository,
     private readonly commentLikesRepository: CommentLikesRepository,
     private readonly commentRepository: CommentsRepository,
-    private readonly postsRepository: PostsRepository,
-    @InjectModel(CommentLike.name) private commentLikesModel: ICommentLikeModel,
-    @InjectModel(Comment.name) private commentsModel: ICommentModel
+    private readonly postsRepository: PostsRepository
   ) {}
 
   async create(
@@ -36,9 +28,9 @@ export class CommentsService {
   ): Promise<DbId> {
     const post = await this.postsRepository.getById(new Types.ObjectId(postId));
     if (!post) throw new NotFoundException();
-    const createdComment = this.commentsModel.make(
+    const createdComment = this.commentRepository.create(
       createCommentDto.content,
-      user?._id.toString(),
+      user._id.toString(),
       user.login,
       postId
     );
@@ -81,7 +73,7 @@ export class CommentsService {
       commentId
     );
     if (!likeInfo) {
-      const newLike = await this.commentLikesModel.make(
+      const newLike = await this.commentLikesRepository.create(
         user._id.toString(),
         commentId,
         newLikeStatus
