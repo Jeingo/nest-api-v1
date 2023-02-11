@@ -11,15 +11,15 @@ import {
 } from '../helper/query/query.repository.helper';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
-import { PostLikesQueryRepository } from '../post-likes/post.likes.query.repository';
 import { CurrentUserType } from '../auth/types/current.user.type';
+import { PostLikesRepository } from '../post-likes/post.likes.repository';
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(
     @InjectModel(Post.name) private postsModel: IPostModel,
     private readonly blogsRepository: BlogsRepository,
-    private readonly postLikesQueryRepository: PostLikesQueryRepository
+    private readonly postLikesRepository: PostLikesRepository
   ) {}
 
   async getAll(
@@ -98,8 +98,8 @@ export class PostsQueryRepository {
     if (!result) throw new NotFoundException();
     const mappedResult = this._getOutputPostDto(result);
     if (user && mappedResult) {
-      const like = await this.postLikesQueryRepository.getLike(
-        user?.userId,
+      const like = await this.postLikesRepository.getByUserIdAndPostId(
+        user.userId,
         mappedResult.id
       );
       if (like) {
@@ -107,8 +107,9 @@ export class PostsQueryRepository {
       }
     }
     if (mappedResult) {
-      const lastThreeLikes =
-        await this.postLikesQueryRepository.getLastThreeLikes(mappedResult.id);
+      const lastThreeLikes = await this.postLikesRepository.getLastThreeLikes(
+        mappedResult.id
+      );
       if (lastThreeLikes) {
         mappedResult.extendedLikesInfo.newestLikes = lastThreeLikes;
       }
@@ -135,7 +136,7 @@ export class PostsQueryRepository {
   private async _setStatusLike(posts: Array<OutputPostDto>, userId: string) {
     if (!userId) return posts;
     for (let i = 0; i < posts.length; i++) {
-      const like = await this.postLikesQueryRepository.getLike(
+      const like = await this.postLikesRepository.getByUserIdAndPostId(
         userId,
         posts[i].id
       );
@@ -147,8 +148,9 @@ export class PostsQueryRepository {
   }
   private async _setThreeLastUser(posts: Array<OutputPostDto>) {
     for (let i = 0; i < posts.length; i++) {
-      const lastThreeLikes =
-        await this.postLikesQueryRepository.getLastThreeLikes(posts[i].id);
+      const lastThreeLikes = await this.postLikesRepository.getLastThreeLikes(
+        posts[i].id
+      );
       if (lastThreeLikes) {
         posts[i].extendedLikesInfo.newestLikes = lastThreeLikes;
       }

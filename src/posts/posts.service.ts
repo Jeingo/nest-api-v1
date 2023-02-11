@@ -6,7 +6,6 @@ import { DbId, LikeStatus } from '../global-types/global.types';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
 import { InputCreatePostInBlogsDto } from '../blogs/dto/input.create.post.dto';
-import { PostLikesQueryRepository } from '../post-likes/post.likes.query.repository';
 import { PostLikesRepository } from '../post-likes/post.likes.repository';
 
 @Injectable()
@@ -14,7 +13,6 @@ export class PostsService {
   constructor(
     private readonly postsRepository: PostsRepository,
     private readonly blogsRepository: BlogsRepository,
-    private readonly postLikesQueryRepository: PostLikesQueryRepository,
     private readonly postLikesRepository: PostLikesRepository
   ) {}
 
@@ -81,11 +79,11 @@ export class PostsService {
     let lastStatus: LikeStatus = LikeStatus.None;
     const post = await this.postsRepository.getById(new Types.ObjectId(postId));
     if (!post) throw new NotFoundException();
-    const likeInfo = await this.postLikesQueryRepository.getLike(
+    const like = await this.postLikesRepository.getByUserIdAndPostId(
       userId,
       postId
     );
-    if (!likeInfo) {
+    if (!like) {
       const newLike = this.postLikesRepository.create(
         userId,
         postId,
@@ -94,12 +92,10 @@ export class PostsService {
       );
       await this.postLikesRepository.save(newLike);
     } else {
-      const postLike = await this.postLikesRepository.getById(
-        new Types.ObjectId(likeInfo.id)
-      );
+      const postLike = await this.postLikesRepository.getById(like._id);
       postLike.update(newLikeStatus);
       await this.postLikesRepository.save(postLike);
-      lastStatus = likeInfo.myStatus;
+      lastStatus = like.myStatus;
     }
     //todo refactoring
     //post.addLike(like)
