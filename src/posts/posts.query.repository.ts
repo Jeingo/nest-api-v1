@@ -3,23 +3,27 @@ import { InjectModel } from '@nestjs/mongoose';
 import { IPostModel, Post, PostDocument } from './entities/post.entity';
 import { DbId, Direction, LikeStatus } from '../global-types/global.types';
 import { OutputPostDto } from './dto/output.post.dto';
-import { QueryPosts } from './types/posts.type';
+import { NewestLikesType, QueryPosts } from './types/posts.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
-import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
 import { CurrentUserType } from '../auth/types/current.user.type';
-import { PostLikesRepository } from '../post-likes/post.likes.repository';
+import { Blog, IBlogModel } from '../blogs/entities/blog.entity';
+import {
+  IPostLikeModel,
+  PostLike,
+  PostLikeDocument
+} from '../post-likes/entities/post.like.entity';
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(
     @InjectModel(Post.name) private postsModel: IPostModel,
-    private readonly blogsRepository: BlogsRepository,
-    private readonly postLikesRepository: PostLikesRepository
+    @InjectModel(Blog.name) private blogsModel: IBlogModel,
+    @InjectModel(PostLike.name) private postLikesModel: IPostLikeModel
   ) {}
 
   async getAll(
@@ -60,7 +64,7 @@ export class PostsQueryRepository {
     blogId: string,
     user?: CurrentUserType
   ): Promise<PaginatedType<OutputPostDto>> {
-    const blog = await this.blogsRepository.getById(new Types.ObjectId(blogId));
+    const blog = await this.blogsModel.findById(new Types.ObjectId(blogId));
     if (!blog) throw new NotFoundException();
     const {
       sortBy = 'createdAt',
@@ -98,18 +102,16 @@ export class PostsQueryRepository {
     if (!result) throw new NotFoundException();
     const mappedResult = this._getOutputPostDto(result);
     if (user && mappedResult) {
-      const like = await this.postLikesRepository.getByUserIdAndPostId(
-        user.userId,
-        mappedResult.id
-      );
+      const like = await this.postLikesModel.findOne({
+        userId: user.userId,
+        postId: mappedResult.id
+      });
       if (like) {
         mappedResult.extendedLikesInfo.myStatus = like.myStatus;
       }
     }
     if (mappedResult) {
-      const lastThreeLikes = await this.postLikesRepository.getLastThreeLikes(
-        mappedResult.id
-      );
+      const lastThreeLikes = await this._getLastThreeLikes(mappedResult.id);
       if (lastThreeLikes) {
         mappedResult.extendedLikesInfo.newestLikes = lastThreeLikes;
       }
@@ -136,10 +138,10 @@ export class PostsQueryRepository {
   private async _setStatusLike(posts: Array<OutputPostDto>, userId: string) {
     if (!userId) return posts;
     for (let i = 0; i < posts.length; i++) {
-      const like = await this.postLikesRepository.getByUserIdAndPostId(
-        userId,
-        posts[i].id
-      );
+      const like = await this.postLikesModel.findOne({
+        userId: userId,
+        postId: posts[i].id
+      });
       if (like) {
         posts[i].extendedLikesInfo.myStatus = like.myStatus;
       }
@@ -148,13 +150,35 @@ export class PostsQueryRepository {
   }
   private async _setThreeLastUser(posts: Array<OutputPostDto>) {
     for (let i = 0; i < posts.length; i++) {
-      const lastThreeLikes = await this.postLikesRepository.getLastThreeLikes(
-        posts[i].id
-      );
+      const lastThreeLikes = await this._getLastThreeLikes(posts[i].id);
       if (lastThreeLikes) {
         posts[i].extendedLikesInfo.newestLikes = lastThreeLikes;
       }
     }
     return posts;
+  }
+  private async _getLastThreeLikes(
+    postId: string
+  ): Promise<NewestLikesType[] | null> {
+    const desc = -1;
+    const threeLastUser = 3;
+    const likeStatus = LikeStatus.Like;
+    const result = await this.postLikesModel
+      .find({
+        postId: postId,
+        myStatus: likeStatus
+      })
+      .sort({ addedAt: desc })
+      .limit(threeLastUser);
+
+    if (!result) return null;
+    return result.map(this._getOutputExtendedLike);
+  }
+  private _getOutputExtendedLike(like: PostLikeDocument): NewestLikesType {
+    return {
+      addedAt: like.addedAt,
+      userId: like.userId,
+      login: like.login
+    };
   }
 }
