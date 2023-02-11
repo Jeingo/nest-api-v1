@@ -10,20 +10,23 @@ import {
 import { QueryComments } from './types/comments.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import { Types } from 'mongoose';
-import { PostsRepository } from '../posts/posts.repository';
 import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
 import { CurrentUserType } from '../auth/types/current.user.type';
-import { CommentLikesRepository } from '../comment-likes/comment.likes.repository';
+import { IPostModel, Post } from '../posts/entities/post.entity';
+import {
+  CommentLike,
+  ICommentLikeModel
+} from '../comment-likes/entities/comment.like.entity';
 
 @Injectable()
 export class CommentsQueryRepository {
   constructor(
     @InjectModel(Comment.name) private commentsModel: ICommentModel,
-    private readonly postsRepository: PostsRepository,
-    private readonly commentLikesRepository: CommentLikesRepository
+    @InjectModel(Post.name) private postsModel: IPostModel,
+    @InjectModel(CommentLike.name) private commentLikesModel: ICommentLikeModel
   ) {}
 
   async getAllByPostId(
@@ -31,7 +34,7 @@ export class CommentsQueryRepository {
     postId: string,
     user?: CurrentUserType
   ): Promise<PaginatedType<OutputCommentDto>> {
-    const post = await this.postsRepository.getById(new Types.ObjectId(postId));
+    const post = await this.postsModel.findById(new Types.ObjectId(postId));
     if (!post) throw new NotFoundException();
     const {
       sortBy = 'createdAt',
@@ -66,10 +69,10 @@ export class CommentsQueryRepository {
     if (!result) throw new NotFoundException();
     const mappedResult = this._getOutputComment(result);
     if (user?.userId && mappedResult) {
-      const like = await this.commentLikesRepository.getByUserIdAndCommentId(
-        user.userId,
-        mappedResult.id
-      );
+      const like = await this.commentLikesModel.findOne({
+        userId: user.userId,
+        commentId: mappedResult.id
+      });
       if (like) {
         mappedResult.likesInfo.myStatus = like.myStatus;
       }
@@ -98,10 +101,10 @@ export class CommentsQueryRepository {
   ) {
     if (!userId) return comments;
     for (let i = 0; i < comments.length; i++) {
-      const like = await this.commentLikesRepository.getByUserIdAndCommentId(
-        userId,
-        comments[i].id
-      );
+      const like = await this.commentLikesModel.findOne({
+        userId: userId,
+        commentId: comments[i].id
+      });
       if (like) {
         comments[i].likesInfo.myStatus = like.myStatus;
       }
