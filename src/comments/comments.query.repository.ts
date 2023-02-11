@@ -15,8 +15,8 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
-import { UserDocument } from '../users/entities/user.entity';
 import { CommentLikesQueryRepository } from '../comment-likes/comment.like.query.repository';
+import { CurrentUserType } from '../auth/types/current.user.type';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -29,7 +29,7 @@ export class CommentsQueryRepository {
   async getAllByPostId(
     query: QueryComments,
     postId: string,
-    user?: UserDocument
+    user?: CurrentUserType
   ): Promise<PaginatedType<OutputCommentDto>> {
     const post = await this.postsRepository.getById(new Types.ObjectId(postId));
     if (!post) throw new NotFoundException();
@@ -52,7 +52,7 @@ export class CommentsQueryRepository {
     const mappedComments = result.map(this._getOutputComment);
     const mappedCommentsWithStatusLike = await this._setStatusLike(
       mappedComments,
-      user?._id.toString()
+      user?.userId
     );
     return getPaginatedType(
       mappedCommentsWithStatusLike,
@@ -61,13 +61,13 @@ export class CommentsQueryRepository {
       countAllDocuments
     );
   }
-  async getById(id: DbId, user?: UserDocument): Promise<OutputCommentDto> {
+  async getById(id: DbId, user?: CurrentUserType): Promise<OutputCommentDto> {
     const result = await this.commentsModel.findById(id);
     if (!result) throw new NotFoundException();
     const mappedResult = this._getOutputComment(result);
-    if (user?._id && mappedResult) {
+    if (user?.userId && mappedResult) {
       const like = await this.commentLikesQueryRepository.getLike(
-        user?._id.toString(),
+        user?.userId,
         mappedResult.id
       );
       if (like) {

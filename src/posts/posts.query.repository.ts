@@ -11,8 +11,8 @@ import {
 } from '../helper/query/query.repository.helper';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
-import { UserDocument } from '../users/entities/user.entity';
 import { PostLikesQueryRepository } from '../post-likes/post.likes.query.repository';
+import { CurrentUserType } from '../auth/types/current.user.type';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -24,7 +24,7 @@ export class PostsQueryRepository {
 
   async getAll(
     query: QueryPosts,
-    user?: UserDocument
+    user?: CurrentUserType
   ): Promise<PaginatedType<OutputPostDto>> {
     const {
       sortBy = 'createdAt',
@@ -43,7 +43,7 @@ export class PostsQueryRepository {
     const mappedPost = result.map(this._getOutputPostDto);
     const mappedPostWithStatusLike = await this._setStatusLike(
       mappedPost,
-      user?._id.toString()
+      user?.userId
     );
     const mappedFinishPost = await this._setThreeLastUser(
       mappedPostWithStatusLike
@@ -58,7 +58,7 @@ export class PostsQueryRepository {
   async getAllByBlogId(
     query: QueryPosts,
     blogId: string,
-    user?: UserDocument
+    user?: CurrentUserType
   ): Promise<PaginatedType<OutputPostDto>> {
     const blog = await this.blogsRepository.getById(new Types.ObjectId(blogId));
     if (!blog) throw new NotFoundException();
@@ -81,7 +81,7 @@ export class PostsQueryRepository {
     const mappedPost = result.map(this._getOutputPostDto);
     const mappedPostWithStatusLike = await this._setStatusLike(
       mappedPost,
-      user?._id.toString()
+      user?.userId
     );
     const mappedFinishPost = await this._setThreeLastUser(
       mappedPostWithStatusLike
@@ -93,13 +93,13 @@ export class PostsQueryRepository {
       countAllDocuments
     );
   }
-  async getById(id: DbId, user?: UserDocument): Promise<OutputPostDto> {
+  async getById(id: DbId, user?: CurrentUserType): Promise<OutputPostDto> {
     const result = await this.postsModel.findById(id);
     if (!result) throw new NotFoundException();
     const mappedResult = this._getOutputPostDto(result);
     if (user && mappedResult) {
       const like = await this.postLikesQueryRepository.getLike(
-        user?._id.toString(),
+        user?.userId,
         mappedResult.id
       );
       if (like) {

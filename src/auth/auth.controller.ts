@@ -9,8 +9,7 @@ import {
   Headers,
   Res,
   Get,
-  UseGuards,
-  Req
+  UseGuards
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { InputLoginUserDto } from './dto/input.login.user.dto';
@@ -32,6 +31,9 @@ import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 import { InputEmailDto } from './dto/input.email.dto';
 import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
 import { InputNewPasswordDto } from './dto/input.newpassword.dto';
+import { CurrentUser } from '../helper/decorators/current.user.decorator';
+import { CurrentUserType } from './types/current.user.type';
+import { Types } from 'mongoose';
 
 const limit = 5;
 const ttl = 10;
@@ -123,8 +125,10 @@ export class AuthController {
   @UseGuards(BearerGuard)
   @HttpCode(HttpStatus.OK)
   @Get('me')
-  async me(@Req() req): Promise<OutputUserMeDto> {
-    return await this.usersQueryRepository.getMeById(req.user._id);
+  async me(@CurrentUser() user: CurrentUserType): Promise<OutputUserMeDto> {
+    return await this.usersQueryRepository.getMeById(
+      new Types.ObjectId(user.userId)
+    );
   }
 
   @Throttle(limit, ttl)

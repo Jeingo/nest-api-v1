@@ -19,7 +19,7 @@ import { CommentsService } from './comments.service';
 import { InputUpdateLikeDto } from './dto/input.update.like.dto';
 import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/decorators/current.user.decorator';
-import { UserDocument } from '../users/entities/user.entity';
+import { CurrentUserType } from '../auth/types/current.user.type';
 
 @Controller('comments')
 export class CommentsController {
@@ -33,7 +33,7 @@ export class CommentsController {
   @Get(':id')
   async findOne(
     @Param('id', new CheckIdValidationPipe()) id: string,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ): Promise<OutputCommentDto> {
     return this.commentsQueryRepository.getById(new Types.ObjectId(id), user);
   }
@@ -44,7 +44,7 @@ export class CommentsController {
   async update(
     @Param('id', new CheckIdValidationPipe()) id: string,
     @Body() createCommentDto: InputCreateCommentDto,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ) {
     await this.commentService.update(
       new Types.ObjectId(id),
@@ -60,7 +60,7 @@ export class CommentsController {
   async updateStatusLike(
     @Param('commentId', new CheckIdValidationPipe()) commentId: string,
     @Body() updateLikeDto: InputUpdateLikeDto,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ) {
     await this.commentService.updateStatusLike(
       user,
@@ -75,7 +75,7 @@ export class CommentsController {
   @Delete(':id')
   async remove(
     @Param('id', new CheckIdValidationPipe()) id: string,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ) {
     await this.commentService.delete(new Types.ObjectId(id), user);
     return;

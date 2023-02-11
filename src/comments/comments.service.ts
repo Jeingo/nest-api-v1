@@ -7,10 +7,10 @@ import { CommentLikesRepository } from '../comment-likes/comment.likes.repositor
 import { CommentLikesQueryRepository } from '../comment-likes/comment.like.query.repository';
 import { DbId, LikeStatus } from '../global-types/global.types';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
-import { UserDocument } from '../users/entities/user.entity';
 import { CommentsRepository } from './comments.repository';
 import { Types } from 'mongoose';
 import { PostsRepository } from '../posts/posts.repository';
+import { CurrentUserType } from '../auth/types/current.user.type';
 
 @Injectable()
 export class CommentsService {
@@ -24,13 +24,13 @@ export class CommentsService {
   async create(
     createCommentDto: InputCreateCommentDto,
     postId: string,
-    user: UserDocument
+    user: CurrentUserType
   ): Promise<DbId> {
     const post = await this.postsRepository.getById(new Types.ObjectId(postId));
     if (!post) throw new NotFoundException();
     const createdComment = this.commentRepository.create(
       createCommentDto.content,
-      user._id.toString(),
+      user.userId,
       user.login,
       postId
     );
@@ -40,26 +40,26 @@ export class CommentsService {
   async update(
     id: DbId,
     createCommentDto: InputCreateCommentDto,
-    user: UserDocument
+    user: CurrentUserType
   ): Promise<boolean> {
     const comment = await this.commentRepository.getById(id);
     if (!comment) throw new NotFoundException();
-    if (comment.commentatorInfo.userId !== user._id.toString())
+    if (comment.commentatorInfo.userId !== user.userId)
       throw new ForbiddenException();
     comment.update(createCommentDto.content);
     await this.commentRepository.save(comment);
     return true;
   }
-  async delete(id: DbId, user: UserDocument): Promise<boolean> {
+  async delete(id: DbId, user: CurrentUserType): Promise<boolean> {
     const comment = await this.commentRepository.getById(id);
     if (!comment) throw new NotFoundException();
-    if (comment.commentatorInfo.userId !== user._id.toString())
+    if (comment.commentatorInfo.userId !== user.userId)
       throw new ForbiddenException();
     await this.commentRepository.delete(id);
     return true;
   }
   async updateStatusLike(
-    user: UserDocument,
+    user: CurrentUserType,
     commentId: string,
     newLikeStatus: LikeStatus
   ): Promise<boolean> {
@@ -69,12 +69,12 @@ export class CommentsService {
     );
     if (!comment) throw new NotFoundException();
     const likeInfo = await this.commentLikesQueryRepository.getLike(
-      user._id.toString(),
+      user.userId,
       commentId
     );
     if (!likeInfo) {
       const newLike = await this.commentLikesRepository.create(
-        user._id.toString(),
+        user.userId,
         commentId,
         newLikeStatus
       );

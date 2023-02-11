@@ -28,7 +28,7 @@ import { BasicGuard } from '../auth/guards/basic.guard';
 import { GetUserGuard } from '../auth/guards/get.user.guard';
 import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/decorators/current.user.decorator';
-import { UserDocument } from '../users/entities/user.entity';
+import { CurrentUserType } from '../auth/types/current.user.type';
 
 @Controller('blogs')
 export class BlogsController {
@@ -103,7 +103,7 @@ export class BlogsController {
   async findAllPostsByBlogId(
     @Query() query: QueryPosts,
     @Param('blogId', new CheckIdValidationPipe()) blogId: string,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ): Promise<PaginatedType<OutputPostDto>> {
     return await this.postsQueryRepository.getAllByBlogId(query, blogId, user);
   }

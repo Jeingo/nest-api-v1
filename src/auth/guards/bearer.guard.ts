@@ -42,7 +42,7 @@ export class BearerGuard implements CanActivate {
     if (!user) {
       throw new UnauthorizedException();
     }
-    request.user = user;
+    request.user = { userId: user._id.toString(), login: user.login };
     return true;
   }
 }

@@ -31,7 +31,7 @@ import { CommentsService } from '../comments/comments.service';
 import { InputUpdatePostLikeDto } from './dto/input.update.post.like.dto';
 import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/decorators/current.user.decorator';
-import { UserDocument } from '../users/entities/user.entity';
+import { CurrentUserType } from '../auth/types/current.user.type';
 
 @Controller('posts')
 export class PostsController {
@@ -57,7 +57,7 @@ export class PostsController {
   @Get()
   async findAll(
     @Query() query: QueryPosts,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ): Promise<PaginatedType<OutputPostDto>> {
     return await this.postsQueryRepository.getAll(query, user);
   }
@@ -67,7 +67,7 @@ export class PostsController {
   @Get(':id')
   async findOne(
     @Param('id', new CheckIdValidationPipe()) id: string,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ): Promise<OutputPostDto> {
     return await this.postsQueryRepository.getById(
       new Types.ObjectId(id),
@@ -100,7 +100,7 @@ export class PostsController {
   async findAllCommentsByPostId(
     @Query() query: QueryComments,
     @Param('postId') postId: string,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ): Promise<PaginatedType<OutputCommentDto>> {
     if (!Types.ObjectId.isValid(postId)) throw new NotFoundException();
     return await this.commentsQueryRepository.getAllByPostId(
@@ -116,7 +116,7 @@ export class PostsController {
   async createCommentByPostId(
     @Param('postId', new CheckIdValidationPipe()) postId: string,
     @Body() createCommentDto: InputCreateCommentDto,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ): Promise<OutputCommentDto> {
     const createdCommentId = await this.commentsService.create(
       createCommentDto,
@@ -132,10 +132,10 @@ export class PostsController {
   async updateStatusLike(
     @Param('postId', new CheckIdValidationPipe()) postId: string,
     @Body() updatePostLikeDto: InputUpdatePostLikeDto,
-    @CurrentUser() user: UserDocument
+    @CurrentUser() user: CurrentUserType
   ) {
     await this.postsService.updateStatusLike(
-      user._id.toString(),
+      user.userId,
       postId,
       user.login,
       updatePostLikeDto.likeStatus
