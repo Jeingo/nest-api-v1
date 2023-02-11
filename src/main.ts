@@ -15,6 +15,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
-  await app.listen(configService.get('PORT'));
+  await app.listen(configService.get('port'));
 }
 bootstrap();
