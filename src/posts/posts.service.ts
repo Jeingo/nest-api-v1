@@ -34,18 +34,16 @@ export class PostsService {
 
   async createInBlogs(
     createPostDto: InputCreatePostInBlogsDto,
-    blogId: string
+    blogId: DbId
   ): Promise<DbId> {
     const { title, shortDescription, content } = createPostDto;
-    const foundBlog = await this.blogsRepository.getById(
-      new Types.ObjectId(blogId)
-    );
+    const foundBlog = await this.blogsRepository.getById(blogId);
     if (!foundBlog) throw new NotFoundException();
     const createdPost = this.postsRepository.create(
       title,
       shortDescription,
       content,
-      blogId,
+      blogId.toString(),
       foundBlog.name
     );
     await this.postsRepository.save(createdPost);
@@ -72,7 +70,7 @@ export class PostsService {
   }
   async updateStatusLike(
     userId: string,
-    postId: string,
+    postId: DbId,
     login: string,
     newLikeStatus: LikeStatus
   ): Promise<boolean> {
@@ -81,12 +79,12 @@ export class PostsService {
     if (!post) throw new NotFoundException();
     const like = await this.postLikesRepository.getByUserIdAndPostId(
       userId,
-      postId
+      postId.toString()
     );
     if (!like) {
       const newLike = this.postLikesRepository.create(
         userId,
-        postId,
+        postId.toString(),
         newLikeStatus,
         login
       );

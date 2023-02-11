@@ -10,16 +10,16 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { CommentsQueryRepository } from './comments.query.repository';
-import { Types } from 'mongoose';
 import { OutputCommentDto } from './dto/output.comment.dto';
 import { GetUserGuard } from '../auth/guards/get.user.guard';
 import { BearerGuard } from '../auth/guards/bearer.guard';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
 import { CommentsService } from './comments.service';
 import { InputUpdateLikeDto } from './dto/input.update.like.dto';
-import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
+import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
+import { DbId } from '../global-types/global.types';
 
 @Controller('comments')
 export class CommentsController {
@@ -32,25 +32,21 @@ export class CommentsController {
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   async findOne(
-    @Param('id', new CheckIdValidationPipe()) id: string,
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
     @CurrentUser() user: CurrentUserType
   ): Promise<OutputCommentDto> {
-    return this.commentsQueryRepository.getById(new Types.ObjectId(id), user);
+    return this.commentsQueryRepository.getById(id, user);
   }
 
   @UseGuards(BearerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
-    @Param('id', new CheckIdValidationPipe()) id: string,
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
     @Body() createCommentDto: InputCreateCommentDto,
     @CurrentUser() user: CurrentUserType
   ) {
-    await this.commentService.update(
-      new Types.ObjectId(id),
-      createCommentDto,
-      user
-    );
+    await this.commentService.update(id, createCommentDto, user);
     return;
   }
 
@@ -58,7 +54,7 @@ export class CommentsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':commentId/like-status')
   async updateStatusLike(
-    @Param('commentId', new CheckIdValidationPipe()) commentId: string,
+    @Param('commentId', new CheckIdAndParseToDBId()) commentId: string,
     @Body() updateLikeDto: InputUpdateLikeDto,
     @CurrentUser() user: CurrentUserType
   ) {
@@ -74,10 +70,10 @@ export class CommentsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(
-    @Param('id', new CheckIdValidationPipe()) id: string,
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
     @CurrentUser() user: CurrentUserType
   ) {
-    await this.commentService.delete(new Types.ObjectId(id), user);
+    await this.commentService.delete(id, user);
     return;
   }
 }

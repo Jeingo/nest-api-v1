@@ -18,7 +18,6 @@ import { BlogsQueryRepository } from './blogs.query.repository';
 import { OutputBlogDto } from './dto/output.blog.dto';
 import { QueryBlogs } from './types/blogs.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
-import { Types } from 'mongoose';
 import { InputCreatePostInBlogsDto } from './dto/input.create.post.dto';
 import { PostsService } from '../posts/posts.service';
 import { PostsQueryRepository } from '../posts/posts.query.repository';
@@ -26,9 +25,10 @@ import { QueryPosts } from '../posts/types/posts.type';
 import { OutputPostDto } from '../posts/dto/output.post.dto';
 import { BasicGuard } from '../auth/guards/basic.guard';
 import { GetUserGuard } from '../auth/guards/get.user.guard';
-import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
+import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
+import { DbId } from '../global-types/global.types';
 
 @Controller('blogs')
 export class BlogsController {
@@ -60,34 +60,34 @@ export class BlogsController {
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   async findOne(
-    @Param('id', new CheckIdValidationPipe()) id: string
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId
   ): Promise<OutputBlogDto> {
-    return await this.blogsQueryRepository.getById(new Types.ObjectId(id));
+    return await this.blogsQueryRepository.getById(id);
   }
 
   @UseGuards(BasicGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
-    @Param('id', new CheckIdValidationPipe()) id: string,
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
     @Body() updateBlogDto: InputUpdateBlogDto
   ) {
-    await this.blogsService.update(new Types.ObjectId(id), updateBlogDto);
+    await this.blogsService.update(id, updateBlogDto);
     return;
   }
 
   @UseGuards(BasicGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async remove(@Param('id', new CheckIdValidationPipe()) id: string) {
-    return this.blogsService.remove(new Types.ObjectId(id));
+  async remove(@Param('id', new CheckIdAndParseToDBId()) id: DbId) {
+    return this.blogsService.remove(id);
   }
 
   @UseGuards(BasicGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post(':blogId/posts')
   async createPost(
-    @Param('blogId', new CheckIdValidationPipe()) blogId: string,
+    @Param('blogId', new CheckIdAndParseToDBId()) blogId: DbId,
     @Body() createPostDto: InputCreatePostInBlogsDto
   ): Promise<OutputPostDto> {
     const createdPostId = await this.postsService.createInBlogs(
@@ -102,7 +102,7 @@ export class BlogsController {
   @Get(':blogId/posts')
   async findAllPostsByBlogId(
     @Query() query: QueryPosts,
-    @Param('blogId', new CheckIdValidationPipe()) blogId: string,
+    @Param('blogId', new CheckIdAndParseToDBId()) blogId: DbId,
     @CurrentUser() user: CurrentUserType
   ): Promise<PaginatedType<OutputPostDto>> {
     return await this.postsQueryRepository.getAllByBlogId(query, blogId, user);

@@ -49,7 +49,7 @@ import { SessionsQueryRepository } from './sessions/sessions.query.repository';
 import { TestingController } from './testing/testing.controller';
 import { TestingService } from './testing/testing.service';
 import { UsersController } from './users/users.controller';
-import { CheckIdValidationPipe } from './helper/pipes/check.id.validator.pipe';
+import { CheckIdAndParseToDBId } from './helper/pipes/check.id.validator.pipe';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -79,7 +79,7 @@ const providers = [
   IsBlogIdConstraint,
   SessionsQueryRepository,
   TestingService,
-  CheckIdValidationPipe
+  CheckIdAndParseToDBId
 ];
 const controllers = [
   AuthController,

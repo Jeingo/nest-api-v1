@@ -21,7 +21,7 @@ export class CommentsService {
 
   async create(
     createCommentDto: InputCreateCommentDto,
-    postId: string,
+    postId: DbId,
     user: CurrentUserType
   ): Promise<DbId> {
     const post = await this.postsRepository.getById(new Types.ObjectId(postId));
@@ -30,7 +30,7 @@ export class CommentsService {
       createCommentDto.content,
       user.userId,
       user.login,
-      postId
+      postId.toString()
     );
     await this.commentRepository.save(createdComment);
     return createdComment._id;

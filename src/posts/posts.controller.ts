@@ -29,9 +29,10 @@ import { BearerGuard } from '../auth/guards/bearer.guard';
 import { InputCreateCommentDto } from '../comments/dto/input.create.comment.dto';
 import { CommentsService } from '../comments/comments.service';
 import { InputUpdatePostLikeDto } from './dto/input.update.post.like.dto';
-import { CheckIdValidationPipe } from '../helper/pipes/check.id.validator.pipe';
+import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
+import { DbId } from '../global-types/global.types';
 
 @Controller('posts')
 export class PostsController {
@@ -66,31 +67,28 @@ export class PostsController {
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   async findOne(
-    @Param('id', new CheckIdValidationPipe()) id: string,
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
     @CurrentUser() user: CurrentUserType
   ): Promise<OutputPostDto> {
-    return await this.postsQueryRepository.getById(
-      new Types.ObjectId(id),
-      user
-    );
+    return await this.postsQueryRepository.getById(id, user);
   }
 
   @UseGuards(BasicGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
-    @Param('id', new CheckIdValidationPipe()) id: string,
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
     @Body() updatePostDto: InputUpdatePostDto
   ) {
-    await this.postsService.update(new Types.ObjectId(id), updatePostDto);
+    await this.postsService.update(id, updatePostDto);
     return;
   }
 
   @UseGuards(BasicGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async remove(@Param('id', new CheckIdValidationPipe()) id: string) {
-    await this.postsService.remove(new Types.ObjectId(id));
+  async remove(@Param('id', new CheckIdAndParseToDBId()) id: DbId) {
+    await this.postsService.remove(id);
     return;
   }
 
@@ -114,7 +112,7 @@ export class PostsController {
   @HttpCode(HttpStatus.CREATED)
   @Post(':postId/comments')
   async createCommentByPostId(
-    @Param('postId', new CheckIdValidationPipe()) postId: string,
+    @Param('postId', new CheckIdAndParseToDBId()) postId: DbId,
     @Body() createCommentDto: InputCreateCommentDto,
     @CurrentUser() user: CurrentUserType
   ): Promise<OutputCommentDto> {
@@ -130,7 +128,7 @@ export class PostsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':postId/like-status')
   async updateStatusLike(
-    @Param('postId', new CheckIdValidationPipe()) postId: string,
+    @Param('postId', new CheckIdAndParseToDBId()) postId: DbId,
     @Body() updatePostLikeDto: InputUpdatePostLikeDto,
     @CurrentUser() user: CurrentUserType
   ) {

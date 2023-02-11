@@ -26,6 +26,7 @@ export class PostsRepository {
   async delete(id: DbId): Promise<PostDocument> {
     return this.postsModel.findByIdAndDelete(id);
   }
+  //todo move to entity
   async updateLikeInPost(
     post: PostDocument,
     lastStatus: LikeStatus,

@@ -9,7 +9,6 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
-import { Types } from 'mongoose';
 import { CurrentUserType } from '../auth/types/current.user.type';
 import { Blog, IBlogModel } from '../blogs/entities/blog.entity';
 import {
@@ -61,10 +60,10 @@ export class PostsQueryRepository {
   }
   async getAllByBlogId(
     query: QueryPosts,
-    blogId: string,
+    blogId: DbId,
     user?: CurrentUserType
   ): Promise<PaginatedType<OutputPostDto>> {
-    const blog = await this.blogsModel.findById(new Types.ObjectId(blogId));
+    const blog = await this.blogsModel.findById(blogId);
     if (!blog) throw new NotFoundException();
     const {
       sortBy = 'createdAt',
@@ -75,10 +74,10 @@ export class PostsQueryRepository {
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
     const skipNumber = (+pageNumber - 1) * +pageSize;
     const countAllDocuments = await this.postsModel.countDocuments({
-      blogId: blogId
+      blogId: blogId.toString()
     });
     const result = await this.postsModel
-      .find({ blogId: blogId })
+      .find({ blogId: blogId.toString() })
       .sort({ [sortBy]: sortDirectionNumber })
       .skip(skipNumber)
       .limit(+pageSize);

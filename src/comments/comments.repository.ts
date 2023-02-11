@@ -30,6 +30,7 @@ export class CommentsRepository {
   async delete(id: DbId): Promise<CommentDocument> {
     return this.commentsModel.findByIdAndDelete(id);
   }
+  //todo move to entity
   async updateLikeInComment(
     comment: CommentDocument,
     lastStatus: LikeStatus,
