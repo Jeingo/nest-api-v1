@@ -29,7 +29,6 @@ import { UsersQueryRepository } from './users/users.query.repository';
 import { EmailManager } from './adapters/email/email.manager';
 import { EmailService } from './adapters/email/email.service';
 import { BlogsController } from './blogs/blogs.controller';
-import { BlogsService } from './blogs/blogs.service';
 import { BlogsQueryRepository } from './blogs/blogs.query.repository';
 import { BlogsRepository } from './blogs/blogs.repository';
 import { PostsQueryRepository } from './posts/posts.query.repository';
@@ -66,6 +65,7 @@ import { RecoveryPasswordUseCase } from './auth/use-cases/recovery.password.use.
 import { SetNewPasswordUseCase } from './auth/use-cases/set.new.password.use.case';
 import { CreateBlogUseCase } from './blogs/use-cases/create.blog.use.case';
 import { UpdateBlogUseCase } from './blogs/use-cases/update.blog.use.case';
+import { RemoveBlogUseCase } from './blogs/use-cases/remove.blog.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -77,7 +77,8 @@ const useCases = [
   RecoveryPasswordUseCase,
   SetNewPasswordUseCase,
   CreateBlogUseCase,
-  UpdateBlogUseCase
+  UpdateBlogUseCase,
+  RemoveBlogUseCase
 ];
 const services = [
   UsersService,
@@ -87,7 +88,6 @@ const services = [
   ConfigService,
   EmailManager,
   EmailService,
-  BlogsService,
   PostsService,
   CommentsService,
   TestingService

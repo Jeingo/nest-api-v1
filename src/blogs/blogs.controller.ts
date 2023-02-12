@@ -11,7 +11,6 @@ import {
   HttpStatus,
   UseGuards
 } from '@nestjs/common';
-import { BlogsService } from './blogs.service';
 import { InputCreateBlogDto } from './dto/input.create.blog.dto';
 import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { BlogsQueryRepository } from './blogs.query.repository';
@@ -32,11 +31,11 @@ import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateBlogCommand } from './use-cases/create.blog.use.case';
 import { UpdateBlogCommand } from './use-cases/update.blog.use.case';
+import { RemoveBlogCommand } from './use-cases/remove.blog.use.case';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
-    private readonly blogsService: BlogsService,
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly postsService: PostsService,
     private readonly postsQueryRepository: PostsQueryRepository,
@@ -86,7 +85,8 @@ export class BlogsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id', new CheckIdAndParseToDBId()) id: DbId) {
-    return this.blogsService.remove(id);
+    await this.commandBus.execute(new RemoveBlogCommand(id));
+    return;
   }
 
   @UseGuards(BasicAuthGuard)
