@@ -58,39 +58,46 @@ import { PasswordRecoveryCodeIsCorrectConstraint } from './helper/validation-dec
 
 const configService = new ConfigService<IConfigType>();
 
-const providers = [
+const services = [
   AuthService,
   UsersService,
   JwtAdapter,
   JwtService,
   SessionsService,
-  SessionsRepository,
   ConfigService,
-  UsersQueryRepository,
   EmailManager,
   EmailService,
   BlogsService,
-  BlogsQueryRepository,
-  BlogsRepository,
-  PostsQueryRepository,
   PostsService,
+  CommentsService,
+  TestingService
+];
+const repositories = [
+  SessionsRepository,
+  BlogsRepository,
   PostsRepository,
   UsersRepository,
   PostLikesRepository,
-  CommentsService,
-  CommentsQueryRepository,
   CommentsRepository,
-  CommentLikesRepository,
+  CommentLikesRepository
+];
+const queryRepositories = [
+  UsersQueryRepository,
+  BlogsQueryRepository,
+  PostsQueryRepository,
+  CommentsQueryRepository,
+  SessionsQueryRepository
+];
+const decorators = [
   IsBlogIdConstraint,
   EmailNotExistConstraint,
   EmailExistAndDontConfirmedConstraint,
   LoginExistConstraint,
   EmailConfirmationCodeIsCorrectConstraint,
   PasswordRecoveryCodeIsCorrectConstraint,
-  SessionsQueryRepository,
-  TestingService,
   CheckIdAndParseToDBId
 ];
+
 const controllers = [
   AuthController,
   BlogsController,
@@ -123,7 +130,10 @@ const controllers = [
   ],
   controllers: [...controllers],
   providers: [
-    ...providers,
+    ...services,
+    ...repositories,
+    ...queryRepositories,
+    ...decorators,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
