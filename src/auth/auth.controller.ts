@@ -36,6 +36,7 @@ import { Types } from 'mongoose';
 import { JwtAuthGuard } from './guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationUserCommand } from './use-cases/registration.user.use.case';
+import { ConfirmEmailCommand } from './use-cases/confirm.email.use.case';
 
 const limit = 5;
 const ttl = 10;
@@ -150,7 +151,7 @@ export class AuthController {
   async registrationConfirmation(
     @Body() confirmationCodeDto: InputConfirmationCodeDto
   ) {
-    await this.authService.confirmEmail(confirmationCodeDto);
+    await this.commandBus.execute(new ConfirmEmailCommand(confirmationCodeDto));
     return;
   }
 

@@ -60,10 +60,11 @@ import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { BasicStrategy } from './auth/strategies/basic.strategy';
 import { CqrsModule } from '@nestjs/cqrs';
 import { RegistrationUserUseCase } from './auth/use-cases/registration.user.use.case';
+import { ConfirmEmailUseCase } from './auth/use-cases/confirm.email.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
-const useCases = [RegistrationUserUseCase];
+const useCases = [RegistrationUserUseCase, ConfirmEmailUseCase];
 const services = [
   AuthService,
   UsersService,

@@ -7,7 +7,6 @@ import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
 import { DbId } from '../global-types/global.types';
 import { EmailManager } from '../adapters/email/email.manager';
-import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 import { InputEmailDto } from './dto/input.email.dto';
 import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
 import { InputNewPasswordDto } from './dto/input.newpassword.dto';
@@ -42,16 +41,6 @@ export class AuthService {
     );
     if (!statusSession) return false;
     return payload;
-  }
-  async confirmEmail(
-    confirmationCodeDto: InputConfirmationCodeDto
-  ): Promise<boolean> {
-    const user = await this.usersRepository.getByUniqueField(
-      confirmationCodeDto.code
-    );
-    user.updateEmailConfirmationStatus();
-    await this.usersRepository.save(user);
-    return true;
   }
   async resendEmail(emailDto: InputEmailDto): Promise<boolean> {
     const user = await this.usersRepository.getByUniqueField(emailDto.email);
