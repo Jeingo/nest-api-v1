@@ -3,8 +3,6 @@ import { UsersRepository } from '../users/users.repository';
 import { Token, RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
-import { EmailManager } from '../adapters/email/email.manager';
-import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
 import { InputNewPasswordDto } from './dto/input.newpassword.dto';
 
 @Injectable()
@@ -12,8 +10,7 @@ export class AuthService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly jwtAdapter: JwtAdapter,
-    private readonly sessionsService: SessionsService,
-    private readonly emailManager: EmailManager
+    private readonly sessionsService: SessionsService
   ) {}
 
   async checkAuthorizationAndGetPayload(
@@ -27,18 +24,6 @@ export class AuthService {
     );
     if (!statusSession) return false;
     return payload;
-  }
-  async recoveryPassword(
-    recoveryEmailDto: InputRecoveryEmailDto
-  ): Promise<boolean> {
-    const user = await this.usersRepository.getByUniqueField(
-      recoveryEmailDto.email
-    );
-    if (!user) return false;
-    user.updatePasswordRecoveryConfirmationCode();
-    await this.usersRepository.save(user);
-    await this.emailManager.sendPasswordRecoveryEmailConfirmation(user);
-    return true;
   }
   async setNewPassword(newPasswordDto: InputNewPasswordDto): Promise<boolean> {
     const { recoveryCode, newPassword } = newPasswordDto;

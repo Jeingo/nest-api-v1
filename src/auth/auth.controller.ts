@@ -41,6 +41,7 @@ import { CookieGuard } from './guards/cookie.guard';
 import { RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { PayloadFromRefreshToke } from '../helper/get-decorators/payload.decorator';
 import { ResendEmailConfirmationCommand } from './use-cases/resend.email.confirmation.use.case';
+import { RecoveryPasswordCommand } from './use-cases/recovery.password.use.case';
 
 const limit = 5;
 const ttl = 10;
@@ -161,7 +162,9 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('password-recovery')
   async passwordRecovery(@Body() recoveryEmailDto: InputRecoveryEmailDto) {
-    await this.authService.recoveryPassword(recoveryEmailDto);
+    await this.commandBus.execute(
+      new RecoveryPasswordCommand(recoveryEmailDto)
+    );
     return;
   }
 
