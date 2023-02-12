@@ -64,6 +64,7 @@ import { ConfirmEmailUseCase } from './auth/use-cases/confirm.email.use.case';
 import { ValidateUserInLoginUseCase } from './auth/use-cases/validate.user.in.login.use.case';
 import { ResendEmailConfirmationUseCase } from './auth/use-cases/resend.email.confirmation.use.case';
 import { RecoveryPasswordUseCase } from './auth/use-cases/recovery.password.use.case';
+import { SetNewPasswordUseCase } from './auth/use-cases/set.new.password.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -72,7 +73,8 @@ const useCases = [
   ConfirmEmailUseCase,
   ValidateUserInLoginUseCase,
   ResendEmailConfirmationUseCase,
-  RecoveryPasswordUseCase
+  RecoveryPasswordUseCase,
+  SetNewPasswordUseCase
 ];
 const services = [
   AuthService,

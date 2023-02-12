@@ -3,7 +3,6 @@ import { UsersRepository } from '../users/users.repository';
 import { Token, RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
-import { InputNewPasswordDto } from './dto/input.newpassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,12 +23,5 @@ export class AuthService {
     );
     if (!statusSession) return false;
     return payload;
-  }
-  async setNewPassword(newPasswordDto: InputNewPasswordDto): Promise<boolean> {
-    const { recoveryCode, newPassword } = newPasswordDto;
-    const user = await this.usersRepository.getByUniqueField(recoveryCode);
-    user.updatePassword(newPassword);
-    await this.usersRepository.save(user);
-    return true;
   }
 }

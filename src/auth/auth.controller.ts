@@ -42,6 +42,7 @@ import { RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { PayloadFromRefreshToke } from '../helper/get-decorators/payload.decorator';
 import { ResendEmailConfirmationCommand } from './use-cases/resend.email.confirmation.use.case';
 import { RecoveryPasswordCommand } from './use-cases/recovery.password.use.case';
+import { SetNewPasswordCommand } from './use-cases/set.new.password.use.case';
 
 const limit = 5;
 const ttl = 10;
@@ -172,7 +173,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('new-password')
   async newPassword(@Body() newPasswordDto: InputNewPasswordDto) {
-    await this.authService.setNewPassword(newPasswordDto);
+    await this.commandBus.execute(new SetNewPasswordCommand(newPasswordDto));
     return;
   }
 }
