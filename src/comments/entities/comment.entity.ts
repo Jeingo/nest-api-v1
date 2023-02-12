@@ -53,10 +53,7 @@ export class Comment {
   likesInfo: LikesInfo;
 
   update: (content: string) => boolean;
-  updateLike: (
-    lastStatus: LikeStatus,
-    newStatus: LikeStatus
-  ) => CommentDocument;
+  updateLike: (lastStatus: LikeStatus, newStatus: LikeStatus) => boolean;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

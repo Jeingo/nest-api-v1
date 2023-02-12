@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IPostModel, Post, PostDocument } from './entities/post.entity';
-import { DbId, LikeStatus } from '../global-types/global.types';
-import { getUpdatedLike } from '../helper/query/post.like.repository.helper';
+import { DbId } from '../global-types/global.types';
 
 @Injectable()
 export class PostsRepository {
@@ -25,24 +24,5 @@ export class PostsRepository {
   }
   async delete(id: DbId): Promise<PostDocument> {
     return this.postsModel.findByIdAndDelete(id);
-  }
-  //todo move to entity
-  async updateLikeInPost(
-    post: PostDocument,
-    lastStatus: LikeStatus,
-    newStatus: LikeStatus
-  ): Promise<boolean> {
-    const newLikesInfo = getUpdatedLike(
-      {
-        likesCount: post.extendedLikesInfo.likesCount,
-        dislikesCount: post.extendedLikesInfo.dislikesCount
-      },
-      lastStatus,
-      newStatus
-    );
-    const result = await this.postsModel.findByIdAndUpdate(post._id, {
-      extendedLikesInfo: newLikesInfo
-    });
-    return !!result;
   }
 }

@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
+import { LikeStatus } from '../../global-types/global.types';
+import { getUpdatedLike } from '../../helper/query/post.like.repository.helper';
 
 export type PostDocument = HydratedDocument<Post>;
 
@@ -55,6 +57,7 @@ export class Post {
     blogId: string,
     blogName: string
   ) => boolean;
+  updateLike: (lastStatus: LikeStatus, newStatus: LikeStatus) => boolean;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
@@ -93,5 +96,22 @@ PostSchema.methods.update = function (
   this.content = content;
   this.blogId = blogId;
   this.blogName = blogName;
+  return true;
+};
+
+PostSchema.methods.updateLike = function (
+  lastStatus: LikeStatus,
+  newStatus: LikeStatus
+): boolean {
+  const newLikesInfo = getUpdatedLike(
+    {
+      likesCount: this.extendedLikesInfo.likesCount,
+      dislikesCount: this.extendedLikesInfo.dislikesCount
+    },
+    lastStatus,
+    newStatus
+  );
+  this.extendedLikesInfo.likesCount = newLikesInfo.likesCount;
+  this.extendedLikesInfo.dislikesCount = newLikesInfo.dislikesCount;
   return true;
 };

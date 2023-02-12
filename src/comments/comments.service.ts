@@ -61,6 +61,7 @@ export class CommentsService {
     commentId: DbId,
     newLikeStatus: LikeStatus
   ): Promise<boolean> {
+    //todo refactoring
     let lastLikeStatus: LikeStatus = LikeStatus.None;
 
     const comment = await this.commentRepository.getById(commentId);

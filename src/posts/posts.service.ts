@@ -74,39 +74,29 @@ export class PostsService {
     login: string,
     newLikeStatus: LikeStatus
   ): Promise<boolean> {
-    let lastStatus: LikeStatus = LikeStatus.None;
+    let lastLikeStatus: LikeStatus = LikeStatus.None;
+
     const post = await this.postsRepository.getById(new Types.ObjectId(postId));
     if (!post) throw new NotFoundException();
-    const like = await this.postLikesRepository.getByUserIdAndPostId(
+    let like = await this.postLikesRepository.getByUserIdAndPostId(
       userId,
       postId.toString()
     );
     if (!like) {
-      const newLike = this.postLikesRepository.create(
+      like = this.postLikesRepository.create(
         userId,
         postId.toString(),
         newLikeStatus,
         login
       );
-      await this.postLikesRepository.save(newLike);
     } else {
-      const postLike = await this.postLikesRepository.getById(like._id);
-      postLike.update(newLikeStatus);
-      await this.postLikesRepository.save(postLike);
-      lastStatus = like.myStatus;
+      lastLikeStatus = like.myStatus;
+      like.update(newLikeStatus);
     }
-    //todo refactoring
-    //post.addLike(like)
-    //add like -> like.update(postId, status)
-    //like update -> this.postId = postId...
-    //virtual like
-    //repo.addLikeToPost(post, like)
-    //post.save()
-    //post.virtualLike.save()
-    return await this.postsRepository.updateLikeInPost(
-      post,
-      lastStatus,
-      newLikeStatus
-    );
+    post.updateLike(lastLikeStatus, newLikeStatus);
+
+    await this.postLikesRepository.save(like);
+    await this.postsRepository.save(post);
+    return true;
   }
 }
