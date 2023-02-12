@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 import { Token, TokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
-import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
 import { DbId } from '../global-types/global.types';
 import { EmailManager } from '../adapters/email/email.manager';
 import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
@@ -43,20 +42,6 @@ export class AuthService {
     );
     if (!statusSession) return false;
     return payload;
-  }
-  async registration(
-    registrationUserDto: InputRegistrationUserDto
-  ): Promise<DbId> {
-    const { login, password, email } = registrationUserDto;
-    const createdUser = this.usersRepository.create(
-      login,
-      password,
-      email,
-      false
-    );
-    await this.usersRepository.save(createdUser);
-    await this.emailManager.sendRegistrationEmailConfirmation(createdUser);
-    return createdUser._id;
   }
   async confirmEmail(
     confirmationCodeDto: InputConfirmationCodeDto

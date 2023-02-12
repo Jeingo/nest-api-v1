@@ -34,6 +34,8 @@ import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from './types/current.user.type';
 import { Types } from 'mongoose';
 import { JwtAuthGuard } from './guards/jwt.auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { RegistrationUserCommand } from './use-cases/registration.user.use.case';
 
 const limit = 5;
 const ttl = 10;
@@ -46,7 +48,8 @@ export class AuthController {
     private readonly jwtAdapter: JwtAdapter,
     private readonly sessionsService: SessionsService,
     private readonly configService: ConfigService<IConfigType>,
-    private readonly usersQueryRepository: UsersQueryRepository
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly commandBus: CommandBus
   ) {}
 
   @Throttle(limit, ttl)
@@ -135,7 +138,9 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration')
   async registration(@Body() registrationUserDto: InputRegistrationUserDto) {
-    await this.authService.registration(registrationUserDto);
+    await this.commandBus.execute(
+      new RegistrationUserCommand(registrationUserDto)
+    );
     return;
   }
 

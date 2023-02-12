@@ -58,9 +58,12 @@ import { PasswordRecoveryCodeIsCorrectConstraint } from './helper/validation-dec
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { BasicStrategy } from './auth/strategies/basic.strategy';
+import { CqrsModule } from '@nestjs/cqrs';
+import { RegistrationUserUseCase } from './auth/use-cases/registration.user.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
+const useCases = [RegistrationUserUseCase];
 const services = [
   AuthService,
   UsersService,
@@ -131,7 +134,8 @@ const controllers = [
       { name: CommentLike.name, schema: CommentLikeSchema }
     ]),
     ThrottlerModule.forRoot(),
-    PassportModule
+    PassportModule,
+    CqrsModule
   ],
   controllers: [...controllers],
   providers: [
@@ -140,6 +144,7 @@ const controllers = [
     ...queryRepositories,
     ...decorators,
     ...strategies,
+    ...useCases,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
