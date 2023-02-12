@@ -4,31 +4,38 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface
 } from 'class-validator';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../../users/users.repository';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-export class IsEmailExistConstraint implements ValidatorConstraintInterface {
+export class EmailExistAndDontConfirmedConstraint
+  implements ValidatorConstraintInterface
+{
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async validate(email: string) {
     const user = await this.usersRepository.getByUniqueField(email);
-    return !!user;
-  }
-  defaultMessage() {
-    return `email email is wrong`;
+    if (!user) {
+      throw new BadRequestException(['email email is wrong']);
+    }
+    if (user.emailConfirmation.isConfirmed) {
+      throw new BadRequestException(['email account is already confirmed']);
+    }
+    return true;
   }
 }
 
-export function IsEmailExist(validationOptions?: ValidationOptions) {
+export function EmailExistAndDontConfirmed(
+  validationOptions?: ValidationOptions
+) {
   return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsEmailExistConstraint
+      validator: EmailExistAndDontConfirmedConstraint
     });
   };
 }

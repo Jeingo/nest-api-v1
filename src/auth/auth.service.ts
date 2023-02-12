@@ -73,10 +73,6 @@ export class AuthService {
   }
   async resendEmail(emailDto: InputEmailDto): Promise<boolean> {
     const user = await this.usersRepository.getByUniqueField(emailDto.email);
-    if (user.emailConfirmation.isConfirmed) {
-      throw new BadRequestException(['email account is already confirmed']);
-    }
-
     user.updateConfirmationCode();
     await this.usersRepository.save(user);
     await this.emailManager.sendRegistrationEmailConfirmation(user);

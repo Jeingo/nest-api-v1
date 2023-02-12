@@ -1,9 +1,9 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { Trim } from '../../helper/decorators/to.trim.decorator';
-import { IsEmailExist } from '../../helper/decorators/is.email.exist.decorator';
+import { EmailExistAndDontConfirmed } from '../../helper/decorators/email.exist.and.dont.confirmed.decorator';
 
 export class InputEmailDto {
-  @IsEmailExist()
+  @EmailExistAndDontConfirmed()
   @IsEmail()
   @IsString()
   @IsNotEmpty()

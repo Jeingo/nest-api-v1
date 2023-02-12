@@ -53,7 +53,7 @@ import { CheckIdAndParseToDBId } from './helper/pipes/check.id.validator.pipe';
 import { IsEmailNotExistConstraint } from './helper/decorators/is.email.not.exist.decorator';
 import { IsLoginExistConstraint } from './helper/decorators/is.login.exist.decorator';
 import { IsConfirmationCodeCorrectConstraint } from './helper/decorators/is.confirmation.code.correct.decorator';
-import { IsEmailExistConstraint } from './helper/decorators/is.email.exist.decorator';
+import { EmailExistAndDontConfirmedConstraint } from './helper/decorators/email.exist.and.dont.confirmed.decorator';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -82,7 +82,7 @@ const providers = [
   CommentLikesRepository,
   IsBlogIdConstraint,
   IsEmailNotExistConstraint,
-  IsEmailExistConstraint,
+  EmailExistAndDontConfirmedConstraint,
   IsLoginExistConstraint,
   IsConfirmationCodeCorrectConstraint,
   SessionsQueryRepository,
