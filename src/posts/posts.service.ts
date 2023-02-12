@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { PostsRepository } from './posts.repository';
 import { DbId, LikeStatus } from '../global-types/global.types';
 import { BlogsRepository } from '../blogs/blogs.repository';
@@ -13,18 +12,6 @@ export class PostsService {
     private readonly blogsRepository: BlogsRepository,
     private readonly postLikesRepository: PostLikesRepository
   ) {}
-
-  async update(id: DbId, updatePostDto: InputUpdatePostDto): Promise<boolean> {
-    const { title, shortDescription, content, blogId } = updatePostDto;
-    const foundBlog = await this.blogsRepository.getById(
-      new Types.ObjectId(blogId)
-    );
-    const post = await this.postsRepository.getById(id);
-    if (!post) throw new NotFoundException();
-    post.update(title, shortDescription, content, blogId, foundBlog.name);
-    await this.postsRepository.save(post);
-    return true;
-  }
 
   async remove(id: DbId): Promise<boolean> {
     const post = await this.postsRepository.getById(id);

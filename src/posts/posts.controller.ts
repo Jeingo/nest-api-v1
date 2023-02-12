@@ -33,6 +33,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../comments/use.cases/create.comment.use.case';
 import { CreatePostCommand } from './use-cases/create.post.use.case';
+import { UpdatePostCommand } from './use-cases/update.post.use.case';
 
 @Controller('posts')
 export class PostsController {
@@ -82,7 +83,7 @@ export class PostsController {
     @Param('id', new CheckIdAndParseToDBId()) id: DbId,
     @Body() updatePostDto: InputUpdatePostDto
   ) {
-    await this.postsService.update(id, updatePostDto);
+    await this.commandBus.execute(new UpdatePostCommand(id, updatePostDto));
     return;
   }
 
