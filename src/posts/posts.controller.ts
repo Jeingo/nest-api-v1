@@ -32,6 +32,7 @@ import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../comments/use.cases/create.comment.use.case';
+import { CreatePostCommand } from './use-cases/create.post.use.case';
 
 @Controller('posts')
 export class PostsController {
@@ -48,7 +49,9 @@ export class PostsController {
   async create(
     @Body() createPostDto: InputCreatePostDto
   ): Promise<OutputPostDto> {
-    const createdPostId = await this.postsService.create(createPostDto);
+    const createdPostId = await this.commandBus.execute(
+      new CreatePostCommand(createPostDto)
+    );
     return await this.postsQueryRepository.getById(createdPostId);
   }
 

@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InputCreatePostDto } from './dto/input.create.post.dto';
 import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { PostsRepository } from './posts.repository';
 import { DbId, LikeStatus } from '../global-types/global.types';
@@ -15,22 +14,6 @@ export class PostsService {
     private readonly blogsRepository: BlogsRepository,
     private readonly postLikesRepository: PostLikesRepository
   ) {}
-
-  async create(createPostDto: InputCreatePostDto): Promise<DbId> {
-    const { title, shortDescription, content, blogId } = createPostDto;
-    const foundBlog = await this.blogsRepository.getById(
-      new Types.ObjectId(blogId)
-    );
-    const createdPost = this.postsRepository.create(
-      title,
-      shortDescription,
-      content,
-      blogId,
-      foundBlog.name
-    );
-    await this.postsRepository.save(createdPost);
-    return createdPost._id;
-  }
 
   async createInBlogs(
     createPostDto: InputCreatePostInBlogsDto,
