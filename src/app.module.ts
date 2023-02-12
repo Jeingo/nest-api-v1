@@ -66,6 +66,7 @@ import { SetNewPasswordUseCase } from './auth/use-cases/set.new.password.use.cas
 import { CreateBlogUseCase } from './blogs/use-cases/create.blog.use.case';
 import { UpdateBlogUseCase } from './blogs/use-cases/update.blog.use.case';
 import { RemoveBlogUseCase } from './blogs/use-cases/remove.blog.use.case';
+import { CreateCommentUseCase } from './comments/use.cases/create.comment.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -78,7 +79,8 @@ const useCases = [
   SetNewPasswordUseCase,
   CreateBlogUseCase,
   UpdateBlogUseCase,
-  RemoveBlogUseCase
+  RemoveBlogUseCase,
+  CreateCommentUseCase
 ];
 const services = [
   UsersService,

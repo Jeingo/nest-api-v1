@@ -7,34 +7,15 @@ import { CommentLikesRepository } from '../comment-likes/comment.likes.repositor
 import { DbId, LikeStatus } from '../global-types/global.types';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
 import { CommentsRepository } from './comments.repository';
-import { Types } from 'mongoose';
-import { PostsRepository } from '../posts/posts.repository';
 import { CurrentUserType } from '../auth/types/current.user.type';
 
 @Injectable()
 export class CommentsService {
   constructor(
     private readonly commentLikesRepository: CommentLikesRepository,
-    private readonly commentRepository: CommentsRepository,
-    private readonly postsRepository: PostsRepository
+    private readonly commentRepository: CommentsRepository
   ) {}
 
-  async create(
-    createCommentDto: InputCreateCommentDto,
-    postId: DbId,
-    user: CurrentUserType
-  ): Promise<DbId> {
-    const post = await this.postsRepository.getById(new Types.ObjectId(postId));
-    if (!post) throw new NotFoundException();
-    const createdComment = this.commentRepository.create(
-      createCommentDto.content,
-      user.userId,
-      user.login,
-      postId.toString()
-    );
-    await this.commentRepository.save(createdComment);
-    return createdComment._id;
-  }
   async update(
     id: DbId,
     createCommentDto: InputCreateCommentDto,

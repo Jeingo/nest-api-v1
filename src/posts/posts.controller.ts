@@ -9,8 +9,7 @@ import {
   HttpStatus,
   Query,
   Put,
-  UseGuards,
-  NotFoundException
+  UseGuards
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { InputCreatePostDto } from './dto/input.create.post.dto';
@@ -19,7 +18,6 @@ import { PostsQueryRepository } from './posts.query.repository';
 import { OutputPostDto } from './dto/output.post.dto';
 import { QueryPosts } from './types/posts.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
-import { Types } from 'mongoose';
 import { CommentsQueryRepository } from '../comments/comments.query.repository';
 import { QueryComments } from '../comments/types/comments.type';
 import { OutputCommentDto } from '../comments/dto/output.comment.dto';
@@ -33,6 +31,8 @@ import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
 import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateCommentCommand } from '../comments/use.cases/create.comment.use.case';
 
 @Controller('posts')
 export class PostsController {
@@ -40,7 +40,8 @@ export class PostsController {
     private readonly postsService: PostsService,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsQueryRepository: CommentsQueryRepository,
-    private readonly commentsService: CommentsService
+    private readonly commentsService: CommentsService,
+    private readonly commandBus: CommandBus
   ) {}
 
   @UseGuards(BasicAuthGuard)
@@ -97,10 +98,9 @@ export class PostsController {
   @Get(':postId/comments')
   async findAllCommentsByPostId(
     @Query() query: QueryComments,
-    @Param('postId') postId: string,
+    @Param('postId', new CheckIdAndParseToDBId()) postId: DbId,
     @CurrentUser() user: CurrentUserType
   ): Promise<PaginatedType<OutputCommentDto>> {
-    if (!Types.ObjectId.isValid(postId)) throw new NotFoundException();
     return await this.commentsQueryRepository.getAllByPostId(
       query,
       postId,
@@ -116,10 +116,8 @@ export class PostsController {
     @Body() createCommentDto: InputCreateCommentDto,
     @CurrentUser() user: CurrentUserType
   ): Promise<OutputCommentDto> {
-    const createdCommentId = await this.commentsService.create(
-      createCommentDto,
-      postId,
-      user
+    const createdCommentId = await this.commandBus.execute(
+      new CreateCommentCommand(createCommentDto, postId, user)
     );
     return await this.commentsQueryRepository.getById(createdCommentId);
   }

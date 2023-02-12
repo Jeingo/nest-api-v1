@@ -20,12 +20,14 @@ import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
 
 @Controller('comments')
 export class CommentsController {
   constructor(
     private readonly commentsQueryRepository: CommentsQueryRepository,
-    private readonly commentService: CommentsService
+    private readonly commentService: CommentsService,
+    private readonly commandBus: CommandBus
   ) {}
 
   @UseGuards(GetUserGuard)

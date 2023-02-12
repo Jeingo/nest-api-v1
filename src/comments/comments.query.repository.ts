@@ -9,7 +9,6 @@ import {
 } from './entities/comment.entity';
 import { QueryComments } from './types/comments.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
-import { Types } from 'mongoose';
 import {
   getPaginatedType,
   makeDirectionToNumber
@@ -31,10 +30,10 @@ export class CommentsQueryRepository {
 
   async getAllByPostId(
     query: QueryComments,
-    postId: string,
+    postId: DbId,
     user?: CurrentUserType
   ): Promise<PaginatedType<OutputCommentDto>> {
-    const post = await this.postsModel.findById(new Types.ObjectId(postId));
+    const post = await this.postsModel.findById(postId);
     if (!post) throw new NotFoundException();
     const {
       sortBy = 'createdAt',
@@ -45,10 +44,10 @@ export class CommentsQueryRepository {
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
     const skipNumber = (+pageNumber - 1) * +pageSize;
     const countAllDocuments = await this.commentsModel.countDocuments({
-      postId: postId
+      postId: postId.toString()
     });
     const result = await this.commentsModel
-      .find({ postId: postId })
+      .find({ postId: postId.toString() })
       .sort({ [sortBy]: sortDirectionNumber })
       .skip(skipNumber)
       .limit(+pageSize);
