@@ -5,8 +5,14 @@ export type Tokens = {
   refreshToken: string;
 };
 
-export type TokenPayloadType = {
+export type RefreshTokenPayloadType = {
   deviceId: string;
+  userId: string;
+  exp: number;
+  iat: number;
+};
+
+export type AccessTokenPayloadType = {
   userId: string;
   exp: number;
   iat: number;

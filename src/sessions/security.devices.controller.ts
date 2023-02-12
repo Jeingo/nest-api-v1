@@ -5,13 +5,15 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  UnauthorizedException
+  UseGuards
 } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
-import { Cookies } from '../helper/get-decorators/cookie.decorator';
 import { AuthService } from '../auth/auth.service';
 import { SessionsQueryRepository } from './sessions.query.repository';
 import { OutputSessionDto } from './dto/output.session.dto';
+import { CookieGuard } from '../auth/guards/cookie.guard';
+import { PayloadFromRefreshToke } from '../helper/get-decorators/payload.decorator';
+import { RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 
 @Controller('security/devices')
 export class SecurityDevicesController {
@@ -22,32 +24,22 @@ export class SecurityDevicesController {
   ) {}
 
   @HttpCode(HttpStatus.OK)
+  @UseGuards(CookieGuard)
   @Get()
   async getAllActiveSession(
-    @Cookies('refreshToken') gotRefreshToken: string
+    @PayloadFromRefreshToke() payload: RefreshTokenPayloadType
   ): Promise<OutputSessionDto[]> {
-    const payload = await this.authService.checkAuthorizationAndGetPayload(
-      gotRefreshToken
-    );
-    if (!payload) {
-      throw new UnauthorizedException();
-    }
     return await this.sessionsQueryRepository.findAllActiveSession(
       payload.userId
     );
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(CookieGuard)
   @Delete()
   async deleteAllSessionWithoutCurrent(
-    @Cookies('refreshToken') gotRefreshToken: string
+    @PayloadFromRefreshToke() payload: RefreshTokenPayloadType
   ) {
-    const payload = await this.authService.checkAuthorizationAndGetPayload(
-      gotRefreshToken
-    );
-    if (!payload) {
-      throw new UnauthorizedException();
-    }
     await this.sessionsService.deleteActiveSessionWithoutCurrent(
       payload.userId,
       payload.iat
@@ -56,17 +48,12 @@ export class SecurityDevicesController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(CookieGuard)
   @Delete(':id')
   async deleteSessionById(
     @Param('id') id: string,
-    @Cookies('refreshToken') gotRefreshToken: string
+    @PayloadFromRefreshToke() payload: RefreshTokenPayloadType
   ) {
-    const payload = await this.authService.checkAuthorizationAndGetPayload(
-      gotRefreshToken
-    );
-    if (!payload) {
-      throw new UnauthorizedException();
-    }
     await this.sessionsService.deleteSessionByDeviceId(id, payload.userId);
     return;
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
-import { Token, TokenPayloadType } from '../adapters/jwt/types/jwt.type';
+import { Token, RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
 import { EmailManager } from '../adapters/email/email.manager';
@@ -19,10 +19,10 @@ export class AuthService {
 
   async checkAuthorizationAndGetPayload(
     refreshToken: Token
-  ): Promise<TokenPayloadType | false> {
+  ): Promise<RefreshTokenPayloadType | false> {
     const result = this.jwtAdapter.checkExpirationRefreshToken(refreshToken);
     if (!result) return false;
-    const payload = this.jwtAdapter.getPayload(refreshToken);
+    const payload = this.jwtAdapter.getRefreshTokenPayload(refreshToken);
     const statusSession = await this.sessionsService.isActiveSession(
       payload.deviceId
     );

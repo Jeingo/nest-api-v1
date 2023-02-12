@@ -22,7 +22,6 @@ import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
 import { Throttle } from '@nestjs/throttler';
-import { Cookies } from '../helper/get-decorators/cookie.decorator';
 import { UsersQueryRepository } from '../users/users.query.repository';
 import { OutputUserMeDto } from './dto/output.user.me.dto';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
@@ -38,6 +37,9 @@ import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationUserCommand } from './use-cases/registration.user.use.case';
 import { ConfirmEmailCommand } from './use-cases/confirm.email.use.case';
 import { ValidateUserInLoginCommand } from './use-cases/validate.user.in.login.use.case';
+import { CookieGuard } from './guards/cookie.guard';
+import { RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
+import { PayloadFromRefreshToke } from '../helper/get-decorators/payload.decorator';
 
 const limit = 5;
 const ttl = 10;
@@ -86,17 +88,12 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @UseGuards(CookieGuard)
   @Post('refresh-token')
   async refreshToken(
-    @Cookies('refreshToken') gotRefreshToken: string,
+    @PayloadFromRefreshToke() payload: RefreshTokenPayloadType,
     @Res({ passthrough: true }) response: Response
   ): Promise<OutputAccessTokenDto> {
-    const payload = await this.authService.checkAuthorizationAndGetPayload(
-      gotRefreshToken
-    );
-    if (!payload) {
-      throw new UnauthorizedException();
-    }
     const { accessToken, refreshToken } = await this.jwtAdapter.getTokens(
       payload.userId,
       payload.deviceId
@@ -111,17 +108,12 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(CookieGuard)
   @Post('logout')
   async logout(
-    @Cookies('refreshToken') gotRefreshToken: string,
+    @PayloadFromRefreshToke() payload: RefreshTokenPayloadType,
     @Res({ passthrough: true }) response: Response
   ) {
-    const payload = await this.authService.checkAuthorizationAndGetPayload(
-      gotRefreshToken
-    );
-    if (!payload) {
-      throw new UnauthorizedException();
-    }
     await this.sessionsService.deleteSession(payload.iat);
     response.clearCookie('refreshToken');
     return;

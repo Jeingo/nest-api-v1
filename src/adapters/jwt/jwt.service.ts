@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Token, TokenPayloadType, Tokens } from './types/jwt.type';
+import {
+  Token,
+  RefreshTokenPayloadType,
+  Tokens,
+  AccessTokenPayloadType
+} from './types/jwt.type';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../../configuration/configuration';
 import { JwtService } from '@nestjs/jwt';
@@ -28,19 +33,16 @@ export class JwtAdapter {
       return false;
     }
   }
-  checkExpirationAccessToken(token: Token): boolean {
+  getRefreshTokenPayload(refreshToken: Token): RefreshTokenPayloadType | null {
     try {
-      this.jwtService.verify(token, {
-        secret: this.configService.get('JWT_SECRET')
-      });
-      return true;
+      return this.jwtService.decode(refreshToken) as RefreshTokenPayloadType;
     } catch {
-      return false;
+      return null;
     }
   }
-  getPayload(token: Token): TokenPayloadType | null {
+  getAccessTokenPayload(accessToken: Token): AccessTokenPayloadType | null {
     try {
-      return this.jwtService.decode(token) as TokenPayloadType;
+      return this.jwtService.decode(accessToken) as AccessTokenPayloadType;
     } catch {
       return null;
     }

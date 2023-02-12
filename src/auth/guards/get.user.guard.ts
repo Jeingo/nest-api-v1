@@ -22,7 +22,9 @@ export class GetUserGuard implements CanActivate {
       return true;
     }
 
-    const payload = this.jwtAdapter.getPayload(authorizationField[1]);
+    const payload = this.jwtAdapter.getAccessTokenPayload(
+      authorizationField[1]
+    );
     if (!payload) {
       return true;
     }
