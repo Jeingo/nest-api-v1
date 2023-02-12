@@ -68,6 +68,7 @@ import { UpdateBlogUseCase } from './blogs/use-cases/update.blog.use.case';
 import { RemoveBlogUseCase } from './blogs/use-cases/remove.blog.use.case';
 import { CreateCommentUseCase } from './comments/use.cases/create.comment.use.case';
 import { UpdateCommentUseCase } from './comments/use.cases/update.comment.use.case';
+import { RemoveCommentUseCase } from './comments/use.cases/remove.comment.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -82,7 +83,8 @@ const useCases = [
   UpdateBlogUseCase,
   RemoveBlogUseCase,
   CreateCommentUseCase,
-  UpdateCommentUseCase
+  UpdateCommentUseCase,
+  RemoveCommentUseCase
 ];
 const services = [
   UsersService,

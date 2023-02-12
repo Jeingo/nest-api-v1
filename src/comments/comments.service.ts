@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CommentLikesRepository } from '../comment-likes/comment.likes.repository';
 import { DbId, LikeStatus } from '../global-types/global.types';
 import { CommentsRepository } from './comments.repository';
@@ -14,14 +10,7 @@ export class CommentsService {
     private readonly commentLikesRepository: CommentLikesRepository,
     private readonly commentRepository: CommentsRepository
   ) {}
-  async delete(id: DbId, user: CurrentUserType): Promise<boolean> {
-    const comment = await this.commentRepository.getById(id);
-    if (!comment) throw new NotFoundException();
-    if (comment.commentatorInfo.userId !== user.userId)
-      throw new ForbiddenException();
-    await this.commentRepository.delete(id);
-    return true;
-  }
+
   async updateStatusLike(
     user: CurrentUserType,
     commentId: DbId,

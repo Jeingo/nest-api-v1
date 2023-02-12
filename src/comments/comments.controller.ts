@@ -22,6 +22,7 @@ import { DbId } from '../global-types/global.types';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateCommentCommand } from './use.cases/update.comment.use.case';
+import { RemoveCommentCommand } from './use.cases/remove.comment.use.case';
 
 @Controller('comments')
 export class CommentsController {
@@ -78,7 +79,7 @@ export class CommentsController {
     @Param('id', new CheckIdAndParseToDBId()) id: DbId,
     @CurrentUser() user: CurrentUserType
   ) {
-    await this.commentService.delete(id, user);
+    await this.commandBus.execute(new RemoveCommentCommand(id, user));
     return;
   }
 }
