@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
-import { InputLoginUserDto } from './dto/input.login.user.dto';
-import bcrypt from 'bcrypt';
 import { Token, TokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
-import { DbId } from '../global-types/global.types';
 import { EmailManager } from '../adapters/email/email.manager';
 import { InputEmailDto } from './dto/input.email.dto';
 import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
@@ -20,16 +17,6 @@ export class AuthService {
     private readonly emailManager: EmailManager
   ) {}
 
-  async validateUser(loginUserDto: InputLoginUserDto): Promise<DbId | null> {
-    const { loginOrEmail, password } = loginUserDto;
-    const user = await this.usersRepository.getByUniqueField(loginOrEmail);
-    if (!user) return null;
-    const result = await bcrypt.compare(password, user.hash);
-    if (!result) {
-      return null;
-    }
-    return user._id;
-  }
   async checkAuthorizationAndGetPayload(
     refreshToken: Token
   ): Promise<TokenPayloadType | false> {

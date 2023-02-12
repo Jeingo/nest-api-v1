@@ -37,6 +37,7 @@ import { JwtAuthGuard } from './guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationUserCommand } from './use-cases/registration.user.use.case';
 import { ConfirmEmailCommand } from './use-cases/confirm.email.use.case';
+import { ValidateUserInLoginCommand } from './use-cases/validate.user.in.login.use.case';
 
 const limit = 5;
 const ttl = 10;
@@ -63,7 +64,9 @@ export class AuthController {
     deviceName: string,
     @Res({ passthrough: true }) response: Response
   ): Promise<OutputAccessTokenDto> {
-    const userId = await this.authService.validateUser(loginUserDto);
+    const userId = await this.commandBus.execute(
+      new ValidateUserInLoginCommand(loginUserDto)
+    );
     if (!userId) {
       response.clearCookie('refreshToken');
       throw new UnauthorizedException();
@@ -92,7 +95,6 @@ export class AuthController {
       gotRefreshToken
     );
     if (!payload) {
-      response.clearCookie('refreshToken');
       throw new UnauthorizedException();
     }
     const { accessToken, refreshToken } = await this.jwtAdapter.getTokens(
@@ -118,7 +120,6 @@ export class AuthController {
       gotRefreshToken
     );
     if (!payload) {
-      response.clearCookie('refreshToken');
       throw new UnauthorizedException();
     }
     await this.sessionsService.deleteSession(payload.iat);

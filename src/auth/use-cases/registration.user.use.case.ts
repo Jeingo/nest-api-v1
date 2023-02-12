@@ -14,6 +14,7 @@ export class RegistrationUserUseCase {
     private readonly usersRepository: UsersRepository,
     private readonly emailManager: EmailManager
   ) {}
+
   async execute(command: RegistrationUserCommand): Promise<DbId> {
     const { login, password, email } = command.registrationUserDto;
     const createdUser = this.usersRepository.create(
