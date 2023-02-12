@@ -9,7 +9,7 @@ import { UsersRepository } from '../../users/users.repository';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-export class IsConfirmationCodeCorrectConstraint
+export class EmailConfirmationCodeIsCorrectConstraint
   implements ValidatorConstraintInterface
 {
   constructor(private readonly usersRepository: UsersRepository) {}
@@ -32,7 +32,7 @@ export class IsConfirmationCodeCorrectConstraint
   }
 }
 
-export function IsConfirmationCodeCorrect(
+export function EmailConfirmationCodeIsCorrect(
   validationOptions?: ValidationOptions
 ) {
   return function (object: object, propertyName: string) {
@@ -41,7 +41,7 @@ export function IsConfirmationCodeCorrect(
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsConfirmationCodeCorrectConstraint
+      validator: EmailConfirmationCodeIsCorrectConstraint
     });
   };
 }

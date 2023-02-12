@@ -43,17 +43,18 @@ import { CommentsService } from './comments/comments.service';
 import { CommentsQueryRepository } from './comments/comments.query.repository';
 import { CommentsRepository } from './comments/comments.repository';
 import { PostsController } from './posts/posts.controller';
-import { IsBlogIdConstraint } from './helper/decorators/is.blog.id.decorator';
+import { IsBlogIdConstraint } from './helper/validation-decorators/is.blog.id.decorator';
 import { SecurityDevicesController } from './sessions/security.devices.controller';
 import { SessionsQueryRepository } from './sessions/sessions.query.repository';
 import { TestingController } from './testing/testing.controller';
 import { TestingService } from './testing/testing.service';
 import { UsersController } from './users/users.controller';
 import { CheckIdAndParseToDBId } from './helper/pipes/check.id.validator.pipe';
-import { IsEmailNotExistConstraint } from './helper/decorators/is.email.not.exist.decorator';
-import { IsLoginExistConstraint } from './helper/decorators/is.login.exist.decorator';
-import { IsConfirmationCodeCorrectConstraint } from './helper/decorators/is.confirmation.code.correct.decorator';
-import { EmailExistAndDontConfirmedConstraint } from './helper/decorators/email.exist.and.dont.confirmed.decorator';
+import { EmailNotExistConstraint } from './helper/validation-decorators/email.not.exist.decorator';
+import { LoginExistConstraint } from './helper/validation-decorators/login.exist.decorator';
+import { EmailConfirmationCodeIsCorrectConstraint } from './helper/validation-decorators/email.confirmation.code.is.correct.decorator';
+import { EmailExistAndDontConfirmedConstraint } from './helper/validation-decorators/email.exist.and.dont.confirmed.decorator';
+import { PasswordRecoveryCodeIsCorrectConstraint } from './helper/validation-decorators/password.recover.code.is.correct.decorator';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -81,10 +82,11 @@ const providers = [
   CommentsRepository,
   CommentLikesRepository,
   IsBlogIdConstraint,
-  IsEmailNotExistConstraint,
+  EmailNotExistConstraint,
   EmailExistAndDontConfirmedConstraint,
-  IsLoginExistConstraint,
-  IsConfirmationCodeCorrectConstraint,
+  LoginExistConstraint,
+  EmailConfirmationCodeIsCorrectConstraint,
+  PasswordRecoveryCodeIsCorrectConstraint,
   SessionsQueryRepository,
   TestingService,
   CheckIdAndParseToDBId

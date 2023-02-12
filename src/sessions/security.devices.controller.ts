@@ -9,7 +9,7 @@ import {
   UnauthorizedException
 } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
-import { Cookies } from '../helper/decorators/cookie.decorator';
+import { Cookies } from '../helper/get-decorators/cookie.decorator';
 import { Response } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { SessionsQueryRepository } from './sessions.query.repository';

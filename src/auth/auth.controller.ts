@@ -22,7 +22,7 @@ import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
 import { Throttle } from '@nestjs/throttler';
-import { Cookies } from '../helper/decorators/cookie.decorator';
+import { Cookies } from '../helper/get-decorators/cookie.decorator';
 import { BearerGuard } from './guards/bearer.guard';
 import { UsersQueryRepository } from '../users/users.query.repository';
 import { OutputUserMeDto } from './dto/output.user.me.dto';
@@ -31,7 +31,7 @@ import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';
 import { InputEmailDto } from './dto/input.email.dto';
 import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
 import { InputNewPasswordDto } from './dto/input.newpassword.dto';
-import { CurrentUser } from '../helper/decorators/current.user.decorator';
+import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from './types/current.user.type';
 import { Types } from 'mongoose';
 

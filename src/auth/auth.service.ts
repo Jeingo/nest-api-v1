@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import { InputLoginUserDto } from './dto/input.login.user.dto';
 import bcrypt from 'bcrypt';
@@ -93,22 +93,6 @@ export class AuthService {
   async setNewPassword(newPasswordDto: InputNewPasswordDto): Promise<boolean> {
     const { recoveryCode, newPassword } = newPasswordDto;
     const user = await this.usersRepository.getByUniqueField(recoveryCode);
-    if (!user) {
-      throw new BadRequestException(['recoveryCode code is wrong']);
-    }
-    if (
-      user.passwordRecoveryConfirmation.passwordRecoveryCode !== recoveryCode
-    ) {
-      throw new BadRequestException(['recoveryCode code is wrong']);
-    }
-    if (user.passwordRecoveryConfirmation.isConfirmed) {
-      throw new BadRequestException([
-        'recoveryCode Password is already changed'
-      ]);
-    }
-    if (user.passwordRecoveryConfirmation.expirationDate < new Date()) {
-      throw new BadRequestException(['recoveryCode code is expired']);
-    }
     user.updatePassword(newPassword);
     await this.usersRepository.save(user);
     return true;

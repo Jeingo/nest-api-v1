@@ -1,9 +1,9 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Trim } from '../../helper/decorators/to.trim.decorator';
-import { IsConfirmationCodeCorrect } from '../../helper/decorators/is.confirmation.code.correct.decorator';
+import { Trim } from '../../helper/validation-decorators/to.trim.decorator';
+import { EmailConfirmationCodeIsCorrect } from '../../helper/validation-decorators/email.confirmation.code.is.correct.decorator';
 
 export class InputConfirmationCodeDto {
-  @IsConfirmationCodeCorrect()
+  @EmailConfirmationCodeIsCorrect()
   @IsString()
   @IsNotEmpty()
   @Trim()

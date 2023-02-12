@@ -30,7 +30,7 @@ import { InputCreateCommentDto } from '../comments/dto/input.create.comment.dto'
 import { CommentsService } from '../comments/comments.service';
 import { InputUpdatePostLikeDto } from './dto/input.update.post.like.dto';
 import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
-import { CurrentUser } from '../helper/decorators/current.user.decorator';
+import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
 

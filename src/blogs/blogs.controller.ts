@@ -26,7 +26,7 @@ import { OutputPostDto } from '../posts/dto/output.post.dto';
 import { BasicGuard } from '../auth/guards/basic.guard';
 import { GetUserGuard } from '../auth/guards/get.user.guard';
 import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
-import { CurrentUser } from '../helper/decorators/current.user.decorator';
+import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
 

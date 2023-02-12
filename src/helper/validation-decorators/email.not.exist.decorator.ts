@@ -9,7 +9,7 @@ import { UsersRepository } from '../../users/users.repository';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-export class IsEmailNotExistConstraint implements ValidatorConstraintInterface {
+export class EmailNotExistConstraint implements ValidatorConstraintInterface {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async validate(email: string) {
@@ -21,14 +21,14 @@ export class IsEmailNotExistConstraint implements ValidatorConstraintInterface {
   }
 }
 
-export function IsEmailNotExist(validationOptions?: ValidationOptions) {
+export function EmailNotExist(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: IsEmailNotExistConstraint
+      validator: EmailNotExistConstraint
     });
   };
 }

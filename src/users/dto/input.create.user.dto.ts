@@ -5,7 +5,7 @@ import {
   Length,
   Matches
 } from 'class-validator';
-import { Trim } from '../../helper/decorators/to.trim.decorator';
+import { Trim } from '../../helper/validation-decorators/to.trim.decorator';
 
 export class InputCreateUserDto {
   @Matches(/^[a-zA-Z0-9_-]*$/)
