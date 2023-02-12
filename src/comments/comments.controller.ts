@@ -13,7 +13,6 @@ import { CommentsQueryRepository } from './comments.query.repository';
 import { OutputCommentDto } from './dto/output.comment.dto';
 import { GetUserGuard } from '../auth/guards/get.user.guard';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
-import { CommentsService } from './comments.service';
 import { InputUpdateLikeDto } from './dto/input.update.like.dto';
 import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
@@ -23,12 +22,12 @@ import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateCommentCommand } from './use.cases/update.comment.use.case';
 import { RemoveCommentCommand } from './use.cases/remove.comment.use.case';
+import { UpdateLikeStatusInCommentCommand } from './use.cases/update.status.like.in.comment.use.case';
 
 @Controller('comments')
 export class CommentsController {
   constructor(
     private readonly commentsQueryRepository: CommentsQueryRepository,
-    private readonly commentService: CommentsService,
     private readonly commandBus: CommandBus
   ) {}
 
@@ -64,10 +63,12 @@ export class CommentsController {
     @Body() updateLikeDto: InputUpdateLikeDto,
     @CurrentUser() user: CurrentUserType
   ) {
-    await this.commentService.updateStatusLike(
-      user,
-      commentId,
-      updateLikeDto.likeStatus
+    await this.commandBus.execute(
+      new UpdateLikeStatusInCommentCommand(
+        user,
+        commentId,
+        updateLikeDto.likeStatus
+      )
     );
     return;
   }

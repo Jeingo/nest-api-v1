@@ -23,7 +23,6 @@ import { QueryComments } from '../comments/types/comments.type';
 import { OutputCommentDto } from '../comments/dto/output.comment.dto';
 import { GetUserGuard } from '../auth/guards/get.user.guard';
 import { InputCreateCommentDto } from '../comments/dto/input.create.comment.dto';
-import { CommentsService } from '../comments/comments.service';
 import { InputUpdatePostLikeDto } from './dto/input.update.post.like.dto';
 import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
@@ -40,7 +39,6 @@ export class PostsController {
     private readonly postsService: PostsService,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsQueryRepository: CommentsQueryRepository,
-    private readonly commentsService: CommentsService,
     private readonly commandBus: CommandBus
   ) {}
 

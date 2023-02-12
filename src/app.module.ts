@@ -37,7 +37,6 @@ import { PostsRepository } from './posts/posts.repository';
 import { PostLikesRepository } from './post-likes/post.likes.repository';
 import { CommentLikesRepository } from './comment-likes/comment.likes.repository';
 import { CommentsController } from './comments/comments.controller';
-import { CommentsService } from './comments/comments.service';
 import { CommentsQueryRepository } from './comments/comments.query.repository';
 import { CommentsRepository } from './comments/comments.repository';
 import { PostsController } from './posts/posts.controller';
@@ -69,6 +68,7 @@ import { RemoveBlogUseCase } from './blogs/use-cases/remove.blog.use.case';
 import { CreateCommentUseCase } from './comments/use.cases/create.comment.use.case';
 import { UpdateCommentUseCase } from './comments/use.cases/update.comment.use.case';
 import { RemoveCommentUseCase } from './comments/use.cases/remove.comment.use.case';
+import { UpdateLikeStatusInCommentUseCase } from './comments/use.cases/update.status.like.in.comment.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -84,7 +84,8 @@ const useCases = [
   RemoveBlogUseCase,
   CreateCommentUseCase,
   UpdateCommentUseCase,
-  RemoveCommentUseCase
+  RemoveCommentUseCase,
+  UpdateLikeStatusInCommentUseCase
 ];
 const services = [
   UsersService,
@@ -95,7 +96,6 @@ const services = [
   EmailManager,
   EmailService,
   PostsService,
-  CommentsService,
   TestingService
 ];
 const repositories = [
