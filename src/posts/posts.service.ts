@@ -4,7 +4,6 @@ import { PostsRepository } from './posts.repository';
 import { DbId, LikeStatus } from '../global-types/global.types';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Types } from 'mongoose';
-import { InputCreatePostInBlogsDto } from '../blogs/dto/input.create.post.dto';
 import { PostLikesRepository } from '../post-likes/post.likes.repository';
 
 @Injectable()
@@ -14,24 +13,6 @@ export class PostsService {
     private readonly blogsRepository: BlogsRepository,
     private readonly postLikesRepository: PostLikesRepository
   ) {}
-
-  async createInBlogs(
-    createPostDto: InputCreatePostInBlogsDto,
-    blogId: DbId
-  ): Promise<DbId> {
-    const { title, shortDescription, content } = createPostDto;
-    const foundBlog = await this.blogsRepository.getById(blogId);
-    if (!foundBlog) throw new NotFoundException();
-    const createdPost = this.postsRepository.create(
-      title,
-      shortDescription,
-      content,
-      blogId.toString(),
-      foundBlog.name
-    );
-    await this.postsRepository.save(createdPost);
-    return createdPost._id;
-  }
 
   async update(id: DbId, updatePostDto: InputUpdatePostDto): Promise<boolean> {
     const { title, shortDescription, content, blogId } = updatePostDto;

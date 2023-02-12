@@ -32,6 +32,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { CreateBlogCommand } from './use-cases/create.blog.use.case';
 import { UpdateBlogCommand } from './use-cases/update.blog.use.case';
 import { RemoveBlogCommand } from './use-cases/remove.blog.use.case';
+import { CreatePostInBlogCommand } from '../posts/use-cases/create.post.in.blog.use.case';
 
 @Controller('blogs')
 export class BlogsController {
@@ -96,9 +97,8 @@ export class BlogsController {
     @Param('blogId', new CheckIdAndParseToDBId()) blogId: DbId,
     @Body() createPostDto: InputCreatePostInBlogsDto
   ): Promise<OutputPostDto> {
-    const createdPostId = await this.postsService.createInBlogs(
-      createPostDto,
-      blogId
+    const createdPostId = await this.commandBus.execute(
+      new CreatePostInBlogCommand(createPostDto, blogId)
     );
     return await this.postsQueryRepository.getById(createdPostId);
   }
