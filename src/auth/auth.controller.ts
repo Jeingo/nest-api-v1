@@ -11,7 +11,6 @@ import {
   Get,
   UseGuards
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { InputLoginUserDto } from './dto/input.login.user.dto';
 import { UsersService } from '../users/users.service';
 import { JwtAdapter } from '../adapters/jwt/jwt.service';
@@ -50,7 +49,6 @@ const ttl = 10;
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly jwtAdapter: JwtAdapter,
     private readonly sessionsService: SessionsService,

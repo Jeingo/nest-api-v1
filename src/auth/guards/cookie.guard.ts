@@ -4,7 +4,6 @@ import {
   Injectable,
   UnauthorizedException
 } from '@nestjs/common';
-import { AuthService } from '../auth.service';
 import {
   RefreshTokenPayloadType,
   Token
@@ -15,7 +14,6 @@ import { SessionsService } from '../../sessions/sessions.service';
 @Injectable()
 export class CookieGuard implements CanActivate {
   constructor(
-    private readonly authService: AuthService,
     private readonly jwtAdapter: JwtAdapter,
     private readonly sessionsService: SessionsService
   ) {}

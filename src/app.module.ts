@@ -65,6 +65,7 @@ import { ResendEmailConfirmationUseCase } from './auth/use-cases/resend.email.co
 import { RecoveryPasswordUseCase } from './auth/use-cases/recovery.password.use.case';
 import { SetNewPasswordUseCase } from './auth/use-cases/set.new.password.use.case';
 import { CreateBlogUseCase } from './blogs/use-cases/create.blog.use.case';
+import { UpdateBlogUseCase } from './blogs/use-cases/update.blog.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -75,7 +76,8 @@ const useCases = [
   ResendEmailConfirmationUseCase,
   RecoveryPasswordUseCase,
   SetNewPasswordUseCase,
-  CreateBlogUseCase
+  CreateBlogUseCase,
+  UpdateBlogUseCase
 ];
 const services = [
   UsersService,

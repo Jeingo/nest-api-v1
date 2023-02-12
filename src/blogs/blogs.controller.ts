@@ -31,6 +31,7 @@ import { DbId } from '../global-types/global.types';
 import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateBlogCommand } from './use-cases/create.blog.use.case';
+import { UpdateBlogCommand } from './use-cases/update.blog.use.case';
 
 @Controller('blogs')
 export class BlogsController {
@@ -77,7 +78,7 @@ export class BlogsController {
     @Param('id', new CheckIdAndParseToDBId()) id: DbId,
     @Body() updateBlogDto: InputUpdateBlogDto
   ) {
-    await this.blogsService.update(id, updateBlogDto);
+    await this.commandBus.execute(new UpdateBlogCommand(id, updateBlogDto));
     return;
   }
 

@@ -8,7 +8,6 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
-import { AuthService } from '../auth/auth.service';
 import { SessionsQueryRepository } from './sessions.query.repository';
 import { OutputSessionDto } from './dto/output.session.dto';
 import { CookieGuard } from '../auth/guards/cookie.guard';
@@ -19,7 +18,6 @@ import { RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 export class SecurityDevicesController {
   constructor(
     private readonly sessionsService: SessionsService,
-    private readonly authService: AuthService,
     private readonly sessionsQueryRepository: SessionsQueryRepository
   ) {}
 
