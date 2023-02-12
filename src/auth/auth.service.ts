@@ -22,9 +22,7 @@ export class AuthService {
     private readonly emailManager: EmailManager
   ) {}
 
-  async checkCredentials(
-    loginUserDto: InputLoginUserDto
-  ): Promise<DbId | null> {
+  async validateUser(loginUserDto: InputLoginUserDto): Promise<DbId | null> {
     const { loginOrEmail, password } = loginUserDto;
     const user = await this.usersRepository.getByUniqueField(loginOrEmail);
     if (!user) return null;

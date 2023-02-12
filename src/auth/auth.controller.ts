@@ -59,7 +59,7 @@ export class AuthController {
     deviceName: string,
     @Res({ passthrough: true }) response: Response
   ): Promise<OutputAccessTokenDto> {
-    const userId = await this.authService.checkCredentials(loginUserDto);
+    const userId = await this.authService.validateUser(loginUserDto);
     if (!userId) {
       response.clearCookie('refreshToken');
       throw new UnauthorizedException();
