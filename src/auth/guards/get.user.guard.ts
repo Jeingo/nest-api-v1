@@ -29,7 +29,7 @@ export class GetUserGuard implements CanActivate {
     const user = await this.usersRepository.getById(
       new Types.ObjectId(payload.userId)
     );
-    request.user = { userId: user._id.toString(), login: user.login };
+    request.user = { userId: user?._id.toString(), login: user?.login };
     return true;
   }
 }

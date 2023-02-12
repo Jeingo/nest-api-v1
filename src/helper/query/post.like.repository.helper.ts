@@ -1,40 +1,40 @@
 import { LikeStatus } from '../../global-types/global.types';
 
-export type LikesInfoType = {
+export type LikesCounterType = {
   likesCount: number;
   dislikesCount: number;
 };
 
 export function getUpdatedLike(
-  likesInfo: LikesInfoType,
+  likesCounter: LikesCounterType,
   lastStatus: LikeStatus,
   newStatus: LikeStatus
 ) {
   if (newStatus === LikeStatus.None && lastStatus === LikeStatus.Like) {
-    return { ...likesInfo, likesCount: --likesInfo.likesCount };
+    return { ...likesCounter, likesCount: --likesCounter.likesCount };
   }
   if (newStatus === LikeStatus.None && lastStatus === LikeStatus.DisLike) {
-    return { ...likesInfo, dislikesCount: --likesInfo.dislikesCount };
+    return { ...likesCounter, dislikesCount: --likesCounter.dislikesCount };
   }
   if (newStatus === LikeStatus.Like && lastStatus === LikeStatus.None) {
-    return { ...likesInfo, likesCount: ++likesInfo.likesCount };
+    return { ...likesCounter, likesCount: ++likesCounter.likesCount };
   }
   if (newStatus === LikeStatus.Like && lastStatus === LikeStatus.DisLike) {
     return {
-      ...likesInfo,
-      likesCount: ++likesInfo.likesCount,
-      dislikesCount: --likesInfo.dislikesCount
+      ...likesCounter,
+      likesCount: ++likesCounter.likesCount,
+      dislikesCount: --likesCounter.dislikesCount
     };
   }
   if (newStatus === LikeStatus.DisLike && lastStatus === LikeStatus.None) {
-    return { ...likesInfo, dislikesCount: ++likesInfo.dislikesCount };
+    return { ...likesCounter, dislikesCount: ++likesCounter.dislikesCount };
   }
   if (newStatus === LikeStatus.DisLike && lastStatus === LikeStatus.Like) {
     return {
-      ...likesInfo,
-      likesCount: --likesInfo.likesCount,
-      dislikesCount: ++likesInfo.dislikesCount
+      ...likesCounter,
+      likesCount: --likesCounter.likesCount,
+      dislikesCount: ++likesCounter.dislikesCount
     };
   }
-  return likesInfo;
+  return likesCounter;
 }
