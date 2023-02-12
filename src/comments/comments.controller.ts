@@ -54,7 +54,7 @@ export class CommentsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':commentId/like-status')
   async updateStatusLike(
-    @Param('commentId', new CheckIdAndParseToDBId()) commentId: string,
+    @Param('commentId', new CheckIdAndParseToDBId()) commentId: DbId,
     @Body() updateLikeDto: InputUpdateLikeDto,
     @CurrentUser() user: CurrentUserType
   ) {

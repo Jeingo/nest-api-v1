@@ -58,22 +58,20 @@ export class CommentsService {
   }
   async updateStatusLike(
     user: CurrentUserType,
-    commentId: string,
+    commentId: DbId,
     newLikeStatus: LikeStatus
   ): Promise<boolean> {
     let lastLikeStatus: LikeStatus = LikeStatus.None;
-    const comment = await this.commentRepository.getById(
-      new Types.ObjectId(commentId)
-    );
+    const comment = await this.commentRepository.getById(commentId);
     if (!comment) throw new NotFoundException();
     const like = await this.commentLikesRepository.getByUserIdAndCommentId(
       user.userId,
-      commentId
+      commentId.toString()
     );
     if (!like) {
       const newLike = await this.commentLikesRepository.create(
         user.userId,
-        commentId,
+        commentId.toString(),
         newLikeStatus
       );
       await this.commentLikesRepository.save(newLike);

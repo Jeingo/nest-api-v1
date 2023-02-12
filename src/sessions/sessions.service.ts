@@ -17,7 +17,7 @@ export class SessionsService {
     private readonly jwtService: JwtService,
     private readonly sessionsRepository: SessionsRepository
   ) {}
-  async saveSession(
+  async create(
     refreshToken: string,
     ip: string,
     deviceName: string
@@ -41,7 +41,7 @@ export class SessionsService {
     await this.sessionsRepository.save(session);
     return session._id;
   }
-  async updateSession(refreshToken: Token): Promise<boolean> {
+  async update(refreshToken: Token): Promise<boolean> {
     const result = this.jwtService.verify(refreshToken, {
       secret: this.configService.get('JWT_REFRESH_SECRET')
     });
