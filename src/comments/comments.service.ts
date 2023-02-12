@@ -76,9 +76,8 @@ export class CommentsService {
       );
       await this.commentLikesRepository.save(newLike);
     } else {
-      const commentLike = await this.commentLikesRepository.getById(like._id);
-      commentLike.update(newLikeStatus);
-      await this.commentLikesRepository.save(commentLike);
+      like.update(newLikeStatus);
+      await this.commentLikesRepository.save(like);
       lastLikeStatus = like.myStatus;
     }
     return await this.commentRepository.updateLikeInComment(

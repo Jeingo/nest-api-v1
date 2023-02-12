@@ -33,7 +33,7 @@ export class PostLike {
   @Prop({ required: true })
   addedAt: string;
 
-  update: (myStatus: LikeStatus) => PostLikeDocument;
+  update: (myStatus: LikeStatus) => boolean;
 }
 
 export const PostLikeSchema = SchemaFactory.createForClass(PostLike);
@@ -44,7 +44,7 @@ PostLikeSchema.statics.make = function (
   postId: string,
   myStatus: LikeStatus,
   login: string
-) {
+): PostLikeDocument {
   return new this({
     userId: userId,
     postId: postId,
@@ -54,6 +54,7 @@ PostLikeSchema.statics.make = function (
   });
 };
 
-PostLikeSchema.methods.update = function (myStatus: LikeStatus) {
+PostLikeSchema.methods.update = function (myStatus: LikeStatus): boolean {
   this.myStatus = myStatus;
+  return true;
 };

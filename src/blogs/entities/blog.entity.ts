@@ -31,11 +31,7 @@ export class Blog {
   @Prop({ required: true })
   isMembership: boolean;
 
-  update: (
-    name: string,
-    description: string,
-    websiteUrl: string
-  ) => BlogDocument;
+  update: (name: string, description: string, websiteUrl: string) => boolean;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
@@ -45,7 +41,7 @@ BlogSchema.statics.make = function (
   name: string,
   description: string,
   websiteUrl: string
-) {
+): BlogDocument {
   return new this({
     name: name,
     description: description,
@@ -59,8 +55,9 @@ BlogSchema.methods.update = function (
   name: string,
   description: string,
   websiteUrl: string
-) {
+): boolean {
   this.name = name;
   this.description = description;
   this.websiteUrl = websiteUrl;
+  return true;
 };

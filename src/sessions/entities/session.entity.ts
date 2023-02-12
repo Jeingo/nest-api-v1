@@ -37,7 +37,7 @@ export class Session {
   @Prop({ required: true })
   expireAt: string;
 
-  update: (issueAt: string, expireAt: string) => SessionDocument;
+  update: (issueAt: string, expireAt: string) => boolean;
 }
 
 export const SessionSchema = SchemaFactory.createForClass(Session);
@@ -50,7 +50,7 @@ SessionSchema.statics.make = function (
   ip: string,
   userId: string,
   expireAt: string
-) {
+): SessionDocument {
   deviceName = deviceName ? deviceName : 'some device';
   return new this({
     issueAt: issueAt,
@@ -62,7 +62,11 @@ SessionSchema.statics.make = function (
   });
 };
 
-SessionSchema.methods.update = function (issueAt: string, expireAt: string) {
+SessionSchema.methods.update = function (
+  issueAt: string,
+  expireAt: string
+): boolean {
   this.issueAt = issueAt;
   this.expireAt = expireAt;
+  return true;
 };

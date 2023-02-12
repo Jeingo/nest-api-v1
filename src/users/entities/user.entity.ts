@@ -62,10 +62,10 @@ export class User {
   @Prop({ type: EmailConfirmation, required: true })
   emailConfirmation: EmailConfirmation;
 
-  updateEmailConfirmationStatus: () => UserDocument;
-  updateConfirmationCode: () => UserDocument;
-  updatePasswordRecoveryConfirmationCode: () => UserDocument;
-  updatePassword: (newPassword: string) => UserDocument;
+  updateEmailConfirmationStatus: () => boolean;
+  updateConfirmationCode: () => boolean;
+  updatePasswordRecoveryConfirmationCode: () => boolean;
+  updatePassword: (newPassword: string) => boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -76,7 +76,7 @@ UserSchema.statics.make = function (
   password: string,
   email: string,
   isConfirmed: boolean
-) {
+): UserDocument {
   const passwordSalt = bcrypt.genSaltSync(10);
   const passwordHash = bcrypt.hashSync(password, passwordSalt);
   const newDate = new Date();
@@ -102,24 +102,29 @@ UserSchema.statics.make = function (
   });
 };
 
-UserSchema.methods.updateEmailConfirmationStatus = function () {
+UserSchema.methods.updateEmailConfirmationStatus = function (): boolean {
   this.emailConfirmation.isConfirmed = true;
+  return true;
 };
 
-UserSchema.methods.updateConfirmationCode = function () {
+UserSchema.methods.updateConfirmationCode = function (): boolean {
   this.emailConfirmation.confirmationCode = v4();
+  return true;
 };
 
-UserSchema.methods.updatePasswordRecoveryConfirmationCode = function () {
-  this.passwordRecoveryConfirmation.passwordRecoveryCode = v4();
-  this.passwordRecoveryConfirmation.isConfirmed = false;
-  this.passwordRecoveryConfirmation.expirationDate = add(new Date(), {
-    hours: 1
-  });
-};
+UserSchema.methods.updatePasswordRecoveryConfirmationCode =
+  function (): boolean {
+    this.passwordRecoveryConfirmation.passwordRecoveryCode = v4();
+    this.passwordRecoveryConfirmation.isConfirmed = false;
+    this.passwordRecoveryConfirmation.expirationDate = add(new Date(), {
+      hours: 1
+    });
+    return true;
+  };
 
-UserSchema.methods.updatePassword = function (newPassword: string) {
+UserSchema.methods.updatePassword = function (newPassword: string): boolean {
   const passwordSalt = bcrypt.genSaltSync(10);
   this.hash = bcrypt.hashSync(newPassword, passwordSalt);
   this.passwordRecoveryConfirmation.isConfirmed = true;
+  return true;
 };

@@ -27,7 +27,7 @@ export class CommentLike {
   @Prop({ required: true })
   myStatus: LikeStatus;
 
-  update: (myStatus: LikeStatus) => CommentLikeDocument;
+  update: (myStatus: LikeStatus) => boolean;
 }
 
 export const CommentLikeSchema = SchemaFactory.createForClass(CommentLike);
@@ -37,7 +37,7 @@ CommentLikeSchema.statics.make = function (
   userId: string,
   commentId: string,
   myStatus: LikeStatus
-) {
+): CommentLikeDocument {
   return new this({
     userId: userId,
     commentId: commentId,
@@ -45,6 +45,7 @@ CommentLikeSchema.statics.make = function (
   });
 };
 
-CommentLikeSchema.methods.update = function (myStatus: LikeStatus) {
+CommentLikeSchema.methods.update = function (myStatus: LikeStatus): boolean {
   this.myStatus = myStatus;
+  return true;
 };

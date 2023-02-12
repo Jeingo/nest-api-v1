@@ -54,7 +54,7 @@ export class Post {
     content: string,
     blogId: string,
     blogName: string
-  ) => PostDocument;
+  ) => boolean;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
@@ -66,7 +66,7 @@ PostSchema.statics.make = function (
   content: string,
   blogId: string,
   blogName: string
-) {
+): PostDocument {
   return new this({
     title: title,
     shortDescription: description,
@@ -87,10 +87,11 @@ PostSchema.methods.update = function (
   content: string,
   blogId: string,
   blogName: string
-) {
+): boolean {
   this.title = title;
   this.shortDescription = description;
   this.content = content;
   this.blogId = blogId;
   this.blogName = blogName;
+  return true;
 };
