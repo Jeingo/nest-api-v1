@@ -21,6 +21,7 @@ import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
+import { UpdateCommentCommand } from './use.cases/update.comment.use.case';
 
 @Controller('comments')
 export class CommentsController {
@@ -48,7 +49,9 @@ export class CommentsController {
     @Body() createCommentDto: InputCreateCommentDto,
     @CurrentUser() user: CurrentUserType
   ) {
-    await this.commentService.update(id, createCommentDto, user);
+    await this.commandBus.execute(
+      new UpdateCommentCommand(id, createCommentDto, user)
+    );
     return;
   }
 
