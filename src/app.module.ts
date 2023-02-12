@@ -62,13 +62,15 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { RegistrationUserUseCase } from './auth/use-cases/registration.user.use.case';
 import { ConfirmEmailUseCase } from './auth/use-cases/confirm.email.use.case';
 import { ValidateUserInLoginUseCase } from './auth/use-cases/validate.user.in.login.use.case';
+import { ResendEmailConfirmationUseCase } from './auth/use-cases/resend.email.confirmation.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
 const useCases = [
   RegistrationUserUseCase,
   ConfirmEmailUseCase,
-  ValidateUserInLoginUseCase
+  ValidateUserInLoginUseCase,
+  ResendEmailConfirmationUseCase
 ];
 const services = [
   AuthService,

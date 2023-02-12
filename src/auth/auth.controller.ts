@@ -40,6 +40,7 @@ import { ValidateUserInLoginCommand } from './use-cases/validate.user.in.login.u
 import { CookieGuard } from './guards/cookie.guard';
 import { RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { PayloadFromRefreshToke } from '../helper/get-decorators/payload.decorator';
+import { ResendEmailConfirmationCommand } from './use-cases/resend.email.confirmation.use.case';
 
 const limit = 5;
 const ttl = 10;
@@ -152,7 +153,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-email-resending')
   async registrationEmailResending(@Body() emailDto: InputEmailDto) {
-    await this.authService.resendEmail(emailDto);
+    await this.commandBus.execute(new ResendEmailConfirmationCommand(emailDto));
     return;
   }
 

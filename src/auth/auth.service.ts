@@ -4,7 +4,6 @@ import { Token, RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { SessionsService } from '../sessions/sessions.service';
 import { EmailManager } from '../adapters/email/email.manager';
-import { InputEmailDto } from './dto/input.email.dto';
 import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
 import { InputNewPasswordDto } from './dto/input.newpassword.dto';
 
@@ -28,13 +27,6 @@ export class AuthService {
     );
     if (!statusSession) return false;
     return payload;
-  }
-  async resendEmail(emailDto: InputEmailDto): Promise<boolean> {
-    const user = await this.usersRepository.getByUniqueField(emailDto.email);
-    user.updateConfirmationCode();
-    await this.usersRepository.save(user);
-    await this.emailManager.sendRegistrationEmailConfirmation(user);
-    return true;
   }
   async recoveryPassword(
     recoveryEmailDto: InputRecoveryEmailDto
