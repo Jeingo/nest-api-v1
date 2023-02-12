@@ -6,9 +6,9 @@ import {
   emptyUsersWithQuery,
   incorrectUser,
   someQuery
-} from './stubs/users.stub';
-import { errorsMessageForIncorrectUser } from './stubs/error.stub';
-import { setConfigNestApp } from './configuration.test';
+} from '../stubs/users.stub';
+import { errorsMessageForIncorrectUser } from '../stubs/error.stub';
+import { setConfigNestApp } from '../configuration.test';
 
 describe('UsersController (e2e)', () => {
   let configuredNesApp: INestApplication;

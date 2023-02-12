@@ -5,17 +5,17 @@ import {
   correctNewBlog,
   emptyBlogs,
   incorrectBlog
-} from './stubs/blogs.stub';
+} from '../stubs/blogs.stub';
 import {
   errorsMessageForIncorrectBlog,
   errorsMessageForIncorrectPost
-} from './stubs/error.stub';
+} from '../stubs/error.stub';
 import {
   correctPostById,
   emptyPosts,
   incorrectPostById
-} from './stubs/posts.stub';
-import { setConfigNestApp } from './configuration.test';
+} from '../stubs/posts.stub';
+import { setConfigNestApp } from '../configuration.test';
 
 describe('BlogsController (e2e)', () => {
   let configuredNesApp: INestApplication;

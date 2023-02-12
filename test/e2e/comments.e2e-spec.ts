@@ -1,28 +1,28 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { correctBlog } from './stubs/blogs.stub';
-import { correctPost } from './stubs/posts.stub';
+import { correctBlog } from '../stubs/blogs.stub';
+import { correctPost } from '../stubs/posts.stub';
 import {
   correctLogin,
   correctLogin2,
   correctUser,
   correctUser2
-} from './stubs/users.stub';
+} from '../stubs/users.stub';
 import {
   correctComment,
   correctCommentNew,
   emptyComments,
   inCorrectComment
-} from './stubs/comments.stub';
+} from '../stubs/comments.stub';
 import {
   errorsMessageForIncorrectComment,
   errorsMessageForIncorrectCommentLike
-} from './stubs/error.stub';
+} from '../stubs/error.stub';
 import {
   badCommentLikeStatus,
   correctCommentLikeStatus
-} from './stubs/comment.likes.stub';
-import { setConfigNestApp } from './configuration.test';
+} from '../stubs/comment.likes.stub';
+import { setConfigNestApp } from '../configuration.test';
 
 describe('CommentsController (e2e)', () => {
   let configuredNesApp: INestApplication;

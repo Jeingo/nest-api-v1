@@ -5,8 +5,8 @@ import {
   correctLogin2,
   correctUser,
   correctUser2
-} from './stubs/users.stub';
-import { setConfigNestApp } from './configuration.test';
+} from '../stubs/users.stub';
+import { setConfigNestApp } from '../configuration.test';
 
 describe('SecurityDeviceController (e2e)', () => {
   let configuredNesApp: INestApplication;
