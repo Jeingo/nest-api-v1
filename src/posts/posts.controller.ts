@@ -24,8 +24,6 @@ import { CommentsQueryRepository } from '../comments/comments.query.repository';
 import { QueryComments } from '../comments/types/comments.type';
 import { OutputCommentDto } from '../comments/dto/output.comment.dto';
 import { GetUserGuard } from '../auth/guards/get.user.guard';
-import { BasicGuard } from '../auth/guards/basic.guard';
-import { BearerGuard } from '../auth/guards/bearer.guard';
 import { InputCreateCommentDto } from '../comments/dto/input.create.comment.dto';
 import { CommentsService } from '../comments/comments.service';
 import { InputUpdatePostLikeDto } from './dto/input.update.post.like.dto';
@@ -33,6 +31,8 @@ import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
+import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -43,7 +43,7 @@ export class PostsController {
     private readonly commentsService: CommentsService
   ) {}
 
-  @UseGuards(BasicGuard)
+  @UseGuards(BasicAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(
@@ -73,7 +73,7 @@ export class PostsController {
     return await this.postsQueryRepository.getById(id, user);
   }
 
-  @UseGuards(BasicGuard)
+  @UseGuards(BasicAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
@@ -84,7 +84,7 @@ export class PostsController {
     return;
   }
 
-  @UseGuards(BasicGuard)
+  @UseGuards(BasicAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id', new CheckIdAndParseToDBId()) id: DbId) {
@@ -108,7 +108,7 @@ export class PostsController {
     );
   }
 
-  @UseGuards(BearerGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post(':postId/comments')
   async createCommentByPostId(
@@ -124,7 +124,7 @@ export class PostsController {
     return await this.commentsQueryRepository.getById(createdCommentId);
   }
 
-  @UseGuards(BearerGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':postId/like-status')
   async updateStatusLike(

@@ -16,11 +16,11 @@ import { OutputUserDto } from './dto/output.user.dto';
 import { UsersQueryRepository } from './users.query.repository';
 import { QueryUsers } from './types/users.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
-import { BasicGuard } from '../auth/guards/basic.guard';
 import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
 import { DbId } from '../global-types/global.types';
+import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 
-@UseGuards(BasicGuard)
+@UseGuards(BasicAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(

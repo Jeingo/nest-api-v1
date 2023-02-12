@@ -55,6 +55,9 @@ import { LoginExistConstraint } from './helper/validation-decorators/login.exist
 import { EmailConfirmationCodeIsCorrectConstraint } from './helper/validation-decorators/email.confirmation.code.is.correct.decorator';
 import { EmailExistAndDontConfirmedConstraint } from './helper/validation-decorators/email.exist.and.dont.confirmed.decorator';
 import { PasswordRecoveryCodeIsCorrectConstraint } from './helper/validation-decorators/password.recover.code.is.correct.decorator';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './auth/strategies/jwt.strategy';
+import { BasicStrategy } from './auth/strategies/basic.strategy';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -97,6 +100,7 @@ const decorators = [
   PasswordRecoveryCodeIsCorrectConstraint,
   CheckIdAndParseToDBId
 ];
+const strategies = [JwtStrategy, BasicStrategy];
 
 const controllers = [
   AuthController,
@@ -126,7 +130,8 @@ const controllers = [
       { name: PostLike.name, schema: PostLikeSchema },
       { name: CommentLike.name, schema: CommentLikeSchema }
     ]),
-    ThrottlerModule.forRoot()
+    ThrottlerModule.forRoot(),
+    PassportModule
   ],
   controllers: [...controllers],
   providers: [
@@ -134,6 +139,7 @@ const controllers = [
     ...repositories,
     ...queryRepositories,
     ...decorators,
+    ...strategies,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard

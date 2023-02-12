@@ -12,7 +12,6 @@ import {
 import { CommentsQueryRepository } from './comments.query.repository';
 import { OutputCommentDto } from './dto/output.comment.dto';
 import { GetUserGuard } from '../auth/guards/get.user.guard';
-import { BearerGuard } from '../auth/guards/bearer.guard';
 import { InputCreateCommentDto } from './dto/input.create.comment.dto';
 import { CommentsService } from './comments.service';
 import { InputUpdateLikeDto } from './dto/input.update.like.dto';
@@ -20,6 +19,7 @@ import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
+import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 
 @Controller('comments')
 export class CommentsController {
@@ -38,7 +38,7 @@ export class CommentsController {
     return this.commentsQueryRepository.getById(id, user);
   }
 
-  @UseGuards(BearerGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
@@ -50,7 +50,7 @@ export class CommentsController {
     return;
   }
 
-  @UseGuards(BearerGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':commentId/like-status')
   async updateStatusLike(
@@ -66,7 +66,7 @@ export class CommentsController {
     return;
   }
 
-  @UseGuards(BearerGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(

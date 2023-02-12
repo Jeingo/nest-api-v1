@@ -23,7 +23,6 @@ import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
 import { Throttle } from '@nestjs/throttler';
 import { Cookies } from '../helper/get-decorators/cookie.decorator';
-import { BearerGuard } from './guards/bearer.guard';
 import { UsersQueryRepository } from '../users/users.query.repository';
 import { OutputUserMeDto } from './dto/output.user.me.dto';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
@@ -34,6 +33,7 @@ import { InputNewPasswordDto } from './dto/input.newpassword.dto';
 import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from './types/current.user.type';
 import { Types } from 'mongoose';
+import { JwtAuthGuard } from './guards/jwt.auth.guard';
 
 const limit = 5;
 const ttl = 10;
@@ -65,7 +65,7 @@ export class AuthController {
       throw new UnauthorizedException();
     }
     const { accessToken, refreshToken } = await this.jwtAdapter.getTokens(
-      userId,
+      userId.toString(),
       v4()
     );
 
@@ -122,7 +122,7 @@ export class AuthController {
     return;
   }
 
-  @UseGuards(BearerGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get('me')
   async me(@CurrentUser() user: CurrentUserType): Promise<OutputUserMeDto> {

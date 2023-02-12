@@ -24,17 +24,16 @@ export class AuthService {
 
   async checkCredentials(
     loginUserDto: InputLoginUserDto
-  ): Promise<string | false> {
+  ): Promise<DbId | null> {
     const { loginOrEmail, password } = loginUserDto;
     const user = await this.usersRepository.getByUniqueField(loginOrEmail);
-    if (!user) return false;
+    if (!user) return null;
     const result = await bcrypt.compare(password, user.hash);
     if (!result) {
-      return false;
+      return null;
     }
-    return user._id.toString();
+    return user._id;
   }
-
   async checkAuthorizationAndGetPayload(
     refreshToken: Token
   ): Promise<TokenPayloadType | false> {
