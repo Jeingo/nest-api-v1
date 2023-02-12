@@ -29,6 +29,8 @@ import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
 import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateBlogCommand } from './use-cases/create.blog.use.case';
 
 @Controller('blogs')
 export class BlogsController {
@@ -36,7 +38,8 @@ export class BlogsController {
     private readonly blogsService: BlogsService,
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly postsService: PostsService,
-    private readonly postsQueryRepository: PostsQueryRepository
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly commandBus: CommandBus
   ) {}
 
   @UseGuards(BasicAuthGuard)
@@ -45,7 +48,9 @@ export class BlogsController {
   async create(
     @Body() createBlogDto: InputCreateBlogDto
   ): Promise<OutputBlogDto> {
-    const createdBlogId = await this.blogsService.create(createBlogDto);
+    const createdBlogId = await this.commandBus.execute(
+      new CreateBlogCommand(createBlogDto)
+    );
     return await this.blogsQueryRepository.getById(createdBlogId);
   }
 

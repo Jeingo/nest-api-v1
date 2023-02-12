@@ -19,7 +19,6 @@ import {
   CommentLikeSchema
 } from './comment-likes/entities/comment.like.entity';
 import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { UsersRepository } from './users/users.repository';
 import { UsersService } from './users/users.service';
 import { JwtAdapter } from './adapters/jwt/jwt.service';
@@ -65,6 +64,7 @@ import { ValidateUserInLoginUseCase } from './auth/use-cases/validate.user.in.lo
 import { ResendEmailConfirmationUseCase } from './auth/use-cases/resend.email.confirmation.use.case';
 import { RecoveryPasswordUseCase } from './auth/use-cases/recovery.password.use.case';
 import { SetNewPasswordUseCase } from './auth/use-cases/set.new.password.use.case';
+import { CreateBlogUseCase } from './blogs/use-cases/create.blog.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -74,10 +74,10 @@ const useCases = [
   ValidateUserInLoginUseCase,
   ResendEmailConfirmationUseCase,
   RecoveryPasswordUseCase,
-  SetNewPasswordUseCase
+  SetNewPasswordUseCase,
+  CreateBlogUseCase
 ];
 const services = [
-  AuthService,
   UsersService,
   JwtAdapter,
   JwtService,

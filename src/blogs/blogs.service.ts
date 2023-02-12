@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InputCreateBlogDto } from './dto/input.create.blog.dto';
 import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { BlogsRepository } from './blogs.repository';
 import { DbId } from '../global-types/global.types';
@@ -7,17 +6,6 @@ import { DbId } from '../global-types/global.types';
 @Injectable()
 export class BlogsService {
   constructor(private readonly blogsRepository: BlogsRepository) {}
-
-  async create(createBlogDto: InputCreateBlogDto): Promise<DbId> {
-    const { name, description, websiteUrl } = createBlogDto;
-    const createdBlog = this.blogsRepository.create(
-      name,
-      description,
-      websiteUrl
-    );
-    await this.blogsRepository.save(createdBlog);
-    return createdBlog._id;
-  }
 
   async update(id: DbId, updateBlogDto: InputUpdateBlogDto): Promise<boolean> {
     const { name, description, websiteUrl } = updateBlogDto;
