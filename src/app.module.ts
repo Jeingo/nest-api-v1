@@ -72,6 +72,7 @@ import { UpdateLikeStatusInCommentUseCase } from './comments/use.cases/update.st
 import { CreatePostUseCase } from './posts/use-cases/create.post.use.case';
 import { CreatePostInBlogUseCase } from './posts/use-cases/create.post.in.blog.use.case';
 import { UpdatePostUseCase } from './posts/use-cases/update.post.use.case';
+import { RemovePostUseCase } from './posts/use-cases/remove.post.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -91,7 +92,8 @@ const useCases = [
   UpdateLikeStatusInCommentUseCase,
   CreatePostUseCase,
   CreatePostInBlogUseCase,
-  UpdatePostUseCase
+  UpdatePostUseCase,
+  RemovePostUseCase
 ];
 const services = [
   UsersService,

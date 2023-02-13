@@ -34,6 +34,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../comments/use.cases/create.comment.use.case';
 import { CreatePostCommand } from './use-cases/create.post.use.case';
 import { UpdatePostCommand } from './use-cases/update.post.use.case';
+import { RemovePostCommand } from './use-cases/remove.post.use.case';
 
 @Controller('posts')
 export class PostsController {
@@ -91,7 +92,7 @@ export class PostsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id', new CheckIdAndParseToDBId()) id: DbId) {
-    await this.postsService.remove(id);
+    await this.commandBus.execute(new RemovePostCommand(id));
     return;
   }
 

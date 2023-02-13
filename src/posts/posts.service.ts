@@ -13,12 +13,6 @@ export class PostsService {
     private readonly postLikesRepository: PostLikesRepository
   ) {}
 
-  async remove(id: DbId): Promise<boolean> {
-    const post = await this.postsRepository.getById(id);
-    if (!post) throw new NotFoundException();
-    await this.postsRepository.delete(id);
-    return true;
-  }
   async updateStatusLike(
     userId: string,
     postId: DbId,
