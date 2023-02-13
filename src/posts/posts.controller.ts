@@ -11,7 +11,6 @@ import {
   Put,
   UseGuards
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
 import { InputCreatePostDto } from './dto/input.create.post.dto';
 import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { PostsQueryRepository } from './posts.query.repository';
@@ -35,11 +34,11 @@ import { CreateCommentCommand } from '../comments/use.cases/create.comment.use.c
 import { CreatePostCommand } from './use-cases/create.post.use.case';
 import { UpdatePostCommand } from './use-cases/update.post.use.case';
 import { RemovePostCommand } from './use-cases/remove.post.use.case';
+import { UpdateStatusLikeInPostCommand } from './use-cases/update.status.like.in.post.use.case';
 
 @Controller('posts')
 export class PostsController {
   constructor(
-    private readonly postsService: PostsService,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly commandBus: CommandBus
@@ -133,11 +132,13 @@ export class PostsController {
     @Body() updatePostLikeDto: InputUpdatePostLikeDto,
     @CurrentUser() user: CurrentUserType
   ) {
-    await this.postsService.updateStatusLike(
-      user.userId,
-      postId,
-      user.login,
-      updatePostLikeDto.likeStatus
+    await this.commandBus.execute(
+      new UpdateStatusLikeInPostCommand(
+        user.userId,
+        postId,
+        user.login,
+        updatePostLikeDto.likeStatus
+      )
     );
     return;
   }

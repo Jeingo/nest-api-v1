@@ -32,7 +32,6 @@ import { BlogsController } from './blogs/blogs.controller';
 import { BlogsQueryRepository } from './blogs/blogs.query.repository';
 import { BlogsRepository } from './blogs/blogs.repository';
 import { PostsQueryRepository } from './posts/posts.query.repository';
-import { PostsService } from './posts/posts.service';
 import { PostsRepository } from './posts/posts.repository';
 import { PostLikesRepository } from './post-likes/post.likes.repository';
 import { CommentLikesRepository } from './comment-likes/comment.likes.repository';
@@ -73,6 +72,7 @@ import { CreatePostUseCase } from './posts/use-cases/create.post.use.case';
 import { CreatePostInBlogUseCase } from './posts/use-cases/create.post.in.blog.use.case';
 import { UpdatePostUseCase } from './posts/use-cases/update.post.use.case';
 import { RemovePostUseCase } from './posts/use-cases/remove.post.use.case';
+import { UpdateStatusLikeInPostUseCase } from './posts/use-cases/update.status.like.in.post.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -93,7 +93,8 @@ const useCases = [
   CreatePostUseCase,
   CreatePostInBlogUseCase,
   UpdatePostUseCase,
-  RemovePostUseCase
+  RemovePostUseCase,
+  UpdateStatusLikeInPostUseCase
 ];
 const services = [
   UsersService,
@@ -103,7 +104,6 @@ const services = [
   ConfigService,
   EmailManager,
   EmailService,
-  PostsService,
   TestingService
 ];
 const repositories = [

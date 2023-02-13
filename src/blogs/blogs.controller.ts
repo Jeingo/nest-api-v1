@@ -18,7 +18,6 @@ import { OutputBlogDto } from './dto/output.blog.dto';
 import { QueryBlogs } from './types/blogs.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import { InputCreatePostInBlogsDto } from './dto/input.create.post.dto';
-import { PostsService } from '../posts/posts.service';
 import { PostsQueryRepository } from '../posts/posts.query.repository';
 import { QueryPosts } from '../posts/types/posts.type';
 import { OutputPostDto } from '../posts/dto/output.post.dto';
@@ -38,7 +37,6 @@ import { CreatePostInBlogCommand } from '../posts/use-cases/create.post.in.blog.
 export class BlogsController {
   constructor(
     private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly postsService: PostsService,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commandBus: CommandBus
   ) {}
