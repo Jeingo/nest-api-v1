@@ -20,7 +20,6 @@ import {
 } from './comment-likes/entities/comment.like.entity';
 import { AuthController } from './auth/auth.controller';
 import { UsersRepository } from './users/users.repository';
-import { UsersService } from './users/users.service';
 import { JwtAdapter } from './adapters/jwt/jwt.service';
 import { JwtService } from '@nestjs/jwt';
 import { SessionsService } from './sessions/sessions.service';
@@ -73,6 +72,8 @@ import { CreatePostInBlogUseCase } from './posts/use-cases/create.post.in.blog.u
 import { UpdatePostUseCase } from './posts/use-cases/update.post.use.case';
 import { RemovePostUseCase } from './posts/use-cases/remove.post.use.case';
 import { UpdateStatusLikeInPostUseCase } from './posts/use-cases/update.status.like.in.post.use.case';
+import { CreateUserUseCase } from './users/use-cases/create.user.use.case';
+import { RemoveUserUseCase } from './users/use-cases/remove.user.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -94,10 +95,11 @@ const useCases = [
   CreatePostInBlogUseCase,
   UpdatePostUseCase,
   RemovePostUseCase,
-  UpdateStatusLikeInPostUseCase
+  UpdateStatusLikeInPostUseCase,
+  CreateUserUseCase,
+  RemoveUserUseCase
 ];
 const services = [
-  UsersService,
   JwtAdapter,
   JwtService,
   SessionsService,
