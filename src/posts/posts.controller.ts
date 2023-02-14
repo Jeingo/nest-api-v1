@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Param,
-  Delete,
   HttpCode,
   HttpStatus,
   Query,
@@ -25,11 +24,9 @@ import { CheckIdAndParseToDBId } from '../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../helper/get-decorators/current.user.decorator';
 import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
-import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../comments/use.cases/create.comment.use.case';
-import { RemovePostCommand } from '../blogger/blogs/use-cases/remove.post.use.case';
 import { UpdateStatusLikeInPostCommand } from './use-cases/update.status.like.in.post.use.case';
 
 @Controller('posts')
@@ -58,14 +55,6 @@ export class PostsController {
     @CurrentUser() user: CurrentUserType
   ): Promise<OutputPostDto> {
     return await this.postsQueryRepository.getById(id, user);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete(':id')
-  async remove(@Param('id', new CheckIdAndParseToDBId()) id: DbId) {
-    await this.commandBus.execute(new RemovePostCommand(id));
-    return;
   }
 
   @UseGuards(GetUserGuard)

@@ -32,6 +32,7 @@ import { CreatePostInBlogCommand } from './use-cases/create.post.in.blog.use.cas
 import { PostsQueryRepository } from '../../posts/posts.query.repository';
 import { UpdatePostCommand } from './use-cases/update.post.use.case';
 import { InputUpdatePostDto } from './dto/input.update.post.dto';
+import { RemovePostCommand } from './use-cases/remove.post.use.case';
 
 @Controller('blogger/blogs')
 export class BloggerBlogsController {
@@ -115,6 +116,18 @@ export class BloggerBlogsController {
     await this.commandBus.execute(
       new UpdatePostCommand(id, updatePostDto, blogId, user)
     );
+    return;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':blogId/posts/:id')
+  async removePost(
+    @Param('blogId', new CheckIdAndParseToDBId()) blogId: DbId,
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
+    @CurrentUser() user: CurrentUserType
+  ) {
+    await this.commandBus.execute(new RemovePostCommand(id, blogId, user));
     return;
   }
 }
