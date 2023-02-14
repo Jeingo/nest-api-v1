@@ -5,7 +5,7 @@ import {
   User,
   UserDocument
 } from '../../users/entities/user.entity';
-import { QueryUsers } from './types/query.users.type';
+import { BanStatus, QueryUsers } from './types/query.users.type';
 import { PaginatedType } from '../../helper/query/types.query.repository.helper';
 import { OutputSuperAdminUserDto } from './dto/outputSuperAdminUserDto';
 import { DbId, Direction } from '../../global-types/global.types';
@@ -22,6 +22,7 @@ export class SuperAdminUsersQueryRepository {
     query: QueryUsers
   ): Promise<PaginatedType<OutputSuperAdminUserDto>> {
     const {
+      banStatus = BanStatus.all,
       searchLoginTerm = null,
       searchEmailTerm = null,
       sortBy = 'createdAt',
@@ -32,14 +33,15 @@ export class SuperAdminUsersQueryRepository {
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
     const skipNumber = (+pageNumber - 1) * +pageSize;
 
-    const filter = (a: any, b: any) => ({ $or: [a, b] });
+    const filter = (a: any, b: any, c: any) => ({ ...c, $or: [a, b] });
     const loginFilter = searchLoginTerm
       ? { login: { $regex: new RegExp(searchLoginTerm, 'gi') } }
       : {};
     const emailFilter = searchEmailTerm
       ? { email: { $regex: new RegExp(searchEmailTerm, 'gi') } }
       : {};
-    const filterMain = filter(loginFilter, emailFilter);
+    const banFilter = this._getBanFilter(banStatus);
+    const filterMain = filter(loginFilter, emailFilter, banFilter);
     const countAllDocuments = await this.usersModel.countDocuments(filterMain);
     const result = await this.usersModel
       .find(filterMain)
@@ -72,5 +74,14 @@ export class SuperAdminUsersQueryRepository {
         banReason: user.banInfo.banReason
       }
     };
+  }
+  private _getBanFilter(banStatus: BanStatus) {
+    if (banStatus === BanStatus.all) {
+      return {};
+    }
+    if (banStatus === BanStatus.banned) {
+      return { 'banInfo.isBanned': true };
+    }
+    return { 'banInfo.isBanned': false };
   }
 }
