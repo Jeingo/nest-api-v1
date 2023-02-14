@@ -14,6 +14,7 @@ import { CookieGuard } from '../auth/guards/cookie.guard';
 import { PayloadFromRefreshToke } from '../helper/get-decorators/payload.decorator';
 import { RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { CommandBus } from '@nestjs/cqrs';
+import { RemoveSessionWithoutCurrentCommand } from './use-cases/remove.sessions.without.current.use.case';
 
 @Controller('security/devices')
 export class SecurityDevicesController {
@@ -40,9 +41,8 @@ export class SecurityDevicesController {
   async deleteAllSessionWithoutCurrent(
     @PayloadFromRefreshToke() payload: RefreshTokenPayloadType
   ) {
-    await this.sessionsService.deleteActiveSessionWithoutCurrent(
-      payload.userId,
-      payload.iat
+    await this.commandBus.execute(
+      new RemoveSessionWithoutCurrentCommand(payload.userId, payload.iat)
     );
     return;
   }

@@ -15,16 +15,6 @@ export class SessionsService {
     private readonly jwtService: JwtService,
     private readonly sessionsRepository: SessionsRepository
   ) {}
-  async deleteActiveSessionWithoutCurrent(
-    userId: string,
-    iat: number
-  ): Promise<boolean> {
-    const issueAt = new Date(iat * 1000).toISOString();
-    return await this.sessionsRepository.deleteSessionsWithoutCurrent(
-      userId,
-      issueAt
-    );
-  }
   async deleteSessionByDeviceId(id: string, userId: string): Promise<boolean> {
     const session = await this.sessionsRepository.get(id);
     if (!session) throw new NotFoundException();

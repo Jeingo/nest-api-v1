@@ -77,6 +77,7 @@ import { RemoveUserUseCase } from './users/use-cases/remove.user.use.case';
 import { CreateSessionUseCase } from './sessions/use-cases/create.session.use.case';
 import { UpdateSessionUseCase } from './sessions/use-cases/update.session.use.case';
 import { RemoveSessionUseCase } from './sessions/use-cases/remove.session.use.case';
+import { RemoveSessionWithoutCurrentUseCase } from './sessions/use-cases/remove.sessions.without.current.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -104,7 +105,8 @@ const useCases = [
   CreateUserUseCase,
   CreateSessionUseCase,
   UpdateSessionUseCase,
-  RemoveSessionUseCase
+  RemoveSessionUseCase,
+  RemoveSessionWithoutCurrentUseCase
 ];
 const services = [
   JwtAdapter,
