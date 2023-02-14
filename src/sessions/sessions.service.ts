@@ -15,10 +15,6 @@ export class SessionsService {
     private readonly jwtService: JwtService,
     private readonly sessionsRepository: SessionsRepository
   ) {}
-  async deleteSession(iat: number): Promise<boolean> {
-    const issueAt = new Date(iat * 1000).toISOString();
-    return await this.sessionsRepository.deleteSession(issueAt);
-  }
   async deleteActiveSessionWithoutCurrent(
     userId: string,
     iat: number

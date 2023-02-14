@@ -14,7 +14,6 @@ import {
 import { InputLoginUserDto } from './dto/input.login.user.dto';
 import { JwtAdapter } from '../adapters/jwt/jwt.service';
 import { v4 } from 'uuid';
-import { SessionsService } from '../sessions/sessions.service';
 import { OutputAccessTokenDto } from './dto/output.token.dto';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
@@ -43,6 +42,7 @@ import { RecoveryPasswordCommand } from './use-cases/recovery.password.use.case'
 import { SetNewPasswordCommand } from './use-cases/set.new.password.use.case';
 import { CreateSessionCommand } from '../sessions/use-cases/create.session.use.case';
 import { UpdateSessionCommand } from '../sessions/use-cases/update.session.use.case';
+import { RemoveSessionCommand } from '../sessions/use-cases/remove.session.use.case';
 
 const limit = 5;
 const ttl = 10;
@@ -51,7 +51,6 @@ const ttl = 10;
 export class AuthController {
   constructor(
     private readonly jwtAdapter: JwtAdapter,
-    private readonly sessionsService: SessionsService,
     private readonly configService: ConfigService<IConfigType>,
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly commandBus: CommandBus
@@ -117,7 +116,7 @@ export class AuthController {
     @PayloadFromRefreshToke() payload: RefreshTokenPayloadType,
     @Res({ passthrough: true }) response: Response
   ) {
-    await this.sessionsService.deleteSession(payload.iat);
+    await this.commandBus.execute(new RemoveSessionCommand(payload.iat));
     response.clearCookie('refreshToken');
     return;
   }
