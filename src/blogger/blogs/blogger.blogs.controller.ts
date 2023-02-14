@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -24,6 +25,7 @@ import { CheckIdAndParseToDBId } from '../../helper/pipes/check.id.validator.pip
 import { DbId } from '../../global-types/global.types';
 import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { UpdateBlogCommand } from './use-cases/update.blog.use.case';
+import { RemoveBlogCommand } from './use-cases/remove.blog.use.case';
 
 @Controller('blogger/blogs')
 export class BloggerBlogsController {
@@ -66,6 +68,17 @@ export class BloggerBlogsController {
     await this.commandBus.execute(
       new UpdateBlogCommand(id, updateBlogDto, user)
     );
+    return;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id')
+  async remove(
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
+    @CurrentUser() user: CurrentUserType
+  ) {
+    await this.commandBus.execute(new RemoveBlogCommand(id, user));
     return;
   }
 }

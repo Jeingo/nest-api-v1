@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Param,
-  Delete,
   HttpCode,
   Query,
   HttpStatus,
@@ -25,7 +24,6 @@ import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
 import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
-import { RemoveBlogCommand } from '../blogger/blogs/use-cases/remove.blog.use.case';
 import { CreatePostInBlogCommand } from '../posts/use-cases/create.post.in.blog.use.case';
 
 @Controller('blogs')
@@ -50,14 +48,6 @@ export class BlogsController {
     @Param('id', new CheckIdAndParseToDBId()) id: DbId
   ): Promise<OutputBlogDto> {
     return await this.blogsQueryRepository.getById(id);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete(':id')
-  async remove(@Param('id', new CheckIdAndParseToDBId()) id: DbId) {
-    await this.commandBus.execute(new RemoveBlogCommand(id));
-    return;
   }
 
   @UseGuards(BasicAuthGuard)
