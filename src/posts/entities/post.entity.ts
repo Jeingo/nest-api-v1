@@ -12,7 +12,8 @@ type StaticPostMethods = {
     description: string,
     content: string,
     blogId: string,
-    blogName: string
+    blogName: string,
+    userId: string
   ) => PostDocument;
 };
 
@@ -80,7 +81,8 @@ PostSchema.statics.make = function (
   description: string,
   content: string,
   blogId: string,
-  blogName: string
+  blogName: string,
+  userId: string
 ): PostDocument {
   return new this({
     title: title,
@@ -94,7 +96,7 @@ PostSchema.statics.make = function (
       dislikesCount: 0
     },
     postOwnerInfo: {
-      userId: 'none',
+      userId: userId,
       isBaned: false
     }
   });

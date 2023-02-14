@@ -12,9 +12,17 @@ export class PostsRepository {
     description: string,
     content: string,
     blogId: string,
-    blogName: string
+    blogName: string,
+    userId: string
   ): PostDocument {
-    return this.postsModel.make(title, description, content, blogId, blogName);
+    return this.postsModel.make(
+      title,
+      description,
+      content,
+      blogId,
+      blogName,
+      userId
+    );
   }
   async getById(id: DbId): Promise<PostDocument> {
     return this.postsModel.findById(id);

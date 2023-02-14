@@ -11,8 +11,6 @@ import {
   Put,
   UseGuards
 } from '@nestjs/common';
-import { InputCreatePostDto } from './dto/input.create.post.dto';
-import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { PostsQueryRepository } from './posts.query.repository';
 import { OutputPostDto } from './dto/output.post.dto';
 import { QueryPosts } from './types/query.posts.type';
@@ -31,9 +29,7 @@ import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../comments/use.cases/create.comment.use.case';
-import { CreatePostCommand } from './use-cases/create.post.use.case';
-import { UpdatePostCommand } from './use-cases/update.post.use.case';
-import { RemovePostCommand } from './use-cases/remove.post.use.case';
+import { RemovePostCommand } from '../blogger/blogs/use-cases/remove.post.use.case';
 import { UpdateStatusLikeInPostCommand } from './use-cases/update.status.like.in.post.use.case';
 
 @Controller('posts')
@@ -43,18 +39,6 @@ export class PostsController {
     private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly commandBus: CommandBus
   ) {}
-
-  @UseGuards(BasicAuthGuard)
-  @HttpCode(HttpStatus.CREATED)
-  @Post()
-  async create(
-    @Body() createPostDto: InputCreatePostDto
-  ): Promise<OutputPostDto> {
-    const createdPostId = await this.commandBus.execute(
-      new CreatePostCommand(createPostDto)
-    );
-    return await this.postsQueryRepository.getById(createdPostId);
-  }
 
   @UseGuards(GetUserGuard)
   @HttpCode(HttpStatus.OK)
@@ -74,17 +58,6 @@ export class PostsController {
     @CurrentUser() user: CurrentUserType
   ): Promise<OutputPostDto> {
     return await this.postsQueryRepository.getById(id, user);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Put(':id')
-  async update(
-    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
-    @Body() updatePostDto: InputUpdatePostDto
-  ) {
-    await this.commandBus.execute(new UpdatePostCommand(id, updatePostDto));
-    return;
   }
 
   @UseGuards(BasicAuthGuard)

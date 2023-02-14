@@ -66,10 +66,9 @@ import { CreateCommentUseCase } from './comments/use.cases/create.comment.use.ca
 import { UpdateCommentUseCase } from './comments/use.cases/update.comment.use.case';
 import { RemoveCommentUseCase } from './comments/use.cases/remove.comment.use.case';
 import { UpdateLikeStatusInCommentUseCase } from './comments/use.cases/update.status.like.in.comment.use.case';
-import { CreatePostUseCase } from './posts/use-cases/create.post.use.case';
-import { CreatePostInBlogUseCase } from './posts/use-cases/create.post.in.blog.use.case';
-import { UpdatePostUseCase } from './posts/use-cases/update.post.use.case';
-import { RemovePostUseCase } from './posts/use-cases/remove.post.use.case';
+import { CreatePostInBlogUseCase } from './blogger/blogs/use-cases/create.post.in.blog.use.case';
+import { UpdatePostUseCase } from './blogger/blogs/use-cases/update.post.use.case';
+import { RemovePostUseCase } from './blogger/blogs/use-cases/remove.post.use.case';
 import { UpdateStatusLikeInPostUseCase } from './posts/use-cases/update.status.like.in.post.use.case';
 import { CreateUserUseCase } from './users/use-cases/create.user.use.case';
 import { RemoveUserUseCase } from './users/use-cases/remove.user.use.case';
@@ -99,7 +98,6 @@ const useCases = [
   UpdateCommentUseCase,
   RemoveCommentUseCase,
   UpdateLikeStatusInCommentUseCase,
-  CreatePostUseCase,
   CreatePostInBlogUseCase,
   UpdatePostUseCase,
   RemovePostUseCase,

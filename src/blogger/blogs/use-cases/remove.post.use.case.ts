@@ -1,6 +1,6 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { DbId } from '../../global-types/global.types';
-import { PostsRepository } from '../posts.repository';
+import { DbId } from '../../../global-types/global.types';
+import { PostsRepository } from '../../../posts/posts.repository';
 import { NotFoundException } from '@nestjs/common';
 
 export class RemovePostCommand {
