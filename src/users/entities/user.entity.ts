@@ -20,10 +20,10 @@ export type IUserModel = Model<UserDocument> & StaticUserMethods;
 
 @Schema()
 class PasswordRecoveryConfirmation {
-  @Prop({ required: true })
+  @Prop()
   passwordRecoveryCode: string;
 
-  @Prop({ required: true })
+  @Prop()
   expirationDate: Date;
 
   @Prop({ required: true })
@@ -40,6 +40,18 @@ class EmailConfirmation {
 
   @Prop({ required: true })
   isConfirmed: boolean;
+}
+
+@Schema({ _id: false })
+class BanInfo {
+  @Prop({ required: true })
+  isBanned: boolean;
+
+  @Prop()
+  banDate: string;
+
+  @Prop({ minlength: 20, maxlength: 100 })
+  banReason: string;
 }
 
 @Schema()
@@ -59,8 +71,11 @@ export class User {
   @Prop({ required: true })
   passwordRecoveryConfirmation: PasswordRecoveryConfirmation;
 
-  @Prop({ type: EmailConfirmation, required: true })
+  @Prop({ required: true })
   emailConfirmation: EmailConfirmation;
+
+  @Prop({ required: true })
+  banInfo: BanInfo;
 
   updateEmailConfirmationStatus: () => boolean;
   updateConfirmationCode: () => boolean;
@@ -86,10 +101,8 @@ UserSchema.statics.make = function (
     email: email,
     createdAt: newDate.toISOString(),
     passwordRecoveryConfirmation: {
-      passwordRecoveryCode: v4(),
-      expirationDate: add(newDate, {
-        hours: 1
-      }),
+      passwordRecoveryCode: null,
+      expirationDate: null,
       isConfirmed: true
     },
     emailConfirmation: {
@@ -98,6 +111,11 @@ UserSchema.statics.make = function (
         hours: 1
       }),
       isConfirmed: isConfirmed
+    },
+    banInfo: {
+      isBanned: false,
+      banDate: null,
+      banReason: null
     }
   });
 };

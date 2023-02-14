@@ -22,6 +22,9 @@ export class CommentLike {
   userId: string;
 
   @Prop({ required: true })
+  isBaned: boolean;
+
+  @Prop({ required: true })
   commentId: string;
 
   @Prop({ required: true })
@@ -40,6 +43,7 @@ CommentLikeSchema.statics.make = function (
 ): CommentLikeDocument {
   return new this({
     userId: userId,
+    isBaned: false,
     commentId: commentId,
     myStatus: myStatus
   });

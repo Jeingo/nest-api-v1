@@ -22,6 +22,9 @@ export class PostLike {
   userId: string;
 
   @Prop({ required: true })
+  isBaned: boolean;
+
+  @Prop({ required: true })
   postId: string;
 
   @Prop({ required: true })
@@ -47,6 +50,7 @@ PostLikeSchema.statics.make = function (
 ): PostLikeDocument {
   return new this({
     userId: userId,
+    isBaned: false,
     postId: postId,
     myStatus: myStatus,
     login: login,

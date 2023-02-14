@@ -24,6 +24,9 @@ class CommentatorInfo {
 
   @Prop({ required: true })
   userLogin: string;
+
+  @Prop({ required: true })
+  isBaned: boolean;
 }
 
 @Schema({ _id: false })
@@ -71,7 +74,8 @@ CommentSchema.statics.make = function (
     postId: postId,
     commentatorInfo: {
       userId: userId,
-      userLogin: userLogin
+      userLogin: userLogin,
+      isBaned: false
     },
     likesInfo: {
       likesCount: 0,

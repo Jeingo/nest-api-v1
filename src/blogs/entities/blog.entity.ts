@@ -14,6 +14,18 @@ type StaticBlogMethods = {
 
 export type IBlogModel = Model<BlogDocument> & StaticBlogMethods;
 
+@Schema({ _id: false })
+class BlogOwnerInfo {
+  @Prop({ required: true, maxlength: 50 })
+  userId: string;
+
+  @Prop({ required: true, maxlength: 50 })
+  userLogin: string;
+
+  @Prop({ required: true })
+  isBaned: boolean;
+}
+
 @Schema()
 export class Blog {
   @Prop({ required: true, maxlength: 15 })
@@ -31,6 +43,9 @@ export class Blog {
   @Prop({ required: true })
   isMembership: boolean;
 
+  @Prop({ required: true })
+  blogOwnerInfo: BlogOwnerInfo;
+
   update: (name: string, description: string, websiteUrl: string) => boolean;
 }
 
@@ -47,7 +62,12 @@ BlogSchema.statics.make = function (
     description: description,
     websiteUrl: websiteUrl,
     createdAt: new Date().toISOString(),
-    isMembership: false
+    isMembership: false,
+    blogOwnerInfo: {
+      userId: 'none',
+      userLogin: 'none',
+      isBaned: false
+    }
   });
 };
 

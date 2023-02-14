@@ -27,6 +27,15 @@ class ExtendedLikesInfo {
   dislikesCount: number;
 }
 
+@Schema({ _id: false })
+class PostOwnerInfo {
+  @Prop({ required: true, maxlength: 50 })
+  userId: string;
+
+  @Prop({ required: true })
+  isBaned: boolean;
+}
+
 @Schema()
 export class Post {
   @Prop({ required: true, maxlength: 30 })
@@ -49,6 +58,9 @@ export class Post {
 
   @Prop({ required: true })
   extendedLikesInfo: ExtendedLikesInfo;
+
+  @Prop({ required: true })
+  postOwnerInfo: PostOwnerInfo;
 
   update: (
     title: string,
@@ -80,6 +92,10 @@ PostSchema.statics.make = function (
     extendedLikesInfo: {
       likesCount: 0,
       dislikesCount: 0
+    },
+    postOwnerInfo: {
+      userId: 'none',
+      isBaned: false
     }
   });
 };
