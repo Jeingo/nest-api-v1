@@ -183,11 +183,11 @@ const controllers = [
     ...queryRepositories,
     ...decorators,
     ...strategies,
-    ...useCases,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard
-    }
+    ...useCases
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard
+    // }
   ]
 })
 export class AppModule {}
