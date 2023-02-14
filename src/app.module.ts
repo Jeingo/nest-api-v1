@@ -42,7 +42,6 @@ import { SecurityDevicesController } from './sessions/security.devices.controlle
 import { SessionsQueryRepository } from './sessions/sessions.query.repository';
 import { TestingController } from './testing/testing.controller';
 import { TestingService } from './testing/testing.service';
-import { UsersController } from './users/users.controller';
 import { CheckIdAndParseToDBId } from './helper/pipes/check.id.validator.pipe';
 import { EmailNotExistConstraint } from './helper/validation-decorators/email.not.exist.decorator';
 import { LoginExistConstraint } from './helper/validation-decorators/login.exist.decorator';
@@ -70,8 +69,8 @@ import { CreatePostInBlogUseCase } from './blogger/blogs/use-cases/create.post.i
 import { UpdatePostUseCase } from './blogger/blogs/use-cases/update.post.use.case';
 import { RemovePostUseCase } from './blogger/blogs/use-cases/remove.post.use.case';
 import { UpdateStatusLikeInPostUseCase } from './posts/use-cases/update.status.like.in.post.use.case';
-import { CreateUserUseCase } from './users/use-cases/create.user.use.case';
-import { RemoveUserUseCase } from './users/use-cases/remove.user.use.case';
+import { CreateUserUseCase } from './superadmin/users/use-cases/create.user.use.case';
+import { RemoveUserUseCase } from './superadmin/users/use-cases/remove.user.use.case';
 import { CreateSessionUseCase } from './sessions/use-cases/create.session.use.case';
 import { UpdateSessionUseCase } from './sessions/use-cases/update.session.use.case';
 import { RemoveSessionUseCase } from './sessions/use-cases/remove.session.use.case';
@@ -81,6 +80,7 @@ import { BloggerBlogsController } from './blogger/blogs/blogger.blogs.controller
 import { SuperAdminBlogsController } from './superadmin/blogs/superadmin.blogs.controller';
 import { SuperAdminUsersController } from './superadmin/users/superadmin.users.controller';
 import { BloggerBlogsQueryRepository } from './blogger/blogs/blogger.blogs.query.repository';
+import { SuperAdminUsersQueryRepository } from './superadmin/users/superadmin.users.query.repository';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -134,7 +134,8 @@ const queryRepositories = [
   PostsQueryRepository,
   CommentsQueryRepository,
   SessionsQueryRepository,
-  BloggerBlogsQueryRepository
+  BloggerBlogsQueryRepository,
+  SuperAdminUsersQueryRepository
 ];
 const decorators = [
   IsBlogIdConstraint,
@@ -154,7 +155,6 @@ const controllers = [
   PostsController,
   SecurityDevicesController,
   TestingController,
-  UsersController,
   BloggerBlogsController,
   SuperAdminBlogsController,
   SuperAdminUsersController

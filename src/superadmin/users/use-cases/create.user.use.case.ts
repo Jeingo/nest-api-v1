@@ -1,7 +1,7 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { DbId } from '../../global-types/global.types';
+import { DbId } from '../../../global-types/global.types';
 import { InputCreateUserDto } from '../dto/input.create.user.dto';
-import { UsersRepository } from '../users.repository';
+import { UsersRepository } from '../../../users/users.repository';
 
 export class CreateUserCommand {
   constructor(public createUserDto: InputCreateUserDto) {}

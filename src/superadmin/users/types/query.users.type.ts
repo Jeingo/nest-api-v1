@@ -1,4 +1,4 @@
-import { Direction } from '../../global-types/global.types';
+import { Direction } from '../../../global-types/global.types';
 
 export type QueryUsers = {
   searchLoginTerm?: string;
