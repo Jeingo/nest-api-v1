@@ -19,7 +19,7 @@ import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
 import { Throttle } from '@nestjs/throttler';
-import { UsersQueryRepository } from '../users/users.query.repository';
+import { UsersQueryRepository } from './users.query.repository';
 import { OutputUserMeDto } from './dto/output.user.me.dto';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
 import { InputConfirmationCodeDto } from './dto/input.confirmation.code.dto';

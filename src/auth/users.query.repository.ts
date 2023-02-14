@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { IUserModel, User, UserDocument } from './entities/user.entity';
+import { IUserModel, User, UserDocument } from '../users/entities/user.entity';
 import { DbId } from '../global-types/global.types';
-import { OutputUserMeDto } from '../auth/dto/output.user.me.dto';
+import { OutputUserMeDto } from './dto/output.user.me.dto';
 
 @Injectable()
 export class UsersQueryRepository {

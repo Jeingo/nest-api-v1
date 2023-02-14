@@ -23,7 +23,7 @@ import { UsersRepository } from './users/users.repository';
 import { JwtAdapter } from './adapters/jwt/jwt.service';
 import { JwtService } from '@nestjs/jwt';
 import { SessionsRepository } from './sessions/sessions.repository';
-import { UsersQueryRepository } from './users/users.query.repository';
+import { UsersQueryRepository } from './auth/users.query.repository';
 import { EmailManager } from './adapters/email/email.manager';
 import { EmailService } from './adapters/email/email.service';
 import { BlogsController } from './blogs/blogs.controller';
