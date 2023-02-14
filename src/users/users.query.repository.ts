@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { IUserModel, User, UserDocument } from './entities/user.entity';
 import { DbId, Direction } from '../global-types/global.types';
 import { OutputUserDto } from './dto/output.user.dto';
-import { QueryUsers } from './types/users.type';
+import { QueryUsers } from './types/query.users.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
   getPaginatedType,

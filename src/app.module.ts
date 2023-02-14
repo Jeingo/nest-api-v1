@@ -78,6 +78,9 @@ import { UpdateSessionUseCase } from './sessions/use-cases/update.session.use.ca
 import { RemoveSessionUseCase } from './sessions/use-cases/remove.session.use.case';
 import { RemoveSessionWithoutCurrentUseCase } from './sessions/use-cases/remove.sessions.without.current.use.case';
 import { RemoveSessionByDeviceIdUseCase } from './sessions/use-cases/remove.session.by.device.id.use.case';
+import { BloggerBlogsController } from './blogger/blogs/blogger.blogs.controller';
+import { SuperAdminBlogsController } from './superadmin/blogs/superadmin.blogs.controller';
+import { SuperAdminUsersController } from './superadmin/users/superadmin.users.controller';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -151,7 +154,10 @@ const controllers = [
   PostsController,
   SecurityDevicesController,
   TestingController,
-  UsersController
+  UsersController,
+  BloggerBlogsController,
+  SuperAdminBlogsController,
+  SuperAdminUsersController
 ];
 
 @Module({

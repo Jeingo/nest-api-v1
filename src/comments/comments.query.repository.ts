@@ -7,7 +7,7 @@ import {
   CommentDocument,
   ICommentModel
 } from './entities/comment.entity';
-import { QueryComments } from './types/comments.type';
+import { QueryComments } from './types/query.comments.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
   getPaginatedType,

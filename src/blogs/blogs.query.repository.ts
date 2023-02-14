@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument, IBlogModel } from './entities/blog.entity';
 import { OutputBlogDto } from './dto/output.blog.dto';
-import { QueryBlogs } from './types/blogs.type';
+import { QueryBlogs } from './types/query.blogs.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
   getPaginatedType,

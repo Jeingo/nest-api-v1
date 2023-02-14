@@ -1,5 +1,5 @@
 import { LikeStatus } from '../../global-types/global.types';
-import { NewestLikesType } from '../types/posts.type';
+import { NewestLikesType } from '../types/query.posts.type';
 
 export class OutputPostDto {
   id: string;
