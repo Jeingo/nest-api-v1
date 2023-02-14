@@ -8,7 +8,9 @@ type StaticBlogMethods = {
     this: IBlogModel,
     name: string,
     description: string,
-    websiteUrl: string
+    websiteUrl: string,
+    userId: string,
+    login: string
   ) => BlogDocument;
 };
 
@@ -55,7 +57,9 @@ BlogSchema.statics.make = function (
   this: IBlogModel,
   name: string,
   description: string,
-  websiteUrl: string
+  websiteUrl: string,
+  userId: string,
+  login: string
 ): BlogDocument {
   return new this({
     name: name,
@@ -64,8 +68,8 @@ BlogSchema.statics.make = function (
     createdAt: new Date().toISOString(),
     isMembership: false,
     blogOwnerInfo: {
-      userId: 'none',
-      userLogin: 'none',
+      userId: userId,
+      userLogin: login,
       isBaned: false
     }
   });

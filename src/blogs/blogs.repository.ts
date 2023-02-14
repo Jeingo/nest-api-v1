@@ -7,8 +7,14 @@ import { DbId } from '../global-types/global.types';
 export class BlogsRepository {
   constructor(@InjectModel(Blog.name) private blogsModel: IBlogModel) {}
 
-  create(name: string, description: string, websiteUrl: string): BlogDocument {
-    return this.blogsModel.make(name, description, websiteUrl);
+  create(
+    name: string,
+    description: string,
+    websiteUrl: string,
+    userId: string,
+    login: string
+  ): BlogDocument {
+    return this.blogsModel.make(name, description, websiteUrl, userId, login);
   }
   async getById(id: DbId): Promise<BlogDocument> {
     return this.blogsModel.findById(id);

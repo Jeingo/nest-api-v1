@@ -11,13 +11,12 @@ import {
   HttpStatus,
   UseGuards
 } from '@nestjs/common';
-import { InputCreateBlogDto } from './dto/input.create.blog.dto';
-import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
+import { InputUpdateBlogDto } from '../blogger/blogs/dto/input.update.blog.dto';
 import { BlogsQueryRepository } from './blogs.query.repository';
 import { OutputBlogDto } from './dto/output.blog.dto';
 import { QueryBlogs } from './types/query.blogs.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
-import { InputCreatePostInBlogsDto } from './dto/input.create.post.dto';
+import { InputCreatePostInBlogsDto } from '../blogger/blogs/dto/input.create.post.dto';
 import { PostsQueryRepository } from '../posts/posts.query.repository';
 import { QueryPosts } from '../posts/types/query.posts.type';
 import { OutputPostDto } from '../posts/dto/output.post.dto';
@@ -28,9 +27,8 @@ import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
 import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateBlogCommand } from './use-cases/create.blog.use.case';
-import { UpdateBlogCommand } from './use-cases/update.blog.use.case';
-import { RemoveBlogCommand } from './use-cases/remove.blog.use.case';
+import { UpdateBlogCommand } from '../blogger/blogs/use-cases/update.blog.use.case';
+import { RemoveBlogCommand } from '../blogger/blogs/use-cases/remove.blog.use.case';
 import { CreatePostInBlogCommand } from '../posts/use-cases/create.post.in.blog.use.case';
 
 @Controller('blogs')
@@ -40,18 +38,6 @@ export class BlogsController {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commandBus: CommandBus
   ) {}
-
-  @UseGuards(BasicAuthGuard)
-  @HttpCode(HttpStatus.CREATED)
-  @Post()
-  async create(
-    @Body() createBlogDto: InputCreateBlogDto
-  ): Promise<OutputBlogDto> {
-    const createdBlogId = await this.commandBus.execute(
-      new CreateBlogCommand(createBlogDto)
-    );
-    return await this.blogsQueryRepository.getById(createdBlogId);
-  }
 
   @HttpCode(HttpStatus.OK)
   @Get()

@@ -59,9 +59,9 @@ import { ValidateUserInLoginUseCase } from './auth/use-cases/validate.user.in.lo
 import { ResendEmailConfirmationUseCase } from './auth/use-cases/resend.email.confirmation.use.case';
 import { RecoveryPasswordUseCase } from './auth/use-cases/recovery.password.use.case';
 import { SetNewPasswordUseCase } from './auth/use-cases/set.new.password.use.case';
-import { CreateBlogUseCase } from './blogs/use-cases/create.blog.use.case';
-import { UpdateBlogUseCase } from './blogs/use-cases/update.blog.use.case';
-import { RemoveBlogUseCase } from './blogs/use-cases/remove.blog.use.case';
+import { CreateBlogUseCase } from './blogger/blogs/use-cases/create.blog.use.case';
+import { UpdateBlogUseCase } from './blogger/blogs/use-cases/update.blog.use.case';
+import { RemoveBlogUseCase } from './blogger/blogs/use-cases/remove.blog.use.case';
 import { CreateCommentUseCase } from './comments/use.cases/create.comment.use.case';
 import { UpdateCommentUseCase } from './comments/use.cases/update.comment.use.case';
 import { RemoveCommentUseCase } from './comments/use.cases/remove.comment.use.case';

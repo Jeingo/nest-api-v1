@@ -1,6 +1,6 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { BlogsRepository } from '../blogs.repository';
-import { DbId } from '../../global-types/global.types';
+import { BlogsRepository } from '../../../blogs/blogs.repository';
+import { DbId } from '../../../global-types/global.types';
 import { InputUpdateBlogDto } from '../dto/input.update.blog.dto';
 import { NotFoundException } from '@nestjs/common';
 

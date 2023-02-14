@@ -3,7 +3,7 @@ import { DbId } from '../../global-types/global.types';
 import { PostsRepository } from '../posts.repository';
 import { BlogsRepository } from '../../blogs/blogs.repository';
 import { NotFoundException } from '@nestjs/common';
-import { InputCreatePostInBlogsDto } from '../../blogs/dto/input.create.post.dto';
+import { InputCreatePostInBlogsDto } from '../../blogger/blogs/dto/input.create.post.dto';
 
 export class CreatePostInBlogCommand {
   constructor(
