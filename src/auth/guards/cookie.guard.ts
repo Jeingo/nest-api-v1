@@ -9,13 +9,13 @@ import {
   Token
 } from '../../adapters/jwt/types/jwt.type';
 import { JwtAdapter } from '../../adapters/jwt/jwt.service';
-import { SessionsService } from '../../sessions/sessions.service';
+import { SessionsRepository } from '../../sessions/sessions.repository';
 
 @Injectable()
 export class CookieGuard implements CanActivate {
   constructor(
     private readonly jwtAdapter: JwtAdapter,
-    private readonly sessionsService: SessionsService
+    private readonly sessionsRepository: SessionsRepository
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -34,10 +34,12 @@ export class CookieGuard implements CanActivate {
     const result = this.jwtAdapter.checkExpirationRefreshToken(refreshToken);
     if (!result) return false;
     const payload = this.jwtAdapter.getRefreshTokenPayload(refreshToken);
-    const statusSession = await this.sessionsService.isActiveSession(
-      payload.deviceId
-    );
+    const statusSession = await this.isActiveSession(payload.deviceId);
     if (!statusSession) return false;
     return payload;
+  }
+  private async isActiveSession(deviceId: string): Promise<boolean> {
+    const result = await this.sessionsRepository.get(deviceId);
+    return !!result;
   }
 }

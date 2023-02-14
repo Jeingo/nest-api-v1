@@ -15,11 +15,6 @@ export class SessionsService {
     private readonly jwtService: JwtService,
     private readonly sessionsRepository: SessionsRepository
   ) {}
-
-  async isActiveSession(deviceId: string): Promise<boolean> {
-    const result = await this.sessionsRepository.get(deviceId);
-    return !!result;
-  }
   async deleteSession(iat: number): Promise<boolean> {
     const issueAt = new Date(iat * 1000).toISOString();
     return await this.sessionsRepository.deleteSession(issueAt);
