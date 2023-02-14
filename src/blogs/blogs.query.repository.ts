@@ -12,7 +12,7 @@ import { DbId, Direction } from '../global-types/global.types';
 
 @Injectable()
 export class BlogsQueryRepository {
-  constructor(@InjectModel(Blog.name) private blogsModel: IBlogModel) {}
+  constructor(@InjectModel(Blog.name) protected blogsModel: IBlogModel) {}
 
   async getAll(query: QueryBlogs): Promise<PaginatedType<OutputBlogDto>> {
     const {
@@ -48,7 +48,7 @@ export class BlogsQueryRepository {
     if (!result) throw new NotFoundException();
     return this._getOutputBlogDto(result);
   }
-  private _getOutputBlogDto(blog: BlogDocument): OutputBlogDto {
+  protected _getOutputBlogDto(blog: BlogDocument): OutputBlogDto {
     return {
       id: blog._id.toString(),
       name: blog.name,

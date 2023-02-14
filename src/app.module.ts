@@ -81,6 +81,7 @@ import { RemoveSessionByDeviceIdUseCase } from './sessions/use-cases/remove.sess
 import { BloggerBlogsController } from './blogger/blogs/blogger.blogs.controller';
 import { SuperAdminBlogsController } from './superadmin/blogs/superadmin.blogs.controller';
 import { SuperAdminUsersController } from './superadmin/users/superadmin.users.controller';
+import { BloggerBlogsQueryRepository } from './blogger/blogs/blogger.blogs.query.repository';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -134,7 +135,8 @@ const queryRepositories = [
   BlogsQueryRepository,
   PostsQueryRepository,
   CommentsQueryRepository,
-  SessionsQueryRepository
+  SessionsQueryRepository,
+  BloggerBlogsQueryRepository
 ];
 const decorators = [
   IsBlogIdConstraint,
