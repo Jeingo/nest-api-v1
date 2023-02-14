@@ -74,6 +74,7 @@ import { RemovePostUseCase } from './posts/use-cases/remove.post.use.case';
 import { UpdateStatusLikeInPostUseCase } from './posts/use-cases/update.status.like.in.post.use.case';
 import { CreateUserUseCase } from './users/use-cases/create.user.use.case';
 import { RemoveUserUseCase } from './users/use-cases/remove.user.use.case';
+import { CreateSessionUseCase } from './sessions/use-cases/create.session.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -97,7 +98,9 @@ const useCases = [
   RemovePostUseCase,
   UpdateStatusLikeInPostUseCase,
   CreateUserUseCase,
-  RemoveUserUseCase
+  RemoveUserUseCase,
+  CreateUserUseCase,
+  CreateSessionUseCase
 ];
 const services = [
   JwtAdapter,

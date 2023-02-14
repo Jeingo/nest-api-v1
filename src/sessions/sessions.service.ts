@@ -7,7 +7,6 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
 import { SessionsRepository } from './sessions.repository';
-import { DbId } from '../global-types/global.types';
 import { Token } from '../adapters/jwt/types/jwt.type';
 
 @Injectable()
@@ -17,30 +16,6 @@ export class SessionsService {
     private readonly jwtService: JwtService,
     private readonly sessionsRepository: SessionsRepository
   ) {}
-  async create(
-    refreshToken: string,
-    ip: string,
-    deviceName: string
-  ): Promise<DbId> {
-    const result = this.jwtService.verify(refreshToken, {
-      secret: this.configService.get('JWT_REFRESH_SECRET')
-    });
-    const issueAt = new Date(result.iat * 1000).toISOString();
-    const expireAt = new Date(result.exp * 1000).toISOString();
-    const userId = result.userId;
-    const deviceId = result.deviceId;
-
-    const session = this.sessionsRepository.create(
-      issueAt,
-      deviceId,
-      deviceName,
-      ip,
-      userId,
-      expireAt
-    );
-    await this.sessionsRepository.save(session);
-    return session._id;
-  }
   async update(refreshToken: Token): Promise<boolean> {
     const result = this.jwtService.verify(refreshToken, {
       secret: this.configService.get('JWT_REFRESH_SECRET')

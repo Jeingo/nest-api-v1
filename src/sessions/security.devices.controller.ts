@@ -13,12 +13,14 @@ import { OutputSessionDto } from './dto/output.session.dto';
 import { CookieGuard } from '../auth/guards/cookie.guard';
 import { PayloadFromRefreshToke } from '../helper/get-decorators/payload.decorator';
 import { RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
+import { CommandBus } from '@nestjs/cqrs';
 
 @Controller('security/devices')
 export class SecurityDevicesController {
   constructor(
     private readonly sessionsService: SessionsService,
-    private readonly sessionsQueryRepository: SessionsQueryRepository
+    private readonly sessionsQueryRepository: SessionsQueryRepository,
+    private readonly commandBus: CommandBus
   ) {}
 
   @HttpCode(HttpStatus.OK)
