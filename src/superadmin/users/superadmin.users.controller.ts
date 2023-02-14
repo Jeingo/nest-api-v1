@@ -14,7 +14,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { SuperAdminUsersQueryRepository } from './superadmin.users.query.repository';
 import { BasicAuthGuard } from '../../auth/guards/basic.auth.guard';
 import { InputCreateUserDto } from './dto/input.create.user.dto';
-import { OutputUserDto } from './dto/output.user.dto';
+import { OutputSuperAdminUserDto } from './dto/outputSuperAdminUserDto';
 import { CreateUserCommand } from './use-cases/create.user.use.case';
 import { QueryUsers } from './types/query.users.type';
 import { PaginatedType } from '../../helper/query/types.query.repository.helper';
@@ -34,7 +34,7 @@ export class SuperAdminUsersController {
   @Post()
   async create(
     @Body() createUserDto: InputCreateUserDto
-  ): Promise<OutputUserDto> {
+  ): Promise<OutputSuperAdminUserDto> {
     const createdUserId = await this.commandBus.execute(
       new CreateUserCommand(createUserDto)
     );
@@ -45,7 +45,7 @@ export class SuperAdminUsersController {
   @Get()
   async findAll(
     @Query() query: QueryUsers
-  ): Promise<PaginatedType<OutputUserDto>> {
+  ): Promise<PaginatedType<OutputSuperAdminUserDto>> {
     return await this.superAdminUsersQueryRepository.getAll(query);
   }
 

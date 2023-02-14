@@ -7,19 +7,20 @@ import {
 } from '../../users/entities/user.entity';
 import { QueryUsers } from './types/query.users.type';
 import { PaginatedType } from '../../helper/query/types.query.repository.helper';
-import { OutputUserDto } from './dto/output.user.dto';
+import { OutputSuperAdminUserDto } from './dto/outputSuperAdminUserDto';
 import { DbId, Direction } from '../../global-types/global.types';
 import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../../helper/query/query.repository.helper';
-import { OutputUserMeDto } from '../../auth/dto/output.user.me.dto';
 
 @Injectable()
 export class SuperAdminUsersQueryRepository {
   constructor(@InjectModel(User.name) private usersModel: IUserModel) {}
 
-  async getAll(query: QueryUsers): Promise<PaginatedType<OutputUserDto>> {
+  async getAll(
+    query: QueryUsers
+  ): Promise<PaginatedType<OutputSuperAdminUserDto>> {
     const {
       searchLoginTerm = null,
       searchEmailTerm = null,
@@ -53,29 +54,23 @@ export class SuperAdminUsersQueryRepository {
       countAllDocuments
     );
   }
-  async getById(id: DbId): Promise<OutputUserDto> {
+  async getById(id: DbId): Promise<OutputSuperAdminUserDto> {
     const result = await this.usersModel.findById(id);
     if (!result) throw new NotFoundException();
     return this._getOutputUser(result);
   }
-  async getMeById(id: DbId): Promise<OutputUserMeDto> {
-    const result = await this.usersModel.findById(id);
-    if (!result) throw new NotFoundException();
-    return this._getOutputMeUser(result);
-  }
-  private _getOutputUser(user: UserDocument): OutputUserDto {
+
+  private _getOutputUser(user: UserDocument): OutputSuperAdminUserDto {
     return {
       id: user._id.toString(),
       login: user.login,
       email: user.email,
-      createdAt: user.createdAt
-    };
-  }
-  private _getOutputMeUser(user: UserDocument): OutputUserMeDto {
-    return {
-      email: user.email,
-      login: user.login,
-      userId: user._id.toString()
+      createdAt: user.createdAt,
+      banInfo: {
+        isBanned: user.banInfo.isBanned,
+        banDate: user.banInfo.banDate,
+        banReason: user.banInfo.banReason
+      }
     };
   }
 }
