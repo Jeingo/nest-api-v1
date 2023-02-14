@@ -7,7 +7,6 @@ import {
   Param,
   UseGuards
 } from '@nestjs/common';
-import { SessionsService } from './sessions.service';
 import { SessionsQueryRepository } from './sessions.query.repository';
 import { OutputSessionDto } from './dto/output.session.dto';
 import { CookieGuard } from '../auth/guards/cookie.guard';
@@ -15,11 +14,11 @@ import { PayloadFromRefreshToke } from '../helper/get-decorators/payload.decorat
 import { RefreshTokenPayloadType } from '../adapters/jwt/types/jwt.type';
 import { CommandBus } from '@nestjs/cqrs';
 import { RemoveSessionWithoutCurrentCommand } from './use-cases/remove.sessions.without.current.use.case';
+import { RemoveSessionByDeviceIdCommand } from './use-cases/remove.session.by.device.id.use.case';
 
 @Controller('security/devices')
 export class SecurityDevicesController {
   constructor(
-    private readonly sessionsService: SessionsService,
     private readonly sessionsQueryRepository: SessionsQueryRepository,
     private readonly commandBus: CommandBus
   ) {}
@@ -54,7 +53,9 @@ export class SecurityDevicesController {
     @Param('id') id: string,
     @PayloadFromRefreshToke() payload: RefreshTokenPayloadType
   ) {
-    await this.sessionsService.deleteSessionByDeviceId(id, payload.userId);
+    await this.commandBus.execute(
+      new RemoveSessionByDeviceIdCommand(id, payload.userId)
+    );
     return;
   }
 }

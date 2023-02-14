@@ -22,7 +22,6 @@ import { AuthController } from './auth/auth.controller';
 import { UsersRepository } from './users/users.repository';
 import { JwtAdapter } from './adapters/jwt/jwt.service';
 import { JwtService } from '@nestjs/jwt';
-import { SessionsService } from './sessions/sessions.service';
 import { SessionsRepository } from './sessions/sessions.repository';
 import { UsersQueryRepository } from './users/users.query.repository';
 import { EmailManager } from './adapters/email/email.manager';
@@ -78,6 +77,7 @@ import { CreateSessionUseCase } from './sessions/use-cases/create.session.use.ca
 import { UpdateSessionUseCase } from './sessions/use-cases/update.session.use.case';
 import { RemoveSessionUseCase } from './sessions/use-cases/remove.session.use.case';
 import { RemoveSessionWithoutCurrentUseCase } from './sessions/use-cases/remove.sessions.without.current.use.case';
+import { RemoveSessionByDeviceIdUseCase } from './sessions/use-cases/remove.session.by.device.id.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -106,12 +106,12 @@ const useCases = [
   CreateSessionUseCase,
   UpdateSessionUseCase,
   RemoveSessionUseCase,
-  RemoveSessionWithoutCurrentUseCase
+  RemoveSessionWithoutCurrentUseCase,
+  RemoveSessionByDeviceIdUseCase
 ];
 const services = [
   JwtAdapter,
   JwtService,
-  SessionsService,
   ConfigService,
   EmailManager,
   EmailService,
