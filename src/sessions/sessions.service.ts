@@ -7,7 +7,6 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../configuration/configuration';
 import { SessionsRepository } from './sessions.repository';
-import { Token } from '../adapters/jwt/types/jwt.type';
 
 @Injectable()
 export class SessionsService {
@@ -16,19 +15,7 @@ export class SessionsService {
     private readonly jwtService: JwtService,
     private readonly sessionsRepository: SessionsRepository
   ) {}
-  async update(refreshToken: Token): Promise<boolean> {
-    const result = this.jwtService.verify(refreshToken, {
-      secret: this.configService.get('JWT_REFRESH_SECRET')
-    });
-    const issueAt = new Date(result.iat * 1000).toISOString();
-    const expireAt = new Date(result.exp * 1000).toISOString();
-    const deviceId = result.deviceId;
-    return await this.sessionsRepository.updateSession(
-      issueAt,
-      expireAt,
-      deviceId
-    );
-  }
+
   async isActiveSession(deviceId: string): Promise<boolean> {
     const result = await this.sessionsRepository.get(deviceId);
     return !!result;

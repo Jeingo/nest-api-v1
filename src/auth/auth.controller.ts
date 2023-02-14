@@ -42,6 +42,7 @@ import { ResendEmailConfirmationCommand } from './use-cases/resend.email.confirm
 import { RecoveryPasswordCommand } from './use-cases/recovery.password.use.case';
 import { SetNewPasswordCommand } from './use-cases/set.new.password.use.case';
 import { CreateSessionCommand } from '../sessions/use-cases/create.session.use.case';
+import { UpdateSessionCommand } from '../sessions/use-cases/update.session.use.case';
 
 const limit = 5;
 const ttl = 10;
@@ -100,7 +101,7 @@ export class AuthController {
       payload.userId,
       payload.deviceId
     );
-    await this.sessionsService.update(refreshToken);
+    await this.commandBus.execute(new UpdateSessionCommand(refreshToken));
     const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == 'true';
     await response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
