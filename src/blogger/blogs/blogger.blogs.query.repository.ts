@@ -8,14 +8,14 @@ import {
   makeDirectionToNumber
 } from '../../helper/query/query.repository.helper';
 import { CurrentUserType } from '../../auth/types/current.user.type';
-import { OutputBloggerBlogDto } from './dto/output.blogger.blog.dto';
+import { OutputBlogDto } from '../../blogs/dto/output.blog.dto';
 
 @Injectable()
 export class BloggerBlogsQueryRepository extends BlogsQueryRepository {
   async getAllForBlogger(
     query: QueryBlogs,
     user: CurrentUserType
-  ): Promise<PaginatedType<OutputBloggerBlogDto>> {
+  ): Promise<PaginatedType<OutputBlogDto>> {
     const {
       searchNameTerm = null,
       sortBy = 'createdAt',

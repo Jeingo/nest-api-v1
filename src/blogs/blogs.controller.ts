@@ -5,13 +5,11 @@ import {
   Body,
   Param,
   Delete,
-  Put,
   HttpCode,
   Query,
   HttpStatus,
   UseGuards
 } from '@nestjs/common';
-import { InputUpdateBlogDto } from '../blogger/blogs/dto/input.update.blog.dto';
 import { BlogsQueryRepository } from './blogs.query.repository';
 import { OutputBlogDto } from './dto/output.blog.dto';
 import { QueryBlogs } from './types/query.blogs.type';
@@ -27,7 +25,6 @@ import { CurrentUserType } from '../auth/types/current.user.type';
 import { DbId } from '../global-types/global.types';
 import { BasicAuthGuard } from '../auth/guards/basic.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
-import { UpdateBlogCommand } from '../blogger/blogs/use-cases/update.blog.use.case';
 import { RemoveBlogCommand } from '../blogger/blogs/use-cases/remove.blog.use.case';
 import { CreatePostInBlogCommand } from '../posts/use-cases/create.post.in.blog.use.case';
 
@@ -53,17 +50,6 @@ export class BlogsController {
     @Param('id', new CheckIdAndParseToDBId()) id: DbId
   ): Promise<OutputBlogDto> {
     return await this.blogsQueryRepository.getById(id);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Put(':id')
-  async update(
-    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
-    @Body() updateBlogDto: InputUpdateBlogDto
-  ) {
-    await this.commandBus.execute(new UpdateBlogCommand(id, updateBlogDto));
-    return;
   }
 
   @UseGuards(BasicAuthGuard)
