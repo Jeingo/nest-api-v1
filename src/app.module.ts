@@ -81,6 +81,8 @@ import { SuperAdminBlogsController } from './superadmin/blogs/superadmin.blogs.c
 import { SuperAdminUsersController } from './superadmin/users/superadmin.users.controller';
 import { BloggerBlogsQueryRepository } from './blogger/blogs/blogger.blogs.query.repository';
 import { SuperAdminUsersQueryRepository } from './superadmin/users/superadmin.users.query.repository';
+import { SuperAdminBlogsQueryRepository } from './superadmin/blogs/superadmin.blogs.query.repository';
+import { BindWithUserUseCase } from './superadmin/blogs/use-cases/bind.with.user.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -109,7 +111,8 @@ const useCases = [
   UpdateSessionUseCase,
   RemoveSessionUseCase,
   RemoveSessionWithoutCurrentUseCase,
-  RemoveSessionByDeviceIdUseCase
+  RemoveSessionByDeviceIdUseCase,
+  BindWithUserUseCase
 ];
 const services = [
   JwtAdapter,
@@ -135,7 +138,8 @@ const queryRepositories = [
   CommentsQueryRepository,
   SessionsQueryRepository,
   BloggerBlogsQueryRepository,
-  SuperAdminUsersQueryRepository
+  SuperAdminUsersQueryRepository,
+  SuperAdminBlogsQueryRepository
 ];
 const decorators = [
   IsBlogIdConstraint,
