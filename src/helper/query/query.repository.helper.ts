@@ -18,3 +18,7 @@ export const getPaginatedType = <T>(
 
 export const makeDirectionToNumber = (val: Direction) =>
   val === Direction.DESC ? -1 : 1;
+
+export const bannedFilter = (field: string) => {
+  return { [field]: false };
+};

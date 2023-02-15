@@ -152,19 +152,14 @@ UserSchema.methods.ban = function (
   isBanned: boolean,
   banReason: string
 ): boolean {
-  if (isBanned === this.banInfo.isBanned) {
-    return true;
-  }
-  if (isBanned === true) {
+  if (isBanned) {
     this.banInfo.isBanned = true;
     this.banInfo.banDate = new Date().toISOString();
     this.banInfo.banReason = banReason;
     return true;
   }
-  if (isBanned === false) {
-    this.banInfo.isBanned = false;
-    this.banInfo.banDate = null;
-    this.banInfo.banReason = null;
-    return true;
-  }
+  this.banInfo.isBanned = false;
+  this.banInfo.banDate = null;
+  this.banInfo.banReason = null;
+  return true;
 };

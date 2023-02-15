@@ -6,6 +6,7 @@ import { OutputPostDto } from './dto/output.post.dto';
 import { NewestLikesType, QueryPosts } from './types/query.posts.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
+  bannedFilter,
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
@@ -37,9 +38,11 @@ export class PostsQueryRepository {
     } = query;
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
     const skipNumber = (+pageNumber - 1) * +pageSize;
-    const countAllDocuments = await this.postsModel.countDocuments({});
+
+    const finalFilter = bannedFilter('postOwnerInfo.isBanned');
+    const countAllDocuments = await this.postsModel.countDocuments(finalFilter);
     const result = await this.postsModel
-      .find({})
+      .find(finalFilter)
       .sort({ [sortBy]: sortDirectionNumber })
       .skip(skipNumber)
       .limit(+pageSize);
@@ -73,11 +76,14 @@ export class PostsQueryRepository {
     } = query;
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
     const skipNumber = (+pageNumber - 1) * +pageSize;
-    const countAllDocuments = await this.postsModel.countDocuments({
+
+    const finalFilter = {
+      ...bannedFilter('postOwnerInfo.isBanned'),
       blogId: blogId.toString()
-    });
+    };
+    const countAllDocuments = await this.postsModel.countDocuments(finalFilter);
     const result = await this.postsModel
-      .find({ blogId: blogId.toString() })
+      .find(finalFilter)
       .sort({ [sortBy]: sortDirectionNumber })
       .skip(skipNumber)
       .limit(+pageSize);
@@ -99,11 +105,13 @@ export class PostsQueryRepository {
   async getById(id: DbId, user?: CurrentUserType): Promise<OutputPostDto> {
     const result = await this.postsModel.findById(id);
     if (!result) throw new NotFoundException();
+    if (result.postOwnerInfo.isBanned) throw new NotFoundException();
     const mappedResult = this._getOutputPostDto(result);
     if (user && mappedResult) {
       const like = await this.postLikesModel.findOne({
         userId: user.userId,
-        postId: mappedResult.id
+        postId: mappedResult.id,
+        isBanned: false
       });
       if (like) {
         mappedResult.extendedLikesInfo.myStatus = like.myStatus;
@@ -139,7 +147,8 @@ export class PostsQueryRepository {
     for (let i = 0; i < posts.length; i++) {
       const like = await this.postLikesModel.findOne({
         userId: userId,
-        postId: posts[i].id
+        postId: posts[i].id,
+        isBanned: false
       });
       if (like) {
         posts[i].extendedLikesInfo.myStatus = like.myStatus;
@@ -165,7 +174,8 @@ export class PostsQueryRepository {
     const result = await this.postLikesModel
       .find({
         postId: postId,
-        myStatus: likeStatus
+        myStatus: likeStatus,
+        isBanned: false
       })
       .sort({ addedAt: desc })
       .limit(threeLastUser);

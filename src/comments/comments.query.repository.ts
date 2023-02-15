@@ -10,6 +10,7 @@ import {
 import { QueryComments } from './types/query.comments.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
+  bannedFilter,
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
@@ -43,11 +44,16 @@ export class CommentsQueryRepository {
     } = query;
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
     const skipNumber = (+pageNumber - 1) * +pageSize;
-    const countAllDocuments = await this.commentsModel.countDocuments({
+
+    const finalFilter = {
+      ...bannedFilter('commentatorInfo.isBanned'),
       postId: postId.toString()
-    });
+    };
+    const countAllDocuments = await this.commentsModel.countDocuments(
+      finalFilter
+    );
     const result = await this.commentsModel
-      .find({ postId: postId.toString() })
+      .find(finalFilter)
       .sort({ [sortBy]: sortDirectionNumber })
       .skip(skipNumber)
       .limit(+pageSize);
@@ -66,11 +72,13 @@ export class CommentsQueryRepository {
   async getById(id: DbId, user?: CurrentUserType): Promise<OutputCommentDto> {
     const result = await this.commentsModel.findById(id);
     if (!result) throw new NotFoundException();
+    if (result.commentatorInfo.isBanned) throw new NotFoundException();
     const mappedResult = this._getOutputComment(result);
     if (user?.userId && mappedResult) {
       const like = await this.commentLikesModel.findOne({
         userId: user.userId,
-        commentId: mappedResult.id
+        commentId: mappedResult.id,
+        isBanned: false
       });
       if (like) {
         mappedResult.likesInfo.myStatus = like.myStatus;

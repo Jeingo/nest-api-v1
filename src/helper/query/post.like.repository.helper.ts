@@ -1,9 +1,4 @@
-import { LikeStatus } from '../../global-types/global.types';
-
-export type LikesCounterType = {
-  likesCount: number;
-  dislikesCount: number;
-};
+import { LikesCounterType, LikeStatus } from '../../global-types/global.types';
 
 export function getUpdatedLike(
   likesCounter: LikesCounterType,

@@ -5,6 +5,7 @@ import { OutputBlogDto } from './dto/output.blog.dto';
 import { QueryBlogs } from './types/query.blogs.type';
 import { PaginatedType } from '../helper/query/types.query.repository.helper';
 import {
+  bannedFilter,
   getPaginatedType,
   makeDirectionToNumber
 } from '../helper/query/query.repository.helper';
@@ -29,9 +30,13 @@ export class BlogsQueryRepository {
     if (searchNameTerm) {
       filter = { name: { $regex: new RegExp(searchNameTerm, 'gi') } };
     }
-    const countAllDocuments = await this.blogsModel.countDocuments(filter);
+    const finalFilter = {
+      ...filter,
+      ...bannedFilter('blogOwnerInfo.isBanned')
+    };
+    const countAllDocuments = await this.blogsModel.countDocuments(finalFilter);
     const result = await this.blogsModel
-      .find(filter)
+      .find(finalFilter)
       .sort({ [sortBy]: sortDirectionNumber })
       .skip(skipNumber)
       .limit(+pageSize);
@@ -46,6 +51,7 @@ export class BlogsQueryRepository {
   async getById(id: DbId): Promise<OutputBlogDto> {
     const result = await this.blogsModel.findById(id);
     if (!result) throw new NotFoundException();
+    if (result.blogOwnerInfo.isBanned) throw new NotFoundException();
     return this._getOutputBlogDto(result);
   }
   protected _getOutputBlogDto(blog: BlogDocument): OutputBlogDto {

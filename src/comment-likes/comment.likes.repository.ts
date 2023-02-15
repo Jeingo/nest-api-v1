@@ -37,4 +37,10 @@ export class CommentLikesRepository {
   async save(commentLike: CommentLikeDocument): Promise<CommentLikeDocument> {
     return await commentLike.save();
   }
+  async getCount(status: LikeStatus): Promise<number> {
+    return this.commentLikesModel.countDocuments({
+      myStatus: status,
+      isBanned: false
+    });
+  }
 }

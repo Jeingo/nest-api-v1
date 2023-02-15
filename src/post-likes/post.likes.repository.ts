@@ -39,4 +39,10 @@ export class PostLikesRepository {
   async save(postLike: PostLikeDocument): Promise<PostLikeDocument> {
     return await postLike.save();
   }
+  async getCount(status: LikeStatus): Promise<number> {
+    return this.postLikesModel.countDocuments({
+      myStatus: status,
+      isBanned: false
+    });
+  }
 }

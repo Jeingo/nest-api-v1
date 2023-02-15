@@ -16,6 +16,7 @@ export class ValidateUserInLoginUseCase {
     const { loginOrEmail, password } = command.loginUserDto;
     const user = await this.usersRepository.getByUniqueField(loginOrEmail);
     if (!user) return null;
+    if (user.banInfo.isBanned) return null;
     const result = await bcrypt.compare(password, user.hash);
     if (!result) {
       return null;
