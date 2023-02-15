@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { LikesCounterType, LikeStatus } from '../../global-types/global.types';
+import { LikeStatus } from '../../global-types/global.types';
 import { getUpdatedLike } from '../../helper/query/post.like.repository.helper';
 
 export type PostDocument = HydratedDocument<Post>;
@@ -72,7 +72,7 @@ export class Post {
   ) => boolean;
   updateLike: (lastStatus: LikeStatus, newStatus: LikeStatus) => boolean;
   ban: (isBanned: boolean) => boolean;
-  changeLikesCount: (newCounter: LikesCounterType) => boolean;
+  changeLikesCount: (statusLike: LikeStatus, isBanned: boolean) => boolean;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
@@ -142,9 +142,24 @@ PostSchema.methods.ban = function (isBanned: boolean): boolean {
 };
 
 PostSchema.methods.changeLikesCount = function (
-  newCounter: LikesCounterType
+  statusLike: LikeStatus,
+  isBanned: boolean
 ): boolean {
-  this.extendedLikesInfo.likesCount = newCounter.likesCount;
-  this.extendedLikesInfo.dislikesCount = newCounter.dislikesCount;
+  if (isBanned) {
+    if (statusLike === LikeStatus.Like) {
+      this.extendedLikesInfo.likesCount--;
+    }
+    if (statusLike === LikeStatus.DisLike) {
+      this.extendedLikesInfo.dislikesCount--;
+    }
+  } else {
+    if (statusLike === LikeStatus.Like) {
+      this.extendedLikesInfo.likesCount++;
+    }
+    if (statusLike === LikeStatus.DisLike) {
+      this.extendedLikesInfo.dislikesCount++;
+    }
+  }
+
   return true;
 };

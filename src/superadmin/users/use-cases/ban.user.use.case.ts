@@ -1,9 +1,5 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import {
-  DbId,
-  LikesCounterType,
-  LikeStatus
-} from '../../../global-types/global.types';
+import { DbId } from '../../../global-types/global.types';
 import { UsersRepository } from '../../../users/users.repository';
 import { InputBanUserDto } from '../dto/input.ban.user.dto';
 import { PostsRepository } from '../../../posts/posts.repository';
@@ -13,6 +9,9 @@ import { CommentLikesRepository } from '../../../comment-likes/comment.likes.rep
 import { PostLikesRepository } from '../../../post-likes/post.likes.repository';
 import { SessionsRepository } from '../../../sessions/sessions.repository';
 import { NotFoundException } from '@nestjs/common';
+import { CommentLikeDocument } from '../../../comment-likes/entities/comment.like.entity';
+import { PostLikeDocument } from '../../../post-likes/entities/post.like.entity';
+import { Types } from 'mongoose';
 
 export class BanUserCommand {
   constructor(public banUserDto: InputBanUserDto, public id: DbId) {}
@@ -32,7 +31,6 @@ export class BanUserUseCase {
 
   async execute(command: BanUserCommand): Promise<boolean> {
     const { isBanned, banReason } = command.banUserDto;
-    const isBannedBoolean = isBanned; //todo refactoring
 
     const user = await this.usersRepository.getById(command.id);
     if (!user) throw new NotFoundException();
@@ -49,50 +47,54 @@ export class BanUserUseCase {
       command.id.toString()
     );
 
-    user.ban(isBannedBoolean, banReason);
-    blogs.map((doc) => doc.ban(isBannedBoolean));
-    commentLikes.map((doc) => doc.ban(isBannedBoolean));
-    postLikes.map((doc) => doc.ban(isBannedBoolean));
-    posts.map((doc) => doc.ban(isBannedBoolean));
-    comments.map((doc) => doc.ban(isBannedBoolean));
+    user.ban(isBanned, banReason);
+    blogs.map((doc) => doc.ban(isBanned));
+    commentLikes.map((doc) => doc.ban(isBanned));
+    postLikes.map((doc) => doc.ban(isBanned));
+    posts.map((doc) => doc.ban(isBanned));
+    comments.map((doc) => doc.ban(isBanned));
 
-    const commentLikesCounter = await this.getCounterCommentLikes();
-    const postLikesCounter = await this.getCounterPostLikes();
-
-    posts.map((doc) => doc.changeLikesCount(postLikesCounter));
-    comments.map((doc) => doc.changeLikesCount(commentLikesCounter));
+    await this.changeCountCommentLikes(commentLikes, isBanned);
+    await this.changeCountPostLikes(postLikes, isBanned);
 
     await this.usersRepository.save(user);
-    blogs.map((doc) => this.blogsRepository.save(doc));
-    posts.map((doc) => this.postsRepository.save(doc));
-    comments.map((doc) => this.commentsRepository.save(doc));
-    commentLikes.map((doc) => this.commentLikesRepository.save(doc));
-    postLikes.map((doc) => this.postLikesRepository.save(doc));
+    blogs.map(async (doc) => await this.blogsRepository.save(doc));
+    posts.map(async (doc) => await this.postsRepository.save(doc));
+    comments.map(async (doc) => await this.commentsRepository.save(doc));
+    commentLikes.map(
+      async (doc) => await this.commentLikesRepository.save(doc)
+    );
+    postLikes.map(async (doc) => await this.postLikesRepository.save(doc));
 
     await this.sessionsRepository.deleteByUserId(command.id.toString());
 
     return true;
   }
-  private async getCounterCommentLikes(): Promise<LikesCounterType> {
-    const countLike = await this.commentLikesRepository.getCount(
-      LikeStatus.Like
-    );
-    const countDislike = await this.commentLikesRepository.getCount(
-      LikeStatus.DisLike
-    );
-    return {
-      likesCount: countLike,
-      dislikesCount: countDislike
-    };
+
+  private async changeCountCommentLikes(
+    commentLikes: CommentLikeDocument[],
+    isBanned: boolean
+  ) {
+    for (let i = 0; i < commentLikes.length; i++) {
+      const comment = await this.commentsRepository.getById(
+        new Types.ObjectId(commentLikes[i].commentId)
+      );
+      const statusLike = commentLikes[i].myStatus;
+      comment.changeLikesCount(statusLike, isBanned);
+      await this.commentsRepository.save(comment);
+    }
   }
-  private async getCounterPostLikes(): Promise<LikesCounterType> {
-    const countLike = await this.postLikesRepository.getCount(LikeStatus.Like);
-    const countDislike = await this.postLikesRepository.getCount(
-      LikeStatus.DisLike
-    );
-    return {
-      likesCount: countLike,
-      dislikesCount: countDislike
-    };
+  private async changeCountPostLikes(
+    postLikes: PostLikeDocument[],
+    isBanned: boolean
+  ) {
+    for (let i = 0; i < postLikes.length; i++) {
+      const post = await this.postsRepository.getById(
+        new Types.ObjectId(postLikes[i].postId)
+      );
+      const statusLike = postLikes[i].myStatus;
+      post.changeLikesCount(statusLike, isBanned);
+      await this.postsRepository.save(post);
+    }
   }
 }
