@@ -18,7 +18,7 @@ type StaticUserMethods = {
 
 export type IUserModel = Model<UserDocument> & StaticUserMethods;
 
-@Schema()
+@Schema({ _id: false })
 class PasswordRecoveryConfirmation {
   @Prop()
   passwordRecoveryCode: string;
@@ -30,7 +30,7 @@ class PasswordRecoveryConfirmation {
   isConfirmed: boolean;
 }
 
-@Schema()
+@Schema({ _id: false })
 class EmailConfirmation {
   @Prop({ required: true })
   confirmationCode: string;
@@ -81,6 +81,7 @@ export class User {
   updateConfirmationCode: () => boolean;
   updatePasswordRecoveryConfirmationCode: () => boolean;
   updatePassword: (newPassword: string) => boolean;
+  ban: (isBanned: string, banReason: string) => boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -145,4 +146,26 @@ UserSchema.methods.updatePassword = function (newPassword: string): boolean {
   this.hash = bcrypt.hashSync(newPassword, passwordSalt);
   this.passwordRecoveryConfirmation.isConfirmed = true;
   return true;
+};
+
+UserSchema.methods.ban = function (
+  isBanned: string,
+  banReason: string
+): boolean {
+  const isBannedBoolean = isBanned == 'true';
+  if (isBannedBoolean === this.banInfo.isBanned) {
+    return true;
+  }
+  if (isBannedBoolean === true) {
+    this.banInfo.isBanned = true;
+    this.banInfo.banDate = new Date().toISOString();
+    this.banInfo.banReason = banReason;
+    return true;
+  }
+  if (isBannedBoolean === false) {
+    this.banInfo.isBanned = false;
+    this.banInfo.banDate = null;
+    this.banInfo.banReason = null;
+    return true;
+  }
 };

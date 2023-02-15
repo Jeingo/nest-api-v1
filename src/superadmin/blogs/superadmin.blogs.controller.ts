@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Put,
   Query,
   UseGuards
 } from '@nestjs/common';
@@ -33,7 +34,7 @@ export class SuperAdminBlogsController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Get(':blogId/bind-with-user/:userId')
+  @Put(':blogId/bind-with-user/:userId')
   async bindWithUser(
     @Param('blogId') blogId: string,
     @Param('userId') userId: string

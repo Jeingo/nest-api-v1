@@ -83,6 +83,7 @@ import { BloggerBlogsQueryRepository } from './blogger/blogs/blogger.blogs.query
 import { SuperAdminUsersQueryRepository } from './superadmin/users/superadmin.users.query.repository';
 import { SuperAdminBlogsQueryRepository } from './superadmin/blogs/superadmin.blogs.query.repository';
 import { BindWithUserUseCase } from './superadmin/blogs/use-cases/bind.with.user.use.case';
+import { BanUserUseCase } from './superadmin/users/use-cases/ban.user.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -112,7 +113,8 @@ const useCases = [
   RemoveSessionUseCase,
   RemoveSessionWithoutCurrentUseCase,
   RemoveSessionByDeviceIdUseCase,
-  BindWithUserUseCase
+  BindWithUserUseCase,
+  BanUserUseCase
 ];
 const services = [
   JwtAdapter,

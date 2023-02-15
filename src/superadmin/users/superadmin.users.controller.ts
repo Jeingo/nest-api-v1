@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
   UseGuards
 } from '@nestjs/common';
@@ -21,6 +22,8 @@ import { PaginatedType } from '../../helper/query/types.query.repository.helper'
 import { CheckIdAndParseToDBId } from '../../helper/pipes/check.id.validator.pipe';
 import { DbId } from '../../global-types/global.types';
 import { RemoveUserCommand } from './use-cases/remove.user.use.case';
+import { InputBanUserDto } from './dto/input.ban.user.dto';
+import { BanUserCommand } from './use-cases/ban.user.use.case';
 
 @UseGuards(BasicAuthGuard)
 @Controller('sa/users')
@@ -53,6 +56,16 @@ export class SuperAdminUsersController {
   @Delete(':id')
   async remove(@Param('id', new CheckIdAndParseToDBId()) id: DbId) {
     await this.commandBus.execute(new RemoveUserCommand(id));
+    return;
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Put(':id/ban')
+  async banUser(
+    @Param('id', new CheckIdAndParseToDBId()) id: DbId,
+    @Body() banUserDto: InputBanUserDto
+  ) {
+    await this.commandBus.execute(new BanUserCommand(banUserDto, id));
     return;
   }
 }
