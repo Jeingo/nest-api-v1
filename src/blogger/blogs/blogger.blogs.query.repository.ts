@@ -29,7 +29,6 @@ export class BloggerBlogsQueryRepository extends BlogsQueryRepository {
     let filter = {};
     if (searchNameTerm) {
       filter = {
-        ...test,
         name: { $regex: new RegExp(searchNameTerm, 'gi') }
       };
     }
