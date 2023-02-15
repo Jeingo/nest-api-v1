@@ -61,4 +61,8 @@ export class SessionsRepository {
       .ne(issueAt);
     return !!result;
   }
+  async deleteByUserId(userId: string): Promise<boolean> {
+    const result = await this.sessionsModel.deleteMany({ userId: userId });
+    return !!result;
+  }
 }

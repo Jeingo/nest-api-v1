@@ -32,6 +32,7 @@ export class BanUserUseCase {
 
     const user = await this.usersRepository.getById(command.id);
     if (!user) throw new NotFoundException();
+
     const blogs = await this.blogsRepository.getByUserId(command.id.toString());
     const posts = await this.postsRepository.getByUserId(command.id.toString());
     const comments = await this.commentsRepository.getByUserId(
@@ -57,6 +58,8 @@ export class BanUserUseCase {
     comments.map((doc) => this.commentsRepository.save(doc));
     commentLikes.map((doc) => this.commentLikesRepository.save(doc));
     postLikes.map((doc) => this.postLikesRepository.save(doc));
+
+    await this.sessionsRepository.deleteByUserId(command.id.toString());
 
     return true;
   }
