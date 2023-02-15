@@ -27,6 +27,9 @@ export class PostsRepository {
   async getById(id: DbId): Promise<PostDocument> {
     return this.postsModel.findById(id);
   }
+  async getByUserId(userId: string): Promise<PostDocument[]> {
+    return this.postsModel.find({ 'postOwnerInfo.userId': userId });
+  }
   async save(post: PostDocument): Promise<PostDocument> {
     return await post.save();
   }

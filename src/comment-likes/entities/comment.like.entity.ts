@@ -22,7 +22,7 @@ export class CommentLike {
   userId: string;
 
   @Prop({ required: true })
-  isBaned: boolean;
+  isBanned: boolean;
 
   @Prop({ required: true })
   commentId: string;
@@ -31,6 +31,7 @@ export class CommentLike {
   myStatus: LikeStatus;
 
   update: (myStatus: LikeStatus) => boolean;
+  ban: (isBanned: boolean) => boolean;
 }
 
 export const CommentLikeSchema = SchemaFactory.createForClass(CommentLike);
@@ -43,7 +44,7 @@ CommentLikeSchema.statics.make = function (
 ): CommentLikeDocument {
   return new this({
     userId: userId,
-    isBaned: false,
+    isBanned: false,
     commentId: commentId,
     myStatus: myStatus
   });
@@ -51,5 +52,10 @@ CommentLikeSchema.statics.make = function (
 
 CommentLikeSchema.methods.update = function (myStatus: LikeStatus): boolean {
   this.myStatus = myStatus;
+  return true;
+};
+
+CommentLikeSchema.methods.ban = function (isBanned: boolean): boolean {
+  this.isBanned = isBanned;
   return true;
 };

@@ -22,7 +22,7 @@ export class PostLike {
   userId: string;
 
   @Prop({ required: true })
-  isBaned: boolean;
+  isBanned: boolean;
 
   @Prop({ required: true })
   postId: string;
@@ -37,6 +37,7 @@ export class PostLike {
   addedAt: string;
 
   update: (myStatus: LikeStatus) => boolean;
+  ban: (isBanned: boolean) => boolean;
 }
 
 export const PostLikeSchema = SchemaFactory.createForClass(PostLike);
@@ -50,7 +51,7 @@ PostLikeSchema.statics.make = function (
 ): PostLikeDocument {
   return new this({
     userId: userId,
-    isBaned: false,
+    isBanned: false,
     postId: postId,
     myStatus: myStatus,
     login: login,
@@ -60,5 +61,10 @@ PostLikeSchema.statics.make = function (
 
 PostLikeSchema.methods.update = function (myStatus: LikeStatus): boolean {
   this.myStatus = myStatus;
+  return true;
+};
+
+PostLikeSchema.methods.ban = function (isBanned: boolean): boolean {
+  this.isBanned = isBanned;
   return true;
 };

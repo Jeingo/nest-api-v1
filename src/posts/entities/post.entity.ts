@@ -71,6 +71,7 @@ export class Post {
     blogName: string
   ) => boolean;
   updateLike: (lastStatus: LikeStatus, newStatus: LikeStatus) => boolean;
+  ban: (isBanned: boolean) => boolean;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
@@ -131,5 +132,10 @@ PostSchema.methods.updateLike = function (
   );
   this.extendedLikesInfo.likesCount = newLikesInfo.likesCount;
   this.extendedLikesInfo.dislikesCount = newLikesInfo.dislikesCount;
+  return true;
+};
+
+PostSchema.methods.ban = function (isBanned: boolean): boolean {
+  this.postOwnerInfo.isBaned = isBanned;
   return true;
 };

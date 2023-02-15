@@ -81,7 +81,7 @@ export class User {
   updateConfirmationCode: () => boolean;
   updatePasswordRecoveryConfirmationCode: () => boolean;
   updatePassword: (newPassword: string) => boolean;
-  ban: (isBanned: string, banReason: string) => boolean;
+  ban: (isBanned: boolean, banReason: string) => boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -149,20 +149,19 @@ UserSchema.methods.updatePassword = function (newPassword: string): boolean {
 };
 
 UserSchema.methods.ban = function (
-  isBanned: string,
+  isBanned: boolean,
   banReason: string
 ): boolean {
-  const isBannedBoolean = isBanned == 'true';
-  if (isBannedBoolean === this.banInfo.isBanned) {
+  if (isBanned === this.banInfo.isBanned) {
     return true;
   }
-  if (isBannedBoolean === true) {
+  if (isBanned === true) {
     this.banInfo.isBanned = true;
     this.banInfo.banDate = new Date().toISOString();
     this.banInfo.banReason = banReason;
     return true;
   }
-  if (isBannedBoolean === false) {
+  if (isBanned === false) {
     this.banInfo.isBanned = false;
     this.banInfo.banDate = null;
     this.banInfo.banReason = null;

@@ -57,6 +57,7 @@ export class Comment {
 
   update: (content: string) => boolean;
   updateLike: (lastStatus: LikeStatus, newStatus: LikeStatus) => boolean;
+  ban: (isBanned: boolean) => boolean;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
@@ -103,5 +104,10 @@ CommentSchema.methods.updateLike = function (
   );
   this.likesInfo.likesCount = newLikesInfo.likesCount;
   this.likesInfo.dislikesCount = newLikesInfo.dislikesCount;
+  return true;
+};
+
+CommentSchema.methods.ban = function (isBanned: boolean): boolean {
+  this.commentatorInfo.isBaned = isBanned;
   return true;
 };

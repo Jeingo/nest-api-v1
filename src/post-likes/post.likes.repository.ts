@@ -24,6 +24,9 @@ export class PostLikesRepository {
   async getById(id: DbId): Promise<PostLikeDocument> {
     return this.postLikesModel.findById(id);
   }
+  async getByUserId(userId: string): Promise<PostLikeDocument[]> {
+    return this.postLikesModel.find({ userId: userId });
+  }
   async getByUserIdAndPostId(
     userId: string,
     postId: string

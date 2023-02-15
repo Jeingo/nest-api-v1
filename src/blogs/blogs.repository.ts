@@ -19,6 +19,9 @@ export class BlogsRepository {
   async getById(id: DbId): Promise<BlogDocument> {
     return this.blogsModel.findById(id);
   }
+  async getByUserId(userId: string): Promise<BlogDocument[]> {
+    return this.blogsModel.find({ 'blogOwnerInfo.userId': userId });
+  }
   async save(blog: BlogDocument): Promise<BlogDocument> {
     return await blog.save();
   }

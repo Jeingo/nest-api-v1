@@ -23,6 +23,9 @@ export class CommentsRepository {
   async getById(id: DbId): Promise<CommentDocument> {
     return this.commentsModel.findById(id);
   }
+  async getByUserId(userId: string): Promise<CommentDocument[]> {
+    return this.commentsModel.find({ 'commentatorInfo.userId': userId });
+  }
   async save(comment: CommentDocument): Promise<CommentDocument> {
     return await comment.save();
   }
