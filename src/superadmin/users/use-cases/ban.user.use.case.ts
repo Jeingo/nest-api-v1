@@ -32,7 +32,7 @@ export class BanUserUseCase {
 
   async execute(command: BanUserCommand): Promise<boolean> {
     const { isBanned, banReason } = command.banUserDto;
-    const isBannedBoolean = isBanned == 'true';
+    const isBannedBoolean = isBanned; //todo refactoring
 
     const user = await this.usersRepository.getById(command.id);
     if (!user) throw new NotFoundException();

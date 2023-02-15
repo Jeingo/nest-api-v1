@@ -3,7 +3,7 @@ import { Trim } from '../../../helper/validation-decorators/to.trim.decorator';
 
 export class InputBanUserDto {
   @IsNotEmpty()
-  isBanned: string;
+  isBanned: boolean;
 
   @MinLength(20)
   @IsString()
