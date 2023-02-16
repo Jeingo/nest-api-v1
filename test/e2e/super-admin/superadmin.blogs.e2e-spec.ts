@@ -30,12 +30,11 @@ describe('SuperAdminBlogsController (e2e)', () => {
       .send(correctLogin)
       .expect(HttpStatus.OK);
     createdToken = createdResponseToken.body;
-    const responseBlog = await request(app)
+    await request(app)
       .post(bloggerBlogsPath)
       .set('Authorization', 'Bearer ' + createdToken.accessToken)
       .send(correctBlog)
       .expect(HttpStatus.CREATED);
-    createdBlog = responseBlog.body;
   });
 
   afterAll(async () => {
