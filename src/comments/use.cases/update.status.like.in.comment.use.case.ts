@@ -41,7 +41,7 @@ export class UpdateLikeStatusInCommentUseCase {
       lastLikeStatus = like.myStatus;
       like.update(command.newLikeStatus);
     }
-    comment.updateLike(lastLikeStatus, command.newLikeStatus);
+    comment.updateLike(lastLikeStatus, command.newLikeStatus); //todo likeDocument
 
     await this.commentLikesRepository.save(like);
     await this.commentRepository.save(comment);

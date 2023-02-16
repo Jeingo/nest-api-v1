@@ -45,10 +45,6 @@ export const errorsMessageForIncorrectPostWithBlogId = {
     {
       message: 'should not be empty',
       field: 'content'
-    },
-    {
-      message: 'should not be empty',
-      field: 'blogId'
     }
   ]
 };

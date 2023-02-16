@@ -6,7 +6,7 @@ import {
   correctUser,
   correctUser2,
   incorrectLogin
-} from '../stubs/users.stub';
+} from '../../stubs/users.stub';
 import {
   errorsMessageForConfirmation,
   errorsMessageForEmailResending,
@@ -14,13 +14,13 @@ import {
   errorsMessageForNewPassword,
   errorsMessageForPasswordRecovery,
   errorsMessageForRegistration
-} from '../stubs/error.stub';
+} from '../../stubs/error.stub';
 import {
   badEmailForResending,
   incorrectCodeConfirmation,
   incorrectEmailForResending
-} from '../stubs/auth.stub';
-import { setConfigNestApp } from '../configuration.test';
+} from '../../stubs/auth.stub';
+import { setConfigNestApp } from '../../configuration.test';
 
 describe('AuthController (e2e)', () => {
   let configuredNesApp: INestApplication;
@@ -38,7 +38,7 @@ describe('AuthController (e2e)', () => {
 
     await request(app).delete('/testing/all-data');
     const response = await request(app)
-      .post('/users')
+      .post('/sa/users')
       .auth('admin', 'qwerty')
       .send(correctUser)
       .expect(HttpStatus.CREATED);

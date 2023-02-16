@@ -5,8 +5,8 @@ import {
   correctLogin2,
   correctUser,
   correctUser2
-} from '../stubs/users.stub';
-import { setConfigNestApp } from '../configuration.test';
+} from '../../stubs/users.stub';
+import { setConfigNestApp } from '../../configuration.test';
 
 describe('SecurityDeviceController (e2e)', () => {
   let configuredNesApp: INestApplication;
@@ -23,7 +23,7 @@ describe('SecurityDeviceController (e2e)', () => {
 
     await request(app).delete('/testing/all-data');
     await request(app)
-      .post('/users')
+      .post('/sa/users')
       .auth('admin', 'qwerty')
       .send(correctUser)
       .expect(HttpStatus.CREATED);
@@ -92,7 +92,7 @@ describe('SecurityDeviceController (e2e)', () => {
     });
     it('3.3 DELETE /security/devices/id: should return 403 with other user', async () => {
       await request(app)
-        .post('/users')
+        .post('/sa/users')
         .auth('admin', 'qwerty')
         .send(correctUser2)
         .expect(HttpStatus.CREATED);

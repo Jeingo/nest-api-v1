@@ -1,24 +1,24 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { correctBlog } from '../stubs/blogs.stub';
+import { correctBlog } from '../../stubs/blogs.stub';
 import {
   correctNewPost,
   correctPost,
   emptyPosts,
   incorrectPost
-} from '../stubs/posts.stub';
-import { correctLogin1, correctUser1 } from '../stubs/users.stub';
+} from '../../stubs/posts.stub';
+import { correctLogin1, correctUser1 } from '../../stubs/users.stub';
 import {
   errorsMessageForIncorrectComment,
   errorsMessageForIncorrectPostLike,
   errorsMessageForIncorrectPostWithBlogId
-} from '../stubs/error.stub';
-import { correctComment, inCorrectComment } from '../stubs/comments.stub';
+} from '../../stubs/error.stub';
+import { correctComment, inCorrectComment } from '../../stubs/comments.stub';
 import {
   badPostLikeStatus,
   correctPostLikeStatus
-} from '../stubs/post.likes.stub';
-import { setConfigNestApp } from '../configuration.test';
+} from '../../stubs/post.likes.stub';
+import { setConfigNestApp } from '../../configuration.test';
 
 describe('PostsController (e2e)', () => {
   let configuredNesApp: INestApplication;
@@ -45,7 +45,7 @@ describe('PostsController (e2e)', () => {
     correctPost.blogId = createdBlog.id;
     correctNewPost.blogId = createdBlog.id;
     const response2 = await request(app)
-      .post('/users')
+      .post('/sa/users')
       .auth('admin', 'qwerty')
       .send(correctUser1)
       .expect(HttpStatus.CREATED);
