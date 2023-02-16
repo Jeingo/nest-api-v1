@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Get,
   HttpCode,
@@ -39,6 +40,8 @@ export class SuperAdminBlogsController {
     @Param('blogId') blogId: string,
     @Param('userId') userId: string
   ) {
+    if (!Types.ObjectId.isValid(blogId) || !Types.ObjectId.isValid(blogId))
+      throw new BadRequestException(['blogId is not correct']);
     await this.commandBus.execute(
       new BindWithUserCommand(
         new Types.ObjectId(blogId),

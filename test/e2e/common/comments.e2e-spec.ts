@@ -32,6 +32,9 @@ describe('CommentsController (e2e)', () => {
   let createdToken: any;
   let createdToken2: any;
   let createdPost: any;
+  let createdBlog: any;
+
+  const bloggerBlogsPath = '/blogger/blogs';
 
   beforeAll(async () => {
     configuredNesApp = await setConfigNestApp();
@@ -39,19 +42,6 @@ describe('CommentsController (e2e)', () => {
     app = configuredNesApp.getHttpServer();
 
     await request(app).delete('/testing/all-data');
-    const createdResponseBlog = await request(app)
-      .post('/blogs')
-      .auth('admin', 'qwerty')
-      .send(correctBlog)
-      .expect(HttpStatus.CREATED);
-    const createdBlog = createdResponseBlog.body;
-    correctPost.blogId = createdBlog.id;
-    const createdResponsePost = await request(app)
-      .post('/posts')
-      .auth('admin', 'qwerty')
-      .send(correctPost)
-      .expect(HttpStatus.CREATED);
-    createdPost = createdResponsePost.body;
     const createdResponseUser = await request(app)
       .post('/sa/users')
       .auth('admin', 'qwerty')
@@ -63,6 +53,18 @@ describe('CommentsController (e2e)', () => {
       .send(correctLogin)
       .expect(HttpStatus.OK);
     createdToken = createdResponseToken.body;
+    const response3 = await request(app)
+      .post(bloggerBlogsPath)
+      .set('Authorization', 'Bearer ' + createdToken.accessToken)
+      .send(correctBlog)
+      .expect(HttpStatus.CREATED);
+    createdBlog = response3.body;
+    const response4 = await request(app)
+      .post(bloggerBlogsPath + '/' + createdBlog.id + '/posts')
+      .set('Authorization', 'Bearer ' + createdToken.accessToken)
+      .send(correctPost)
+      .expect(HttpStatus.CREATED);
+    createdPost = response4.body;
     const createdResponseComment = await request(app)
       .post('/posts' + '/' + createdPost.id + '/comments')
       .set('Authorization', 'Bearer ' + createdToken.accessToken)
