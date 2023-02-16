@@ -2,6 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 import { LikeStatus } from '../../global-types/global.types';
 import { getUpdatedLike } from '../../helper/query/post.like.repository.helper';
+import { CommentLikeDocument } from '../../comment-likes/entities/comment.like.entity';
+import { CurrentUserType } from '../../auth/types/current.user.type';
 
 export type CommentDocument = HydratedDocument<Comment>;
 
@@ -57,6 +59,11 @@ export class Comment {
 
   update: (content: string) => boolean;
   updateLike: (lastStatus: LikeStatus, newStatus: LikeStatus) => boolean;
+  updateLikeNew: (
+    user: CurrentUserType,
+    newStatus: LikeStatus,
+    likeDocument: CommentLikeDocument
+  ) => boolean;
   ban: (isBanned: boolean) => boolean;
   changeLikesCount: (statusLike: LikeStatus, isBanned: boolean) => boolean;
 }
@@ -134,5 +141,30 @@ CommentSchema.methods.changeLikesCount = function (
     }
   }
 
+  return true;
+};
+
+CommentSchema.methods.updateLikeNew = function (
+  user: CurrentUserType,
+  newStatus: LikeStatus,
+  likeDocument: CommentLikeDocument
+): boolean {
+  let lastLikeStatus: LikeStatus = LikeStatus.None;
+  if (!likeDocument) {
+    likeDocument = null;
+  } else {
+    lastLikeStatus = likeDocument.myStatus;
+    likeDocument.update(newStatus);
+  }
+  const newLikesInfo = getUpdatedLike(
+    {
+      likesCount: this.likesInfo.likesCount,
+      dislikesCount: this.likesInfo.dislikesCount
+    },
+    lastLikeStatus,
+    newStatus
+  );
+  this.likesInfo.likesCount = newLikesInfo.likesCount;
+  this.likesInfo.dislikesCount = newLikesInfo.dislikesCount;
   return true;
 };

@@ -84,6 +84,7 @@ import { SuperAdminUsersQueryRepository } from './superadmin/users/superadmin.us
 import { SuperAdminBlogsQueryRepository } from './superadmin/blogs/superadmin.blogs.query.repository';
 import { BindWithUserUseCase } from './superadmin/blogs/use-cases/bind.with.user.use.case';
 import { BanUserUseCase } from './superadmin/users/use-cases/ban.user.use.case';
+import { CommentsAndLikesRepository } from './comments/comments.and.likes.repository';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -131,7 +132,8 @@ const repositories = [
   UsersRepository,
   PostLikesRepository,
   CommentsRepository,
-  CommentLikesRepository
+  CommentLikesRepository,
+  CommentsAndLikesRepository
 ];
 const queryRepositories = [
   UsersQueryRepository,
