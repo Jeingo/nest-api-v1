@@ -3,17 +3,23 @@ import { setConfigNestApp } from '../../configuration.test';
 import request from 'supertest';
 import {
   correctUser,
+  correctUser1,
   emptyUsers,
   emptyUsersWithQuery,
   incorrectUser,
   someQuery
 } from '../../stubs/users.stub';
-import { errorsMessageForIncorrectUser } from '../../stubs/error.stub';
+import {
+  errorsMessageForBadBan,
+  errorsMessageForIncorrectUser
+} from '../../stubs/error.stub';
+import { badBanInfo, banInfo } from '../../stubs/superadmin.stub';
 
 describe('SuperAdminUsersController (e2e)', () => {
   let configuredNesApp: INestApplication;
   let app: any;
   let createdUser: any;
+  let createdUser2: any;
 
   beforeAll(async () => {
     configuredNesApp = await setConfigNestApp();
@@ -114,6 +120,58 @@ describe('SuperAdminUsersController (e2e)', () => {
         .auth('admin', 'qwerty')
         .expect(HttpStatus.OK)
         .expect(emptyUsers);
+    });
+  });
+  describe('4 PUT /sa/users/id/ban:', () => {
+    it(`4.1 PUT /sa/users/id/ban: should return 401 without authorization`, async () => {
+      const createdResponse = await request(app)
+        .post('/sa/users')
+        .auth('admin', 'qwerty')
+        .send(correctUser1)
+        .expect(HttpStatus.CREATED);
+      createdUser2 = createdResponse.body;
+      await request(app)
+        .put('/sa/users/' + createdUser2.id + '/ban')
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+    it(`4.2 PUT /sa/users/id/ban: should return 400 with incorrect data`, async () => {
+      const response = await request(app)
+        .put('/sa/users/' + createdUser2.id + '/ban')
+        .auth('admin', 'qwerty')
+        .send(badBanInfo)
+        .expect(HttpStatus.BAD_REQUEST);
+      const errMes = response.body;
+      expect(errMes).toEqual(errorsMessageForBadBan);
+    });
+    it(`4.3 PUT /sa/users/id/ban: should return 204 with correct data`, async () => {
+      await request(app)
+        .put('/sa/users/' + createdUser2.id + '/ban')
+        .auth('admin', 'qwerty')
+        .send(banInfo)
+        .expect(HttpStatus.NO_CONTENT);
+      const response = await request(app)
+        .get('/sa/users')
+        .auth('admin', 'qwerty')
+        .expect(HttpStatus.OK);
+      expect(response.body).toEqual({
+        pagesCount: 1,
+        page: 1,
+        pageSize: 10,
+        totalCount: 1,
+        items: [
+          {
+            id: expect.any(String),
+            login: 'login1',
+            email: 'email@gmail.com',
+            createdAt: expect.any(String),
+            banInfo: {
+              isBanned: true,
+              banDate: expect.any(String),
+              banReason: banInfo.banReason
+            }
+          }
+        ]
+      });
     });
   });
 });

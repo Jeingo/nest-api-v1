@@ -158,3 +158,12 @@ export const errorsMessageForNewPassword = {
     }
   ]
 };
+
+export const errorsMessageForBadBan = {
+  errorsMessages: [
+    {
+      message: 'must be longer than or equal to 20 characters',
+      field: 'banReason'
+    }
+  ]
+};
