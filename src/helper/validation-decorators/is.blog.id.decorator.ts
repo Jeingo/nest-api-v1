@@ -6,7 +6,7 @@ import {
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { BlogsRepository } from '../../blogs/blogs.repository';
+import { BlogsRepository } from '../../blogs/infrastructure/blogs.repository';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
