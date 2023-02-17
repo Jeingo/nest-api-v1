@@ -1,4 +1,5 @@
 {
+  "name": "Nest api",
   "builds": [
     {
       "src": "src/main.ts",
