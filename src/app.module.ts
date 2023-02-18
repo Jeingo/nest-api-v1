@@ -91,6 +91,7 @@ import { SuperAdminBlogsQueryRepository } from './superadmin/blogs/infrastructur
 import { BindWithUserUseCase } from './superadmin/blogs/application/use-cases/bind.with.user.use.case';
 import { BanUserUseCase } from './superadmin/users/application/use-cases/ban.user.use.case';
 import { CommentsAndLikesRepository } from './comments/infrastructure/comments.and.likes.repository';
+// import { BloggerCommentsQueryRepository } from './blogger/blogs/infrastructure/blogger.comments.query.repository';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -150,6 +151,7 @@ const queryRepositories = [
   BloggerBlogsQueryRepository,
   SuperAdminUsersQueryRepository,
   SuperAdminBlogsQueryRepository
+  // BloggerCommentsQueryRepository
 ];
 const decorators = [
   IsBlogIdConstraint,
