@@ -32,15 +32,15 @@ import { PostsQueryRepository } from '../../../posts/infrastructure/posts.query.
 import { UpdatePostCommand } from '../application/use-cases/update.post.use.case';
 import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { RemovePostCommand } from '../application/use-cases/remove.post.use.case';
-// import { QueryComments } from '../../../comments/api/types/query.comments.type';
-// import { BloggerCommentsQueryRepository } from '../infrastructure/blogger.comments.query.repository';
+import { QueryComments } from '../../../comments/api/types/query.comments.type';
+import { BloggerCommentsQueryRepository } from '../infrastructure/blogger.comments.query.repository';
 
 @Controller('blogger/blogs')
 export class BloggerBlogsController {
   constructor(
     private readonly bloggerBlogsQueryRepository: BloggerBlogsQueryRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
-    // private readonly bloggerCommentsQueryRepository: BloggerCommentsQueryRepository,
+    private readonly bloggerCommentsQueryRepository: BloggerCommentsQueryRepository,
     private readonly commandBus: CommandBus
   ) {}
 
@@ -133,16 +133,16 @@ export class BloggerBlogsController {
     return;
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @HttpCode(HttpStatus.OK)
-  // @Delete('comments')
-  // async findAllComments(
-  //   @Query() query: QueryComments,
-  //   @CurrentUser() user: CurrentUserType
-  // ) {
-  //   return await this.bloggerCommentsQueryRepository.getAllForBlogger(
-  //     query,
-  //     user
-  //   );
-  // }
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Get('comments')
+  async findAllComments(
+    @Query() query: QueryComments,
+    @CurrentUser() user: CurrentUserType
+  ) {
+    return await this.bloggerCommentsQueryRepository.getAllForBlogger(
+      query,
+      user
+    );
+  }
 }

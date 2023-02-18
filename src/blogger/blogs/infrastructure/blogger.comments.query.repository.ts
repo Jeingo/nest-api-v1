@@ -1,64 +1,102 @@
-// import { Injectable } from '@nestjs/common';
-// import { CurrentUserType } from '../../../auth/api/types/current.user.type';
-// import { Direction, PaginatedType } from '../../../global-types/global.types';
-// import { OutputBlogDto } from '../../../blogs/api/dto/output.blog.dto';
-// import {
-//   getPaginatedType,
-//   makeDirectionToNumber
-// } from '../../../helper/query/query.repository.helper';
-// import { QueryComments } from '../../../comments/api/types/query.comments.type';
-// import { OutputBloggerCommentsDto } from '../api/dto/output.blogger.comments.dto';
-// import { InjectModel } from '@nestjs/mongoose';
-// import {
-//   Blog,
-//   IBlogModel
-// } from '../../../blogs/application/entities/blog.entity';
-// import {
-//   IPostModel,
-//   Post
-// } from '../../../posts/application/entities/post.entity';
-// import { ICommentModel } from '../../../comments/application/entities/comment.entity';
-//
-// @Injectable()
-// export class BloggerCommentsQueryRepository {
-//   constructor(
-//     @InjectModel(Post.name) protected postsModel: IPostModel,
-//     @InjectModel(Comment.name) protected commentsModel: ICommentModel
-//   ) {}
-//
-//   async getAllForBlogger(
-//     query: QueryComments,
-//     user: CurrentUserType
-//   ): Promise<PaginatedType<OutputBloggerCommentsDto>> {
-//     //todo refactoring
-//     const {
-//       sortBy = 'createdAt',
-//       sortDirection = Direction.DESC,
-//       pageNumber = 1,
-//       pageSize = 10
-//     } = query;
-//
-//     const allPosts = await this.postsModel.find({
-//       'postOwnerInfo.userId': user.userId
-//     });
-//
-//     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
-//     const skipNumber = (+pageNumber - 1) * +pageSize;
-//
-//     // const countAllDocuments = await this.blogsModel.countDocuments({
-//     //   'blogOwnerInfo.userId': user.userId
-//     // });
-//     // const result = await this.blogsModel
-//     //   .find({ 'blogOwnerInfo.userId': user.userId })
-//     //   .sort({ [sortBy]: sortDirectionNumber })
-//     //   .skip(skipNumber)
-//     //   .limit(+pageSize);
-//     //
-//     // return getPaginatedType(
-//     //   result.map(this._getOutputBlogDto),
-//     //   +pageSize,
-//     //   +pageNumber,
-//     //   countAllDocuments
-//     // );
-//   }
-// }
+import { Injectable } from '@nestjs/common';
+import { CurrentUserType } from '../../../auth/api/types/current.user.type';
+import { Direction, PaginatedType } from '../../../global-types/global.types';
+import {
+  bannedFilter,
+  getPaginatedType,
+  makeDirectionToNumber
+} from '../../../helper/query/query.repository.helper';
+import { QueryComments } from '../../../comments/api/types/query.comments.type';
+import { OutputBloggerCommentsDto } from '../api/dto/output.blogger.comments.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import {
+  IPostModel,
+  Post
+} from '../../../posts/application/entities/post.entity';
+import {
+  CommentDocument,
+  ICommentModel,
+  Comment
+} from '../../../comments/application/entities/comment.entity';
+import { Types } from 'mongoose';
+
+@Injectable()
+export class BloggerCommentsQueryRepository {
+  constructor(
+    @InjectModel(Post.name) protected postsModel: IPostModel,
+    @InjectModel(Comment.name) protected commentsModel: ICommentModel
+  ) {}
+
+  async getAllForBlogger(
+    query: QueryComments,
+    user: CurrentUserType
+  ): Promise<PaginatedType<OutputBloggerCommentsDto>> {
+    //todo refactoring
+    const {
+      sortBy = 'createdAt',
+      sortDirection = Direction.DESC,
+      pageNumber = 1,
+      pageSize = 10
+    } = query;
+
+    const sortDirectionNumber = makeDirectionToNumber(sortDirection);
+    const skipNumber = (+pageNumber - 1) * +pageSize;
+
+    const finishFilter = {
+      bloggerId: user.userId,
+      ...bannedFilter('commentatorInfo.isBanned')
+    };
+
+    const countAllDocuments = await this.commentsModel.countDocuments(
+      finishFilter
+    );
+
+    const result = await this.commentsModel
+      .find(finishFilter)
+      .sort({ [sortBy]: sortDirectionNumber })
+      .skip(skipNumber)
+      .limit(+pageSize);
+
+    const mappedResult = result.map(this._getOutputBloggerCommentsDto);
+    const finishMappedResult = await this._setPostInfo(mappedResult);
+
+    return getPaginatedType(
+      finishMappedResult,
+      +pageSize,
+      +pageNumber,
+      countAllDocuments
+    );
+  }
+  protected _getOutputBloggerCommentsDto(
+    comment: CommentDocument
+  ): OutputBloggerCommentsDto {
+    return {
+      id: comment._id.toString(),
+      content: comment.content,
+      createdAt: comment.createdAt,
+      commentatorInfo: {
+        userId: comment.commentatorInfo.userId,
+        userLogin: comment.commentatorInfo.userLogin
+      },
+      postInfo: {
+        id: comment.postId,
+        title: null,
+        blogId: null,
+        blogName: null
+      }
+    };
+  }
+  private async _setPostInfo(
+    bloggerComments: OutputBloggerCommentsDto[]
+  ): Promise<OutputBloggerCommentsDto[]> {
+    for (let i = 0; i < bloggerComments.length; i++) {
+      const post = await this.postsModel.findById(
+        new Types.ObjectId(bloggerComments[i].postInfo.id)
+      );
+      bloggerComments[i].postInfo.title = post.title;
+      bloggerComments[i].postInfo.blogId = post.blogId;
+      bloggerComments[i].postInfo.blogName = post.blogName;
+    }
+    return bloggerComments;
+  }
+}

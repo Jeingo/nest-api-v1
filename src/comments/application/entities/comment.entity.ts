@@ -13,7 +13,8 @@ type StaticCommentMethods = {
     content: string,
     userId: string,
     userLogin: string,
-    postId: string
+    postId: string,
+    bloggerId: string
   ) => CommentDocument;
 };
 
@@ -55,6 +56,9 @@ export class Comment {
   postId: string;
 
   @Prop({ required: true })
+  bloggerId: string;
+
+  @Prop({ required: true })
   likesInfo: LikesInfo;
 
   update: (content: string) => boolean;
@@ -75,12 +79,14 @@ CommentSchema.statics.make = function (
   content: string,
   userId: string,
   userLogin: string,
-  postId: string
+  postId: string,
+  bloggerId: string
 ): CommentDocument {
   return new this({
     content: content,
     createdAt: new Date().toISOString(),
     postId: postId,
+    bloggerId: bloggerId,
     commentatorInfo: {
       userId: userId,
       userLogin: userLogin,

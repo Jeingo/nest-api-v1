@@ -28,7 +28,8 @@ export class CreateCommentUseCase {
       command.createCommentDto.content,
       command.user.userId,
       command.user.login,
-      command.postId.toString()
+      command.postId.toString(),
+      post.postOwnerInfo.userId
     );
     await this.commentRepository.save(createdComment);
     return createdComment._id;
