@@ -54,6 +54,18 @@ class BanInfo {
   banReason: string;
 }
 
+@Schema({ _id: false })
+class BloggerBanInfo {
+  @Prop()
+  banDate: string;
+
+  @Prop({ minlength: 20 })
+  banReason: string;
+
+  @Prop()
+  blogId: string;
+}
+
 @Schema()
 export class User {
   @Prop({ required: true, maxlength: 10, minlength: 3 })
@@ -76,6 +88,9 @@ export class User {
 
   @Prop({ required: true })
   banInfo: BanInfo;
+
+  @Prop({ required: true, type: [BloggerBanInfo] })
+  bloggerBanInfo: BloggerBanInfo[];
 
   updateEmailConfirmationStatus: () => boolean;
   updateConfirmationCode: () => boolean;
@@ -117,7 +132,8 @@ UserSchema.statics.make = function (
       isBanned: false,
       banDate: null,
       banReason: null
-    }
+    },
+    bloggerBanInfo: []
   });
 };
 
@@ -161,5 +177,22 @@ UserSchema.methods.ban = function (
   this.banInfo.isBanned = false;
   this.banInfo.banDate = null;
   this.banInfo.banReason = null;
+  return true;
+};
+
+UserSchema.methods.bloggerBan = function (
+  isBanned: boolean,
+  banReason: string,
+  blogId: string
+): boolean {
+  if (isBanned) {
+    this.bloggerBanInfo.push({
+      banDate: new Date().toISOString(),
+      banReason: banReason,
+      blogId: blogId
+    });
+    return true;
+  }
+  this.bloggerBanInfo.filter((banInfo) => banInfo.blogId !== blogId);
   return true;
 };

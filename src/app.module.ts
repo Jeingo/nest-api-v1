@@ -92,6 +92,8 @@ import { BindWithUserUseCase } from './superadmin/blogs/application/use-cases/bi
 import { BanUserUseCase } from './superadmin/users/application/use-cases/ban.user.use.case';
 import { CommentsAndLikesRepository } from './comments/infrastructure/comments.and.likes.repository';
 import { BloggerCommentsQueryRepository } from './blogger/blogs/infrastructure/blogger.comments.query.repository';
+import { BloggerUsersController } from './blogger/users/api/blogger.users.controller';
+import { BloggerUsersQueryRepository } from './blogger/users/infrastructure/blogger.users.query.repository';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -151,7 +153,8 @@ const queryRepositories = [
   BloggerBlogsQueryRepository,
   SuperAdminUsersQueryRepository,
   SuperAdminBlogsQueryRepository,
-  BloggerCommentsQueryRepository
+  BloggerCommentsQueryRepository,
+  BloggerUsersQueryRepository
 ];
 const decorators = [
   IsBlogIdConstraint,
@@ -173,7 +176,8 @@ const controllers = [
   TestingController,
   BloggerBlogsController,
   SuperAdminBlogsController,
-  SuperAdminUsersController
+  SuperAdminUsersController,
+  BloggerUsersController
 ];
 
 @Module({
