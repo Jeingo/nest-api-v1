@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import {
   DbId,
   Direction,
@@ -36,6 +40,7 @@ export class BloggerUsersQueryRepository {
     user: CurrentUserType
   ): Promise<PaginatedType<OutputBloggerUserDto>> {
     const blog = await this.blogsModel.findById(blogId);
+    if (!blog) throw new NotFoundException();
     if (blog.blogOwnerInfo.userId !== user.userId)
       throw new ForbiddenException();
     const {
