@@ -51,6 +51,9 @@ export class Blog {
   @Prop({ required: true })
   isBanned: boolean;
 
+  @Prop()
+  banDate: string;
+
   update: (name: string, description: string, websiteUrl: string) => boolean;
   ban: (isBanned: boolean) => boolean;
   banBlog: (isBanned: boolean) => boolean;
@@ -77,7 +80,8 @@ BlogSchema.statics.make = function (
       userLogin: login,
       isBanned: false
     },
-    isBanned: false
+    isBanned: false,
+    banDate: null
   });
 };
 
@@ -98,6 +102,12 @@ BlogSchema.methods.ban = function (isBanned: boolean): boolean {
 };
 
 BlogSchema.methods.banBlog = function (isBanned: boolean): boolean {
-  this.isBanned = isBanned;
+  if (isBanned) {
+    this.isBanned = true;
+    this.banDate = new Date().toISOString();
+    return true;
+  }
+  this.isBanned = false;
+  this.banDate = new Date().toISOString();
   return true;
 };
