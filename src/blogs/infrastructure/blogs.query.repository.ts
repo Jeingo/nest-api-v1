@@ -59,7 +59,8 @@ export class BlogsQueryRepository {
   async getById(id: DbId): Promise<OutputBlogDto> {
     const result = await this.blogsModel.findById(id);
     if (!result) throw new NotFoundException();
-    if (result.blogOwnerInfo.isBanned) throw new NotFoundException();
+    if (result.blogOwnerInfo.isBanned || result.isBanned)
+      throw new NotFoundException();
     return this._getOutputBlogDto(result);
   }
   protected _getOutputBlogDto(blog: BlogDocument): OutputBlogDto {
