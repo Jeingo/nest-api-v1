@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   DbId,
   Direction,
@@ -50,8 +50,6 @@ export class BloggerUsersQueryRepository {
       .sort({ [sortBy]: sortDirectionNumber })
       .skip(skipNumber)
       .limit(+pageSize);
-
-    if (result.length === 0) throw new NotFoundException();
 
     const mappedResult = this._getOutputBannedUserDto(
       result,

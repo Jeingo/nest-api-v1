@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CurrentUserType } from '../../../auth/api/types/current.user.type';
-import { Direction, PaginatedType } from '../../../global-types/global.types';
+import {
+  Direction,
+  LikeStatus,
+  PaginatedType
+} from '../../../global-types/global.types';
 import {
   bannedFilter,
   getPaginatedType,
@@ -14,9 +18,9 @@ import {
   Post
 } from '../../../posts/application/entities/post.entity';
 import {
+  Comment,
   CommentDocument,
-  ICommentModel,
-  Comment
+  ICommentModel
 } from '../../../comments/application/entities/comment.entity';
 import { Types } from 'mongoose';
 
@@ -31,7 +35,6 @@ export class BloggerCommentsQueryRepository {
     query: QueryComments,
     user: CurrentUserType
   ): Promise<PaginatedType<OutputBloggerCommentsDto>> {
-    //todo refactoring
     const {
       sortBy = 'createdAt',
       sortDirection = Direction.DESC,
@@ -77,6 +80,11 @@ export class BloggerCommentsQueryRepository {
       commentatorInfo: {
         userId: comment.commentatorInfo.userId,
         userLogin: comment.commentatorInfo.userLogin
+      },
+      likesInfo: {
+        likesCount: comment.likesInfo.likesCount,
+        dislikesCount: comment.likesInfo.dislikesCount,
+        myStatus: LikeStatus.None
       },
       postInfo: {
         id: comment.postId,
