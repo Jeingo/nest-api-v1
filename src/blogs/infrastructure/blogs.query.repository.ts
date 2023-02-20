@@ -39,7 +39,8 @@ export class BlogsQueryRepository {
     }
     const finalFilter = {
       ...filter,
-      ...bannedFilter('blogOwnerInfo.isBanned')
+      ...bannedFilter('blogOwnerInfo.isBanned'),
+      ...bannedFilter('isBanned')
     };
     const countAllDocuments = await this.blogsModel.countDocuments(finalFilter);
     const result = await this.blogsModel

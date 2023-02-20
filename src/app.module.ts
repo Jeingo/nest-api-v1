@@ -95,6 +95,7 @@ import { BloggerCommentsQueryRepository } from './blogger/blogs/infrastructure/b
 import { BloggerUsersController } from './blogger/users/api/blogger.users.controller';
 import { BloggerUsersQueryRepository } from './blogger/users/infrastructure/blogger.users.query.repository';
 import { BloggerBanUserUseCase } from './blogger/users/application/use-cases/blogger.ban.user.user.case';
+import { BanBlogUseCase } from './superadmin/blogs/application/use-cases/ban.blog.use.case';
 
 const configService = new ConfigService<IConfigType>();
 
@@ -126,7 +127,8 @@ const useCases = [
   RemoveSessionByDeviceIdUseCase,
   BindWithUserUseCase,
   BanUserUseCase,
-  BloggerBanUserUseCase
+  BloggerBanUserUseCase,
+  BanBlogUseCase
 ];
 const services = [
   JwtAdapter,

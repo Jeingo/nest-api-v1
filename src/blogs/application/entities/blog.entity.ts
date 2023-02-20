@@ -48,8 +48,12 @@ export class Blog {
   @Prop({ required: true })
   blogOwnerInfo: BlogOwnerInfo;
 
+  @Prop({ required: true })
+  isBanned: boolean;
+
   update: (name: string, description: string, websiteUrl: string) => boolean;
   ban: (isBanned: boolean) => boolean;
+  banBlog: (isBanned: boolean) => boolean;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
@@ -72,7 +76,8 @@ BlogSchema.statics.make = function (
       userId: userId,
       userLogin: login,
       isBanned: false
-    }
+    },
+    isBanned: false
   });
 };
 
@@ -89,5 +94,10 @@ BlogSchema.methods.update = function (
 
 BlogSchema.methods.ban = function (isBanned: boolean): boolean {
   this.blogOwnerInfo.isBanned = isBanned;
+  return true;
+};
+
+BlogSchema.methods.banBlog = function (isBanned: boolean): boolean {
+  this.isBanned = isBanned;
   return true;
 };

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -16,7 +17,10 @@ import { OutputSuperAdminBlogDto } from './dto/output.superadmin.blog.dto';
 import { BasicAuthGuard } from '../../../auth/infrastructure/guards/basic.auth.guard';
 import { BindWithUserCommand } from '../application/use-cases/bind.with.user.use.case';
 import { Types } from 'mongoose';
-import { PaginatedType } from '../../../global-types/global.types';
+import { DbId, PaginatedType } from '../../../global-types/global.types';
+import { InputBanBlogDto } from './dto/input.ban.blog.dto';
+import { CheckIdAndParseToDBId } from '../../../helper/pipes/check.id.validator.pipe';
+import { BanBlogCommand } from '../application/use-cases/ban.blog.use.case';
 
 @UseGuards(BasicAuthGuard)
 @Controller('sa/blogs')
@@ -48,6 +52,16 @@ export class SuperAdminBlogsController {
         new Types.ObjectId(userId)
       )
     );
+    return;
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Put(':blogId/ban')
+  async banBlog(
+    @Param('blogId', new CheckIdAndParseToDBId()) blogId: DbId,
+    @Body() banBlogDto: InputBanBlogDto
+  ) {
+    await this.commandBus.execute(new BanBlogCommand(blogId, banBlogDto));
     return;
   }
 }
