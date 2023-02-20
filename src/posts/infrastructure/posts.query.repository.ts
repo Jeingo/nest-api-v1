@@ -47,7 +47,10 @@ export class PostsQueryRepository {
     const sortDirectionNumber = makeDirectionToNumber(sortDirection);
     const skipNumber = (+pageNumber - 1) * +pageSize;
 
-    const finalFilter = bannedFilter('postOwnerInfo.isBanned');
+    const finalFilter = {
+      ...bannedFilter('postOwnerInfo.isBanned'),
+      ...bannedFilter('blogIsBanned')
+    };
     const countAllDocuments = await this.postsModel.countDocuments(finalFilter);
     const result = await this.postsModel
       .find(finalFilter)
@@ -87,6 +90,7 @@ export class PostsQueryRepository {
 
     const finalFilter = {
       ...bannedFilter('postOwnerInfo.isBanned'),
+      ...bannedFilter('blogIsBanned'),
       blogId: blogId.toString()
     };
     const countAllDocuments = await this.postsModel.countDocuments(finalFilter);
@@ -113,7 +117,8 @@ export class PostsQueryRepository {
   async getById(id: DbId, user?: CurrentUserType): Promise<OutputPostDto> {
     const result = await this.postsModel.findById(id);
     if (!result) throw new NotFoundException();
-    if (result.postOwnerInfo.isBanned) throw new NotFoundException();
+    if (result.postOwnerInfo.isBanned || result.blogIsBanned)
+      throw new NotFoundException();
     const mappedResult = this._getOutputPostDto(result);
     if (user && mappedResult) {
       const like = await this.postLikesModel.findOne({

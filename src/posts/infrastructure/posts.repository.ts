@@ -34,6 +34,9 @@ export class PostsRepository {
   async getByUserId(userId: string): Promise<PostDocument[]> {
     return this.postsModel.find({ 'postOwnerInfo.userId': userId });
   }
+  async getByBlogId(blogId: string): Promise<PostDocument[]> {
+    return this.postsModel.find({ blogId: blogId });
+  }
   async save(post: PostDocument): Promise<PostDocument> {
     return await post.save();
   }

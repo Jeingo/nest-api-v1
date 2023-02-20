@@ -63,6 +63,9 @@ export class Post {
   @Prop({ required: true })
   postOwnerInfo: PostOwnerInfo;
 
+  @Prop({ required: true })
+  blogIsBanned: boolean;
+
   update: (
     title: string,
     description: string,
@@ -72,6 +75,7 @@ export class Post {
   ) => boolean;
   updateLike: (lastStatus: LikeStatus, newStatus: LikeStatus) => boolean;
   ban: (isBanned: boolean) => boolean;
+  banFromBlog: (isBanned: boolean) => boolean;
   changeLikesCount: (statusLike: LikeStatus, isBanned: boolean) => boolean;
 }
 
@@ -100,7 +104,8 @@ PostSchema.statics.make = function (
     postOwnerInfo: {
       userId: userId,
       isBanned: false
-    }
+    },
+    blogIsBanned: false
   });
 };
 
@@ -161,5 +166,10 @@ PostSchema.methods.changeLikesCount = function (
     }
   }
 
+  return true;
+};
+
+PostSchema.methods.banFromBlog = function (isBanned: boolean): boolean {
+  this.blogIsBanned = isBanned;
   return true;
 };
