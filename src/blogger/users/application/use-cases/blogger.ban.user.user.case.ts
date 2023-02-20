@@ -25,12 +25,12 @@ export class BloggerBanUserUseCase {
   async execute(command: BloggerBanUserCommand): Promise<boolean> {
     const { isBanned, banReason, blogId } = command.bloggerUserBanDto;
 
+    const user = await this.usersRepository.getById(command.userId);
+    if (!user) throw new NotFoundException();
+
     const blog = await this.blogsRepository.getById(new Types.ObjectId(blogId));
     if (blog.blogOwnerInfo.userId !== command.user.userId)
       throw new ForbiddenException();
-
-    const user = await this.usersRepository.getById(command.userId);
-    if (!user) throw new NotFoundException();
 
     user.bloggerBan(isBanned, banReason, blogId);
     await this.usersRepository.save(user);
