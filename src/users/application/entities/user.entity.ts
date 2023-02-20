@@ -98,6 +98,7 @@ export class User {
   updatePassword: (newPassword: string) => boolean;
   ban: (isBanned: boolean, banReason: string) => boolean;
   bloggerBan: (isBanned: boolean, banReason: string, blogId: string) => boolean;
+  checkBanStatusForBlog: (blogId: string) => boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -196,4 +197,11 @@ UserSchema.methods.bloggerBan = function (
   }
   this.bloggerBanInfo.filter((banInfo) => banInfo.blogId !== blogId);
   return true;
+};
+
+UserSchema.methods.checkBanStatusForBlog = function (blogId: string): boolean {
+  const result = this.bloggerBanInfo.filter(
+    (banInfo) => banInfo.blogId === blogId
+  );
+  return result < 0;
 };
