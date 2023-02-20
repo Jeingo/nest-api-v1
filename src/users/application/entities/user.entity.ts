@@ -195,7 +195,9 @@ UserSchema.methods.bloggerBan = function (
     });
     return true;
   }
-  this.bloggerBanInfo.filter((banInfo) => banInfo.blogId !== blogId);
+  this.bloggerBanInfo = this.bloggerBanInfo.filter(
+    (banInfo) => banInfo.blogId !== blogId
+  );
   return true;
 };
 
@@ -203,5 +205,5 @@ UserSchema.methods.checkBanStatusForBlog = function (blogId: string): boolean {
   const result = this.bloggerBanInfo.filter(
     (banInfo) => banInfo.blogId === blogId
   );
-  return result < 0;
+  return result.length > 0;
 };
