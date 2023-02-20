@@ -33,11 +33,13 @@ export class BloggerUsersController {
   @Get('blog/:blogId')
   async findBannedUsers(
     @Param('blogId', new CheckIdAndParseToDBId()) blogId: DbId,
-    @Query() query: QueryBannedUsers
+    @Query() query: QueryBannedUsers,
+    @CurrentUser() user: CurrentUserType
   ): Promise<PaginatedType<OutputBloggerUserDto>> {
     return await this.bloggerUsersQueryRepository.getBannedUserByBlogId(
       blogId,
-      query
+      query,
+      user
     );
   }
 

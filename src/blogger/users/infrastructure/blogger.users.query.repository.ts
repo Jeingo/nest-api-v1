@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import {
   DbId,
   Direction,
@@ -17,15 +17,27 @@ import {
   User,
   UserDocument
 } from '../../../users/application/entities/user.entity';
+import {
+  Blog,
+  IBlogModel
+} from '../../../blogs/application/entities/blog.entity';
+import { CurrentUserType } from '../../../auth/api/types/current.user.type';
 
 @Injectable()
 export class BloggerUsersQueryRepository {
-  constructor(@InjectModel(User.name) protected usersModel: IUserModel) {}
+  constructor(
+    @InjectModel(User.name) protected usersModel: IUserModel,
+    @InjectModel(Blog.name) protected blogsModel: IBlogModel
+  ) {}
 
   async getBannedUserByBlogId(
     blogId: DbId,
-    query: QueryBannedUsers
+    query: QueryBannedUsers,
+    user: CurrentUserType
   ): Promise<PaginatedType<OutputBloggerUserDto>> {
+    const blog = await this.blogsModel.findById(blogId);
+    if (blog.blogOwnerInfo.userId !== user.userId)
+      throw new ForbiddenException();
     const {
       searchLoginTerm = null,
       sortBy = 'createdAt',
