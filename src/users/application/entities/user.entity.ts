@@ -89,14 +89,15 @@ export class User {
   @Prop({ required: true })
   banInfo: BanInfo;
 
-  @Prop({ required: true, type: [BloggerBanInfo] })
-  bloggerBanInfo: BloggerBanInfo[];
+  @Prop({ required: true })
+  bloggerBanInfo: Array<BloggerBanInfo>;
 
   updateEmailConfirmationStatus: () => boolean;
   updateConfirmationCode: () => boolean;
   updatePasswordRecoveryConfirmationCode: () => boolean;
   updatePassword: (newPassword: string) => boolean;
   ban: (isBanned: boolean, banReason: string) => boolean;
+  bloggerBan: (isBanned: boolean, banReason: string, blogId: string) => boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
