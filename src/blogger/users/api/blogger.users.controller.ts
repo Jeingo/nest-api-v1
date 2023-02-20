@@ -18,6 +18,8 @@ import { QueryBannedUsers } from './types/query.banned.users.type';
 import { InputBloggerUserBanDto } from './dto/input.blogger.user.ban.dto';
 import { BloggerBanUserCommand } from '../application/use-cases/blogger.ban.user.user.case';
 import { CommandBus } from '@nestjs/cqrs';
+import { CurrentUser } from '../../../helper/get-decorators/current.user.decorator';
+import { CurrentUserType } from '../../../auth/api/types/current.user.type';
 
 @Controller('blogger/users')
 export class BloggerUsersController {
@@ -44,10 +46,11 @@ export class BloggerUsersController {
   @Put(':userId/ban')
   async banUser(
     @Param('userId', new CheckIdAndParseToDBId()) userId: DbId,
-    @Body() bloggerUserBanDto: InputBloggerUserBanDto
+    @Body() bloggerUserBanDto: InputBloggerUserBanDto,
+    @CurrentUser() user: CurrentUserType
   ) {
     await this.commandBus.execute(
-      new BloggerBanUserCommand(bloggerUserBanDto, userId)
+      new BloggerBanUserCommand(bloggerUserBanDto, userId, user)
     );
     return;
   }
