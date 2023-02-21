@@ -4,7 +4,7 @@ import {
   IUserModel,
   User,
   UserDocument
-} from '../../../users/application/entities/user.entity';
+} from '../../../users/domain/entities/user.entity';
 import { BanStatus, QueryUsers } from '../api/types/query.users.type';
 import { OutputSuperAdminUserDto } from '../api/dto/outputSuperAdminUserDto';
 import {

@@ -64,6 +64,10 @@ describe('SuperAdminBlogsController (e2e)', () => {
             blogOwnerInfo: {
               userId: expect.any(String),
               userLogin: createdUser.login
+            },
+            banInfo: {
+              isBanned: false,
+              banDate: null
             }
           }
         ]

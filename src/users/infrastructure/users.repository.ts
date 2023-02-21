@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {
-  IUserModel,
-  User,
-  UserDocument
-} from '../application/entities/user.entity';
+import { IUserModel, User, UserDocument } from '../domain/entities/user.entity';
 import { DbId } from '../../global-types/global.types';
 
 @Injectable()

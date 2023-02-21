@@ -3,7 +3,7 @@ import {
   ISessionModel,
   Session,
   SessionDocument
-} from '../application/entities/session.entity';
+} from '../domain/entities/session.entity';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()

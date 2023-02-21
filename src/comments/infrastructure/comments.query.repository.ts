@@ -11,7 +11,7 @@ import {
   Comment,
   CommentDocument,
   ICommentModel
-} from '../application/entities/comment.entity';
+} from '../domain/entities/comment.entity';
 import { QueryComments } from '../api/types/query.comments.type';
 import {
   bannedFilter,
@@ -19,11 +19,11 @@ import {
   makeDirectionToNumber
 } from '../../helper/query/query.repository.helper';
 import { CurrentUserType } from '../../auth/api/types/current.user.type';
-import { IPostModel, Post } from '../../posts/application/entities/post.entity';
+import { IPostModel, Post } from '../../posts/domain/entities/post.entity';
 import {
   CommentLike,
   ICommentLikeModel
-} from '../../comment-likes/application/entities/comment.like.entity';
+} from '../../comment-likes/domain/entities/comment.like.entity';
 
 @Injectable()
 export class CommentsQueryRepository {

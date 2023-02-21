@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, IBlogModel } from '../../blogs/application/entities/blog.entity';
-import { IUserModel, User } from '../../users/application/entities/user.entity';
-import { IPostModel, Post } from '../../posts/application/entities/post.entity';
+import { Blog, IBlogModel } from '../../blogs/domain/entities/blog.entity';
+import { IUserModel, User } from '../../users/domain/entities/user.entity';
+import { IPostModel, Post } from '../../posts/domain/entities/post.entity';
 import {
   Comment,
   ICommentModel
-} from '../../comments/application/entities/comment.entity';
+} from '../../comments/domain/entities/comment.entity';
 import {
   ISessionModel,
   Session
-} from '../../sessions/application/entities/session.entity';
+} from '../../sessions/domain/entities/session.entity';
 import {
   IPostLikeModel,
   PostLike
-} from '../../post-likes/application/entities/post.like.entity';
+} from '../../post-likes/domain/entities/post.like.entity';
 import {
   CommentLike,
   ICommentLikeModel
-} from '../../comment-likes/application/entities/comment.like.entity';
+} from '../../comment-likes/domain/entities/comment.like.entity';
 
 @Injectable()
 export class TestingService {

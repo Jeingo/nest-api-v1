@@ -13,15 +13,12 @@ import {
 import { QueryComments } from '../../../comments/api/types/query.comments.type';
 import { OutputBloggerCommentsDto } from '../api/dto/output.blogger.comments.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import {
-  IPostModel,
-  Post
-} from '../../../posts/application/entities/post.entity';
+import { IPostModel, Post } from '../../../posts/domain/entities/post.entity';
 import {
   Comment,
   CommentDocument,
   ICommentModel
-} from '../../../comments/application/entities/comment.entity';
+} from '../../../comments/domain/entities/comment.entity';
 import { Types } from 'mongoose';
 
 @Injectable()

@@ -4,7 +4,7 @@ import {
   IPostLikeModel,
   PostLike,
   PostLikeDocument
-} from '../application/entities/post.like.entity';
+} from '../domain/entities/post.like.entity';
 import { DbId, LikeStatus } from '../../global-types/global.types';
 
 @Injectable()

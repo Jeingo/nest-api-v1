@@ -20,11 +20,8 @@ import {
   IUserModel,
   User,
   UserDocument
-} from '../../../users/application/entities/user.entity';
-import {
-  Blog,
-  IBlogModel
-} from '../../../blogs/application/entities/blog.entity';
+} from '../../../users/domain/entities/user.entity';
+import { Blog, IBlogModel } from '../../../blogs/domain/entities/blog.entity';
 import { CurrentUserType } from '../../../auth/api/types/current.user.type';
 
 @Injectable()

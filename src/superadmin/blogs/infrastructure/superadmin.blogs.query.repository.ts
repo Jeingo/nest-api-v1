@@ -4,7 +4,7 @@ import {
   Blog,
   BlogDocument,
   IBlogModel
-} from '../../../blogs/application/entities/blog.entity';
+} from '../../../blogs/domain/entities/blog.entity';
 import { QueryBlogs } from '../../../blogs/api/types/query.blogs.type';
 import { OutputSuperAdminBlogDto } from '../api/dto/output.superadmin.blog.dto';
 import { Direction, PaginatedType } from '../../../global-types/global.types';

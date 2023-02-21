@@ -5,7 +5,7 @@ import {
   CommentDocument,
   ICommentModel,
   Comment
-} from '../application/entities/comment.entity';
+} from '../domain/entities/comment.entity';
 
 @Injectable()
 export class CommentsRepository {

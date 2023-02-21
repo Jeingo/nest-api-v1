@@ -5,25 +5,25 @@ import configuration from './configuration/configuration';
 import { IConfigType } from './configuration/configuration';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { Blog, BlogSchema } from './blogs/application/entities/blog.entity';
-import { Post, PostSchema } from './posts/application/entities/post.entity';
-import { User, UserSchema } from './users/application/entities/user.entity';
+import { Blog, BlogSchema } from './blogs/domain/entities/blog.entity';
+import { Post, PostSchema } from './posts/domain/entities/post.entity';
+import { User, UserSchema } from './users/domain/entities/user.entity';
 import {
   Comment,
   CommentSchema
-} from './comments/application/entities/comment.entity';
+} from './comments/domain/entities/comment.entity';
 import {
   Session,
   SessionSchema
-} from './sessions/application/entities/session.entity';
+} from './sessions/domain/entities/session.entity';
 import {
   PostLike,
   PostLikeSchema
-} from './post-likes/application/entities/post.like.entity';
+} from './post-likes/domain/entities/post.like.entity';
 import {
   CommentLike,
   CommentLikeSchema
-} from './comment-likes/application/entities/comment.like.entity';
+} from './comment-likes/domain/entities/comment.like.entity';
 import { AuthController } from './auth/api/auth.controller';
 import { UsersRepository } from './users/infrastructure/users.repository';
 import { JwtAdapter } from './adapters/jwt/jwt.service';

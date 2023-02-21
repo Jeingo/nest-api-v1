@@ -7,7 +7,7 @@ import {
   Blog,
   BlogSchema,
   IBlogModel
-} from '../../../../blogs/application/entities/blog.entity';
+} from '../../../../blogs/domain/entities/blog.entity';
 import { BlogsRepository } from '../../../../blogs/infrastructure/blogs.repository';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Model } from 'mongoose';
@@ -15,7 +15,7 @@ import {
   IUserModel,
   User,
   UserSchema
-} from '../../../../users/application/entities/user.entity';
+} from '../../../../users/domain/entities/user.entity';
 
 describe('CreateBlogUseCase', () => {
   let createBlogUseCase: CreateBlogUseCase;

@@ -4,7 +4,7 @@ import {
   IUserModel,
   User,
   UserDocument
-} from '../../users/application/entities/user.entity';
+} from '../../users/domain/entities/user.entity';
 import { DbId } from '../../global-types/global.types';
 import { OutputUserMeDto } from '../api/dto/output.user.me.dto';
 

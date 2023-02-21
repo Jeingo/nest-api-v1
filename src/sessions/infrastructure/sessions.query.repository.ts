@@ -5,7 +5,7 @@ import {
   ISessionModel,
   Session,
   SessionDocument
-} from '../application/entities/session.entity';
+} from '../domain/entities/session.entity';
 
 @Injectable()
 export class SessionsQueryRepository {

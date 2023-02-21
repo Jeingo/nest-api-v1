@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 import { LikeStatus } from '../../../global-types/global.types';
 import { getUpdatedLike } from '../../../helper/query/post.like.repository.helper';
-import { CommentLikeDocument } from '../../../comment-likes/application/entities/comment.like.entity';
+import { CommentLikeDocument } from '../../../comment-likes/domain/entities/comment.like.entity';
 import { CurrentUserType } from '../../../auth/api/types/current.user.type';
 
 export type CommentDocument = HydratedDocument<Comment>;

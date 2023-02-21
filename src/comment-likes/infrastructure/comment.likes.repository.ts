@@ -5,7 +5,7 @@ import {
   CommentLike,
   CommentLikeDocument,
   ICommentLikeModel
-} from '../application/entities/comment.like.entity';
+} from '../domain/entities/comment.like.entity';
 
 @Injectable()
 export class CommentLikesRepository {

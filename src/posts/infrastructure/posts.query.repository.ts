@@ -1,10 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {
-  IPostModel,
-  Post,
-  PostDocument
-} from '../application/entities/post.entity';
+import { IPostModel, Post, PostDocument } from '../domain/entities/post.entity';
 import {
   DbId,
   Direction,
@@ -19,12 +15,12 @@ import {
   makeDirectionToNumber
 } from '../../helper/query/query.repository.helper';
 import { CurrentUserType } from '../../auth/api/types/current.user.type';
-import { Blog, IBlogModel } from '../../blogs/application/entities/blog.entity';
+import { Blog, IBlogModel } from '../../blogs/domain/entities/blog.entity';
 import {
   IPostLikeModel,
   PostLike,
   PostLikeDocument
-} from '../../post-likes/application/entities/post.like.entity';
+} from '../../post-likes/domain/entities/post.like.entity';
 
 @Injectable()
 export class PostsQueryRepository {

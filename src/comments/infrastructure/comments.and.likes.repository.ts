@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Comment, ICommentModel } from '../application/entities/comment.entity';
+import { Comment, ICommentModel } from '../domain/entities/comment.entity';
 import {
   CommentLike,
   ICommentLikeModel
-} from '../../comment-likes/application/entities/comment.like.entity';
+} from '../../comment-likes/domain/entities/comment.like.entity';
 import { DbId, LikeStatus } from '../../global-types/global.types';
 import { CommentsAndLikesRepositoryType } from './types/comments.and.likes.repository.type';
 import { CurrentUserType } from '../../auth/api/types/current.user.type';

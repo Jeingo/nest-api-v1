@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {
-  IPostModel,
-  Post,
-  PostDocument
-} from '../application/entities/post.entity';
+import { IPostModel, Post, PostDocument } from '../domain/entities/post.entity';
 import { DbId } from '../../global-types/global.types';
 
 @Injectable()

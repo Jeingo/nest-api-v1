@@ -9,8 +9,8 @@ import { CommentLikesRepository } from '../../../../comment-likes/infrastructure
 import { PostLikesRepository } from '../../../../post-likes/infrastructure/post.likes.repository';
 import { SessionsRepository } from '../../../../sessions/infrastructure/sessions.repository';
 import { NotFoundException } from '@nestjs/common';
-import { CommentLikeDocument } from '../../../../comment-likes/application/entities/comment.like.entity';
-import { PostLikeDocument } from '../../../../post-likes/application/entities/post.like.entity';
+import { CommentLikeDocument } from '../../../../comment-likes/domain/entities/comment.like.entity';
+import { PostLikeDocument } from '../../../../post-likes/domain/entities/post.like.entity';
 import { Types } from 'mongoose';
 
 export class BanUserCommand {
