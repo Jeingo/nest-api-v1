@@ -25,6 +25,7 @@ import {
   correctUser,
   correctUser1
 } from '../../stubs/users.stub';
+import { correctComment } from '../../stubs/comments.stub';
 
 describe('BloggerBlogsController (e2e)', () => {
   let configuredNesApp: INestApplication;
@@ -425,40 +426,56 @@ describe('BloggerBlogsController (e2e)', () => {
       await request(app).get('/posts').expect(HttpStatus.OK).expect(emptyPosts);
     });
   });
-  // describe(`9 GET ${bloggerBlogsPath}/comments:`, () => {
-  //   it(`9.1 GET ${bloggerBlogsPath}/comments: should return 401 without authorization`, async () => {
-  //     await request(app)
-  //       .get(bloggerBlogsPath + '/comments')
-  //       .expect(HttpStatus.UNAUTHORIZED);
-  //   });
-  //   it(`9.2 GET ${bloggerBlogsPath}/comments: should return 200 and comments`, async () => {
-  //     const response = await request(app)
-  //       .get(bloggerBlogsPath + '/comments')
-  //       .set('Authorization', 'Bearer ' + createdToken.accessToken)
-  //       .expect(HttpStatus.OK);
-  //     expect(response.body).toEqual({
-  //       pagesCount: 1,
-  //       page: 1,
-  //       pageSize: 10,
-  //       totalCount: 1,
-  //       items: [
-  //         {
-  //           id: expect.any(String),
-  //           content: 'string',
-  //           commentatorInfo: {
-  //             userId: 'string',
-  //             userLogin: 'string'
-  //           },
-  //           createdAt: expect.any(String),
-  //           postInfo: {
-  //             id: expect.any(String),
-  //             title: 'string',
-  //             blogId: 'string',
-  //             blogName: 'string'
-  //           }
-  //         }
-  //       ]
-  //     });
-  //   });
-  // });
+  describe(`9 GET ${bloggerBlogsPath}/comments:`, () => {
+    it(`9.1 GET ${bloggerBlogsPath}/comments: should return 401 without authorization`, async () => {
+      await request(app)
+        .get(bloggerBlogsPath + '/comments')
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+    it(`9.2 GET ${bloggerBlogsPath}/comments: should return 200 and comments`, async () => {
+      const responseBlog = await request(app)
+        .post(bloggerBlogsPath + '/' + createdBlog2.id + '/posts')
+        .set('Authorization', 'Bearer ' + createdToken.accessToken)
+        .send(correctPostById)
+        .expect(HttpStatus.CREATED);
+      createdPost = responseBlog.body;
+      await request(app)
+        .post('/posts' + '/' + createdPost.id + '/comments')
+        .set('Authorization', 'Bearer ' + createdToken.accessToken)
+        .send(correctComment)
+        .expect(HttpStatus.CREATED);
+      const response = await request(app)
+        .get(bloggerBlogsPath + '/comments')
+        .set('Authorization', 'Bearer ' + createdToken.accessToken)
+        .expect(HttpStatus.OK);
+      expect(response.body).toEqual({
+        pagesCount: 1,
+        page: 1,
+        pageSize: 10,
+        totalCount: 1,
+        items: [
+          {
+            id: expect.any(String),
+            content: correctComment.content,
+            commentatorInfo: {
+              userId: expect.any(String),
+              userLogin: correctUser.login
+            },
+            createdAt: expect.any(String),
+            postInfo: {
+              id: expect.any(String),
+              title: correctPostById.title,
+              blogId: expect.any(String),
+              blogName: createdBlog2.name
+            },
+            likesInfo: {
+              likesCount: 0,
+              dislikesCount: 0,
+              myStatus: 'None'
+            }
+          }
+        ]
+      });
+    });
+  });
 });
