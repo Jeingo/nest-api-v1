@@ -15,9 +15,8 @@ export class ResendEmailConfirmationUseCase {
   ) {}
 
   async execute(command: ResendEmailConfirmationCommand): Promise<boolean> {
-    const user = await this.usersRepository.getByUniqueField(
-      command.emailDto.email
-    );
+    const email = command.emailDto.email;
+    const user = await this.usersRepository.getByUniqueField(email);
     user.updateConfirmationCode();
     await this.usersRepository.save(user);
     await this.emailManager.sendRegistrationEmailConfirmation(user);

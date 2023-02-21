@@ -11,9 +11,8 @@ export class ConfirmEmailUseCase {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async execute(command: ConfirmEmailCommand): Promise<boolean> {
-    const user = await this.usersRepository.getByUniqueField(
-      command.confirmationCodeDto.code
-    );
+    const code = command.confirmationCodeDto.code;
+    const user = await this.usersRepository.getByUniqueField(code);
     user.updateEmailConfirmationStatus();
     await this.usersRepository.save(user);
     return true;

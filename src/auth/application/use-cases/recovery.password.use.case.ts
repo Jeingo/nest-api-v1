@@ -15,9 +15,8 @@ export class RecoveryPasswordUseCase {
   ) {}
 
   async execute(command: RecoveryPasswordCommand): Promise<boolean> {
-    const user = await this.usersRepository.getByUniqueField(
-      command.recoveryEmailDto.email
-    );
+    const email = command.recoveryEmailDto.email;
+    const user = await this.usersRepository.getByUniqueField(email);
     if (!user) return false;
     user.updatePasswordRecoveryConfirmationCode();
     await this.usersRepository.save(user);
