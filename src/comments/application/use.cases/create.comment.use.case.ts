@@ -25,19 +25,20 @@ export class CreateCommentUseCase {
   ) {}
 
   async execute(command: CreateCommentCommand): Promise<DbId> {
-    const post = await this.postsRepository.getById(command.postId);
+    const { content } = command.createCommentDto;
+    const { userId, login } = command.user;
+    const postId = command.postId;
+    const post = await this.postsRepository.getById(postId);
     if (!post) throw new NotFoundException();
-    const user = await this.usersRepository.getById(
-      new Types.ObjectId(command.user.userId)
-    );
+    const user = await this.usersRepository.getById(new Types.ObjectId(userId));
     if (user.checkBanStatusForBlog(post.blogId)) {
       throw new ForbiddenException();
     }
     const createdComment = this.commentRepository.create(
-      command.createCommentDto.content,
-      command.user.userId,
-      command.user.login,
-      command.postId.toString(),
+      content,
+      userId,
+      login,
+      postId.toString(),
       post.postOwnerInfo.userId
     );
     await this.commentRepository.save(createdComment);

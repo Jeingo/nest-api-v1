@@ -10,7 +10,8 @@ export class RemoveSessionUseCase {
   constructor(private readonly sessionsRepository: SessionsRepository) {}
 
   async execute(command: RemoveSessionCommand): Promise<boolean> {
-    const issueAt = new Date(command.iat * 1000).toISOString();
+    const iat = command.iat;
+    const issueAt = new Date(iat * 1000).toISOString();
     return await this.sessionsRepository.deleteSession(issueAt);
   }
 }

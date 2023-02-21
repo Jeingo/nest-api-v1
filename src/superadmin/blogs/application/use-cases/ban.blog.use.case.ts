@@ -17,15 +17,15 @@ export class BanBlogUseCase {
   ) {}
 
   async execute(command: BanBlogCommand): Promise<boolean> {
-    const blog = await this.blogsRepository.getById(command.blogId);
+    const blogId = command.blogId;
+    const { isBanned } = command.banBlogDto;
+    const blog = await this.blogsRepository.getById(blogId);
     if (!blog) throw new NotFoundException();
 
-    const posts = await this.postsRepository.getByBlogId(
-      command.blogId.toString()
-    );
+    const posts = await this.postsRepository.getByBlogId(blogId.toString());
 
-    blog.banBlog(command.banBlogDto.isBanned);
-    posts.map((doc) => doc.banFromBlog(command.banBlogDto.isBanned));
+    blog.banBlog(isBanned);
+    posts.map((doc) => doc.banFromBlog(isBanned));
 
     await this.blogsRepository.save(blog);
     posts.map(async (doc) => await this.postsRepository.save(doc));

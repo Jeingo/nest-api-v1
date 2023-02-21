@@ -23,17 +23,19 @@ export class CreatePostInBlogUseCase {
 
   async execute(command: CreatePostInBlogCommand): Promise<DbId> {
     const { title, shortDescription, content } = command.createPostDto;
-    const foundBlog = await this.blogsRepository.getById(command.blogId);
+    const blogId = command.blogId;
+    const { userId } = command.user;
+    const foundBlog = await this.blogsRepository.getById(blogId);
     if (!foundBlog) throw new NotFoundException();
-    if (foundBlog.blogOwnerInfo.userId !== command.user.userId)
+    if (foundBlog.blogOwnerInfo.userId !== userId)
       throw new ForbiddenException();
     const createdPost = this.postsRepository.create(
       title,
       shortDescription,
       content,
-      command.blogId.toString(),
+      blogId.toString(),
       foundBlog.name,
-      command.user.userId
+      userId
     );
     await this.postsRepository.save(createdPost);
     return createdPost._id;

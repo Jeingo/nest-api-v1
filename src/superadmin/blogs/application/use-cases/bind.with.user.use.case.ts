@@ -17,13 +17,15 @@ export class BindWithUserUseCase {
   ) {}
 
   async execute(command: BindWithUserCommand): Promise<boolean> {
-    const blog = await this.blogsRepository.getById(command.blogId);
-    const user = await this.usersRepository.getById(command.userId);
+    const blogId = command.blogId;
+    const userId = command.userId;
+    const blog = await this.blogsRepository.getById(blogId);
+    const user = await this.usersRepository.getById(userId);
     if (!blog || !user)
       throw new BadRequestException(['blogId is not correct']);
     if (blog.blogOwnerInfo.userId !== null)
       throw new BadRequestException(['blogId is not correct']);
-    blog.blogOwnerInfo.userId = command.userId.toString();
+    blog.blogOwnerInfo.userId = userId.toString();
     await this.blogsRepository.save(blog);
     return true;
   }

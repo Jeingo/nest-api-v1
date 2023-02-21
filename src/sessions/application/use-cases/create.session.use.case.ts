@@ -22,7 +22,10 @@ export class CreateSessionUseCase {
   ) {}
 
   async execute(command: CreateSessionCommand): Promise<DbId> {
-    const result = this.jwtService.verify(command.refreshToken, {
+    const refreshToken = command.refreshToken;
+    const ip = command.ip;
+    const deviceName = command.deviceName;
+    const result = this.jwtService.verify(refreshToken, {
       secret: this.configService.get('JWT_REFRESH_SECRET')
     });
     const issueAt = new Date(result.iat * 1000).toISOString();
@@ -33,8 +36,8 @@ export class CreateSessionUseCase {
     const session = this.sessionsRepository.create(
       issueAt,
       deviceId,
-      command.deviceName,
-      command.ip,
+      deviceName,
+      ip,
       userId,
       expireAt
     );

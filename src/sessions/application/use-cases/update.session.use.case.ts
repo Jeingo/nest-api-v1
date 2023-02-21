@@ -17,7 +17,8 @@ export class UpdateSessionUseCase {
   ) {}
 
   async execute(command: UpdateSessionCommand): Promise<boolean> {
-    const result = this.jwtService.verify(command.refreshToken, {
+    const refreshToken = command.refreshToken;
+    const result = this.jwtService.verify(refreshToken, {
       secret: this.configService.get('JWT_REFRESH_SECRET')
     });
     const issueAt = new Date(result.iat * 1000).toISOString();

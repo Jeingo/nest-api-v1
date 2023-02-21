@@ -19,10 +19,11 @@ export class UpdateBlogUseCase {
 
   async execute(command: UpdateBlogCommand): Promise<boolean> {
     const { name, description, websiteUrl } = command.updateBlogDto;
-    const blog = await this.blogsRepository.getById(command.id);
+    const blogId = command.id;
+    const { userId } = command.user;
+    const blog = await this.blogsRepository.getById(blogId);
     if (!blog) throw new NotFoundException();
-    if (blog.blogOwnerInfo.userId !== command.user.userId)
-      throw new ForbiddenException();
+    if (blog.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     blog.update(name, description, websiteUrl);
     await this.blogsRepository.save(blog);
     return true;

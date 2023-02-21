@@ -13,11 +13,12 @@ export class RemoveBlogUseCase {
   constructor(private readonly blogsRepository: BlogsRepository) {}
 
   async execute(command: RemoveBlogCommand): Promise<boolean> {
-    const blog = await this.blogsRepository.getById(command.id);
+    const { userId } = command.user;
+    const blogId = command.id;
+    const blog = await this.blogsRepository.getById(blogId);
     if (!blog) throw new NotFoundException();
-    if (blog.blogOwnerInfo.userId !== command.user.userId)
-      throw new ForbiddenException();
-    await this.blogsRepository.delete(command.id);
+    if (blog.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
+    await this.blogsRepository.delete(blogId);
     return true;
   }
 }

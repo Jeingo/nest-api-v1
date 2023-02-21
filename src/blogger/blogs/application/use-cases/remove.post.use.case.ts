@@ -21,15 +21,18 @@ export class RemovePostUseCase {
   ) {}
 
   async execute(command: RemovePostCommand): Promise<boolean> {
-    const blog = await this.blogsRepository.getById(command.blogId);
-    const post = await this.postsRepository.getById(command.id);
+    const { userId } = command.user;
+    const blogId = command.blogId;
+    const postId = command.id;
+    const blog = await this.blogsRepository.getById(blogId);
+    const post = await this.postsRepository.getById(postId);
     if (!post || !blog) throw new NotFoundException();
     if (
-      blog.blogOwnerInfo.userId !== command.user.userId ||
-      post.postOwnerInfo.userId !== command.user.userId
+      blog.blogOwnerInfo.userId !== userId ||
+      post.postOwnerInfo.userId !== userId
     )
       throw new ForbiddenException();
-    await this.postsRepository.delete(command.id);
+    await this.postsRepository.delete(postId);
     return true;
   }
 }

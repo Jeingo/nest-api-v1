@@ -23,26 +23,31 @@ export class UpdateStatusLikeInPostUseCase {
   ) {}
 
   async execute(command: UpdateStatusLikeInPostCommand): Promise<boolean> {
+    const postId = command.postId;
+    const userId = command.userId;
+    const login = command.login;
+    const newLikeStatus = command.newLikeStatus;
+
     let lastLikeStatus: LikeStatus = LikeStatus.None;
 
-    const post = await this.postsRepository.getById(command.postId);
+    const post = await this.postsRepository.getById(postId);
     if (!post) throw new NotFoundException();
     let like = await this.postLikesRepository.getByUserIdAndPostId(
-      command.userId,
-      command.postId.toString()
+      userId,
+      postId.toString()
     );
     if (!like) {
       like = this.postLikesRepository.create(
-        command.userId,
-        command.postId.toString(),
-        command.newLikeStatus,
-        command.login
+        userId,
+        postId.toString(),
+        newLikeStatus,
+        login
       );
     } else {
       lastLikeStatus = like.myStatus;
-      like.update(command.newLikeStatus);
+      like.update(newLikeStatus);
     }
-    post.updateLike(lastLikeStatus, command.newLikeStatus);
+    post.updateLike(lastLikeStatus, newLikeStatus);
 
     await this.postLikesRepository.save(like);
     await this.postsRepository.save(post);

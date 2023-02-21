@@ -11,9 +11,11 @@ export class RemoveSessionByDeviceIdUseCase {
   constructor(private readonly sessionsRepository: SessionsRepository) {}
 
   async execute(command: RemoveSessionByDeviceIdCommand): Promise<boolean> {
-    const session = await this.sessionsRepository.get(command.id);
+    const sessionId = command.id;
+    const userId = command.userId;
+    const session = await this.sessionsRepository.get(sessionId);
     if (!session) throw new NotFoundException();
-    if (session.userId !== command.userId) throw new ForbiddenException();
+    if (session.userId !== userId) throw new ForbiddenException();
     return await this.sessionsRepository.deleteSession(session.issueAt);
   }
 }

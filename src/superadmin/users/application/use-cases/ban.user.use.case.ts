@@ -31,20 +31,21 @@ export class BanUserUseCase {
 
   async execute(command: BanUserCommand): Promise<boolean> {
     const { isBanned, banReason } = command.banUserDto;
+    const userId = command.id;
 
-    const user = await this.usersRepository.getById(command.id);
+    const user = await this.usersRepository.getById(userId);
     if (!user) throw new NotFoundException();
 
-    const blogs = await this.blogsRepository.getByUserId(command.id.toString());
-    const posts = await this.postsRepository.getByUserId(command.id.toString());
+    const blogs = await this.blogsRepository.getByUserId(userId.toString());
+    const posts = await this.postsRepository.getByUserId(userId.toString());
     const comments = await this.commentsRepository.getByUserId(
-      command.id.toString()
+      userId.toString()
     );
     const commentLikes = await this.commentLikesRepository.getByUserId(
-      command.id.toString()
+      userId.toString()
     );
     const postLikes = await this.postLikesRepository.getByUserId(
-      command.id.toString()
+      userId.toString()
     );
 
     user.ban(isBanned, banReason);
@@ -66,7 +67,7 @@ export class BanUserUseCase {
     );
     postLikes.map(async (doc) => await this.postLikesRepository.save(doc));
 
-    await this.sessionsRepository.deleteByUserId(command.id.toString());
+    await this.sessionsRepository.deleteByUserId(userId.toString());
 
     return true;
   }

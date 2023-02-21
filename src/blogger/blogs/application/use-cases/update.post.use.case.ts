@@ -23,22 +23,19 @@ export class UpdatePostUseCase {
   ) {}
 
   async execute(command: UpdatePostCommand): Promise<boolean> {
+    const { userId } = command.user;
     const { title, shortDescription, content } = command.updatePostDto;
-    const blog = await this.blogsRepository.getById(command.blogId);
-    const post = await this.postsRepository.getById(command.id);
+    const blogId = command.blogId;
+    const postId = command.id;
+    const blog = await this.blogsRepository.getById(blogId);
+    const post = await this.postsRepository.getById(postId);
     if (!post || !blog) throw new NotFoundException();
     if (
-      blog.blogOwnerInfo.userId !== command.user.userId ||
-      post.postOwnerInfo.userId !== command.user.userId
+      blog.blogOwnerInfo.userId !== userId ||
+      post.postOwnerInfo.userId !== userId
     )
       throw new ForbiddenException();
-    post.update(
-      title,
-      shortDescription,
-      content,
-      command.blogId.toString(),
-      blog.name
-    );
+    post.update(title, shortDescription, content, blogId.toString(), blog.name);
     await this.postsRepository.save(post);
     return true;
   }

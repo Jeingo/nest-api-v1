@@ -22,22 +22,25 @@ export class UpdateLikeStatusInCommentUseCase {
   ) {}
 
   async execute(command: UpdateLikeStatusInCommentCommand): Promise<boolean> {
+    const user = command.user;
+    const commentId = command.commentId;
+    const newLikeStatus = command.newLikeStatus;
     //todo to ask
     const commentForLikeUpdate = await this.commentsAndLikesRepository.get(
-      command.commentId,
-      command.user.userId
+      commentId,
+      user.userId
     );
 
     commentForLikeUpdate.commentDocument.updateLikeNew(
-      command.user,
-      command.newLikeStatus,
+      user,
+      newLikeStatus,
       commentForLikeUpdate.commentLikeDocument
     );
 
     await this.commentsAndLikesRepository.save(
       commentForLikeUpdate,
-      command.user,
-      command.newLikeStatus
+      user,
+      newLikeStatus
     );
 
     return true;

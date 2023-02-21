@@ -13,11 +13,13 @@ export class RemoveCommentUseCase {
   constructor(private readonly commentRepository: CommentsRepository) {}
 
   async execute(command: RemoveCommentCommand): Promise<boolean> {
-    const comment = await this.commentRepository.getById(command.id);
+    const commentId = command.id;
+    const { userId } = command.user;
+    const comment = await this.commentRepository.getById(commentId);
     if (!comment) throw new NotFoundException();
-    if (comment.commentatorInfo.userId !== command.user.userId)
+    if (comment.commentatorInfo.userId !== userId)
       throw new ForbiddenException();
-    await this.commentRepository.delete(command.id);
+    await this.commentRepository.delete(commentId);
     return true;
   }
 }
