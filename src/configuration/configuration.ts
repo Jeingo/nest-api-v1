@@ -8,7 +8,7 @@ export default (): IConfigType => ({
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
   EXPIRE_JWT: process.env.EXPIRE_JWT,
   EXPIRE_REFRESH_JWT: process.env.EXPIRE_REFRESH_JWT,
-  SECURE_COOKIE_MODE: process.env.SECURE_COOKIE_MODE,
+  secureCookieMode: process.env.SECURE_COOKIE_MODE == 'true',
   EMAIL_LOGIN: process.env.EMAIL_LOGIN,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
   throttleLimit: parseInt(process.env.THROTTLE_LIMIT, 10),
@@ -25,7 +25,7 @@ export type IConfigType = {
   JWT_REFRESH_SECRET: string;
   EXPIRE_JWT: string;
   EXPIRE_REFRESH_JWT: string;
-  SECURE_COOKIE_MODE: string;
+  secureCookieMode: boolean;
   EMAIL_LOGIN: string;
   EMAIL_PASSWORD: string;
   throttleLimit: number;

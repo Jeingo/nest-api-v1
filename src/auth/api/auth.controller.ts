@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Ip,
   Post,
-  UnauthorizedException,
   Headers,
   Res,
   Get,
@@ -35,7 +34,7 @@ import { ConfirmEmailCommand } from '../application/use-cases/confirm.email.use.
 import { ValidateUserInLoginCommand } from '../application/use-cases/validate.user.in.login.use.case';
 import { CookieGuard } from '../infrastructure/guards/cookie.guard';
 import { RefreshTokenPayloadType } from '../../adapters/jwt/types/jwt.type';
-import { PayloadFromRefreshToke } from '../../helper/get-decorators/payload.decorator';
+import { PayloadFromRefreshToken } from '../../helper/get-decorators/payload.decorator';
 import { ResendEmailConfirmationCommand } from '../application/use-cases/resend.email.confirmation.use.case';
 import { RecoveryPasswordCommand } from '../application/use-cases/recovery.password.use.case';
 import { SetNewPasswordCommand } from '../application/use-cases/set.new.password.use.case';
@@ -66,10 +65,7 @@ export class AuthController {
     const userId = await this.commandBus.execute(
       new ValidateUserInLoginCommand(loginUserDto)
     );
-    if (!userId) {
-      response.clearCookie('refreshToken');
-      throw new UnauthorizedException();
-    }
+
     const { accessToken, refreshToken } = await this.jwtAdapter.getTokens(
       userId.toString(),
       v4()
@@ -78,7 +74,7 @@ export class AuthController {
     await this.commandBus.execute(
       new CreateSessionCommand(refreshToken, ip, deviceName)
     );
-    const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == 'true';
+    const cookieMode = this.configService.get('secureCookieMode');
     await response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: cookieMode
@@ -90,7 +86,7 @@ export class AuthController {
   @UseGuards(CookieGuard)
   @Post('refresh-token')
   async refreshToken(
-    @PayloadFromRefreshToke() payload: RefreshTokenPayloadType,
+    @PayloadFromRefreshToken() payload: RefreshTokenPayloadType,
     @Res({ passthrough: true }) response: Response
   ): Promise<OutputAccessTokenDto> {
     const { accessToken, refreshToken } = await this.jwtAdapter.getTokens(
@@ -98,7 +94,7 @@ export class AuthController {
       payload.deviceId
     );
     await this.commandBus.execute(new UpdateSessionCommand(refreshToken));
-    const cookieMode = this.configService.get('SECURE_COOKIE_MODE') == 'true';
+    const cookieMode = this.configService.get('secureCookieMode');
     await response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: cookieMode
@@ -110,7 +106,7 @@ export class AuthController {
   @UseGuards(CookieGuard)
   @Post('logout')
   async logout(
-    @PayloadFromRefreshToke() payload: RefreshTokenPayloadType,
+    @PayloadFromRefreshToken() payload: RefreshTokenPayloadType,
     @Res({ passthrough: true }) response: Response
   ) {
     await this.commandBus.execute(new RemoveSessionCommand(payload.iat));
