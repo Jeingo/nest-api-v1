@@ -167,3 +167,16 @@ export const errorsMessageForBadBan = {
     }
   ]
 };
+
+export const errorsMessageForBloggerBanUser = {
+  errorsMessages: [
+    {
+      message: 'should not be empty',
+      field: 'banReason'
+    },
+    {
+      message: 'should not be empty',
+      field: 'blogId'
+    }
+  ]
+};
