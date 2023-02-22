@@ -180,3 +180,12 @@ export const errorsMessageForBloggerBanUser = {
     }
   ]
 };
+
+export const errorsMessageForBanBlog = {
+  errorsMessages: [
+    {
+      message: 'should not be empty',
+      field: 'isBanned'
+    }
+  ]
+};
