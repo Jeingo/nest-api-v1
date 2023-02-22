@@ -94,6 +94,7 @@ import { BloggerUsersController } from './blogger/users/api/blogger.users.contro
 import { BloggerUsersQueryRepository } from './blogger/users/infrastructure/blogger.users.query.repository';
 import { BloggerBanUserUseCase } from './blogger/users/application/use-cases/blogger.ban.user.user.case';
 import { BanBlogUseCase } from './superadmin/blogs/application/use-cases/ban.blog.use.case';
+import { BloggerPostsQueryRepository } from './blogger/blogs/infrastructure/blogger.posts.query.repository';
 
 const useCases = [
   RegistrationUserUseCase,
@@ -154,7 +155,8 @@ const queryRepositories = [
   SuperAdminUsersQueryRepository,
   SuperAdminBlogsQueryRepository,
   BloggerCommentsQueryRepository,
-  BloggerUsersQueryRepository
+  BloggerUsersQueryRepository,
+  BloggerPostsQueryRepository
 ];
 const decorators = [
   IsBlogIdConstraint,

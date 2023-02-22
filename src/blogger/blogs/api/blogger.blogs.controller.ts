@@ -31,23 +31,23 @@ import { RemoveBlogCommand } from '../application/use-cases/remove.blog.use.case
 import { InputCreatePostInBlogsDto } from './dto/input.create.post.dto';
 import { OutputPostDto } from '../../../posts/api/dto/output.post.dto';
 import { CreatePostInBlogCommand } from '../application/use-cases/create.post.in.blog.use.case';
-import { PostsQueryRepository } from '../../../posts/infrastructure/posts.query.repository';
 import { UpdatePostCommand } from '../application/use-cases/update.post.use.case';
 import { InputUpdatePostDto } from './dto/input.update.post.dto';
 import { RemovePostCommand } from '../application/use-cases/remove.post.use.case';
 import { QueryComments } from '../../../comments/api/types/query.comments.type';
 import { BloggerCommentsQueryRepository } from '../infrastructure/blogger.comments.query.repository';
+import { BloggerPostsQueryRepository } from '../infrastructure/blogger.posts.query.repository';
 
+@UseGuards(JwtAuthGuard)
 @Controller('blogger/blogs')
 export class BloggerBlogsController {
   constructor(
     private readonly bloggerBlogsQueryRepository: BloggerBlogsQueryRepository,
-    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly bloggerPostsQueryRepository: BloggerPostsQueryRepository,
     private readonly bloggerCommentsQueryRepository: BloggerCommentsQueryRepository,
     private readonly commandBus: CommandBus
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(
@@ -60,7 +60,6 @@ export class BloggerBlogsController {
     return await this.bloggerBlogsQueryRepository.getById(createdBlogId);
   }
 
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get()
   async findAll(
@@ -70,7 +69,6 @@ export class BloggerBlogsController {
     return await this.bloggerBlogsQueryRepository.getAllForBlogger(query, user);
   }
 
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(
@@ -84,7 +82,6 @@ export class BloggerBlogsController {
     return;
   }
 
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(
@@ -95,7 +92,6 @@ export class BloggerBlogsController {
     return;
   }
 
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post(':blogId/posts')
   async createPost(
@@ -106,10 +102,9 @@ export class BloggerBlogsController {
     const createdPostId = await this.commandBus.execute(
       new CreatePostInBlogCommand(createPostDto, blogId, user)
     );
-    return await this.postsQueryRepository.getById(createdPostId);
+    return await this.bloggerPostsQueryRepository.getById(createdPostId);
   }
 
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':blogId/posts/:id')
   async updatePost(
@@ -124,7 +119,6 @@ export class BloggerBlogsController {
     return;
   }
 
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':blogId/posts/:id')
   async removePost(
@@ -136,7 +130,6 @@ export class BloggerBlogsController {
     return;
   }
 
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get('comments')
   async findAllComments(
