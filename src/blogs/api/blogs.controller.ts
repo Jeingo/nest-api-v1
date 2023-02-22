@@ -16,8 +16,11 @@ import { OutputPostDto } from '../../posts/api/dto/output.post.dto';
 import { GetUserGuard } from '../../auth/infrastructure/guards/get.user.guard';
 import { CheckIdAndParseToDBId } from '../../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../../helper/get-decorators/current.user.decorator';
-import { CurrentUserType } from '../../auth/api/types/current.user.type';
-import { DbId, PaginatedType } from '../../global-types/global.types';
+import {
+  CurrentUserType,
+  DbId,
+  PaginatedType
+} from '../../global-types/global.types';
 
 @Controller('blogs')
 export class BlogsController {

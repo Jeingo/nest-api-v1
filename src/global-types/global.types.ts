@@ -25,3 +25,8 @@ export class PaginatedType<T> {
   totalCount: number;
   items: T[];
 }
+
+export type CurrentUserType = {
+  userId: string;
+  login: string;
+};

@@ -11,7 +11,11 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/infrastructure/guards/jwt.auth.guard';
 import { CheckIdAndParseToDBId } from '../../../helper/pipes/check.id.validator.pipe';
-import { DbId, PaginatedType } from '../../../global-types/global.types';
+import {
+  CurrentUserType,
+  DbId,
+  PaginatedType
+} from '../../../global-types/global.types';
 import { OutputBloggerUserDto } from './dto/output.blogger.user.dto';
 import { BloggerUsersQueryRepository } from '../infrastructure/blogger.users.query.repository';
 import { QueryBannedUsers } from './types/query.banned.users.type';
@@ -19,7 +23,6 @@ import { InputBloggerUserBanDto } from './dto/input.blogger.user.ban.dto';
 import { BloggerBanUserCommand } from '../application/use-cases/blogger.ban.user.user.case';
 import { CommandBus } from '@nestjs/cqrs';
 import { CurrentUser } from '../../../helper/get-decorators/current.user.decorator';
-import { CurrentUserType } from '../../../auth/api/types/current.user.type';
 
 @Controller('blogger/users')
 export class BloggerUsersController {

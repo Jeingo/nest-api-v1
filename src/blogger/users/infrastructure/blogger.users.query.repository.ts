@@ -4,6 +4,7 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import {
+  CurrentUserType,
   DbId,
   Direction,
   PaginatedType
@@ -22,7 +23,6 @@ import {
   UserDocument
 } from '../../../users/domain/entities/user.entity';
 import { Blog, IBlogModel } from '../../../blogs/domain/entities/blog.entity';
-import { CurrentUserType } from '../../../auth/api/types/current.user.type';
 
 @Injectable()
 export class BloggerUsersQueryRepository {

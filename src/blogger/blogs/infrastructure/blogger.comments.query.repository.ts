@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CurrentUserType } from '../../../auth/api/types/current.user.type';
 import {
+  CurrentUserType,
   Direction,
   LikeStatus,
   PaginatedType

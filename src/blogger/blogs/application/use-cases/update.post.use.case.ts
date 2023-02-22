@@ -1,9 +1,8 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { DbId } from '../../../../global-types/global.types';
+import { CurrentUserType, DbId } from '../../../../global-types/global.types';
 import { PostsRepository } from '../../../../posts/infrastructure/posts.repository';
 import { BlogsRepository } from '../../../../blogs/infrastructure/blogs.repository';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { CurrentUserType } from '../../../../auth/api/types/current.user.type';
 import { InputUpdatePostDto } from '../../api/dto/input.update.post.dto';
 
 export class UpdatePostCommand {

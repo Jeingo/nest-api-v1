@@ -5,9 +5,12 @@ import {
   CommentLike,
   ICommentLikeModel
 } from '../../comment-likes/domain/entities/comment.like.entity';
-import { DbId, LikeStatus } from '../../global-types/global.types';
+import {
+  CurrentUserType,
+  DbId,
+  LikeStatus
+} from '../../global-types/global.types';
 import { CommentsAndLikesRepositoryType } from './types/comments.and.likes.repository.type';
-import { CurrentUserType } from '../../auth/api/types/current.user.type';
 
 @Injectable()
 export class CommentsAndLikesRepository {

@@ -21,8 +21,11 @@ import { InputCreateCommentDto } from '../../comments/api/dto/input.create.comme
 import { InputUpdatePostLikeDto } from './dto/input.update.post.like.dto';
 import { CheckIdAndParseToDBId } from '../../helper/pipes/check.id.validator.pipe';
 import { CurrentUser } from '../../helper/get-decorators/current.user.decorator';
-import { CurrentUserType } from '../../auth/api/types/current.user.type';
-import { DbId, PaginatedType } from '../../global-types/global.types';
+import {
+  CurrentUserType,
+  DbId,
+  PaginatedType
+} from '../../global-types/global.types';
 import { JwtAuthGuard } from '../../auth/infrastructure/guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../../comments/application/use.cases/create.comment.use.case';

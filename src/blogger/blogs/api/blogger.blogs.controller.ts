@@ -17,11 +17,14 @@ import { OutputBlogDto } from '../../../blogs/api/dto/output.blog.dto';
 import { CreateBlogCommand } from '../application/use-cases/create.blog.use.case';
 import { JwtAuthGuard } from '../../../auth/infrastructure/guards/jwt.auth.guard';
 import { CurrentUser } from '../../../helper/get-decorators/current.user.decorator';
-import { CurrentUserType } from '../../../auth/api/types/current.user.type';
 import { QueryBlogs } from '../../../blogs/api/types/query.blogs.type';
 import { BloggerBlogsQueryRepository } from '../infrastructure/blogger.blogs.query.repository';
 import { CheckIdAndParseToDBId } from '../../../helper/pipes/check.id.validator.pipe';
-import { DbId, PaginatedType } from '../../../global-types/global.types';
+import {
+  CurrentUserType,
+  DbId,
+  PaginatedType
+} from '../../../global-types/global.types';
 import { InputUpdateBlogDto } from './dto/input.update.blog.dto';
 import { UpdateBlogCommand } from '../application/use-cases/update.blog.use.case';
 import { RemoveBlogCommand } from '../application/use-cases/remove.blog.use.case';

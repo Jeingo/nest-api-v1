@@ -1,12 +1,15 @@
 import { BlogsQueryRepository } from '../../../blogs/infrastructure/blogs.query.repository';
 import { Injectable } from '@nestjs/common';
 import { QueryBlogs } from '../../../blogs/api/types/query.blogs.type';
-import { Direction, PaginatedType } from '../../../global-types/global.types';
+import {
+  CurrentUserType,
+  Direction,
+  PaginatedType
+} from '../../../global-types/global.types';
 import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../../../helper/query/query.repository.helper';
-import { CurrentUserType } from '../../../auth/api/types/current.user.type';
 import { OutputBlogDto } from '../../../blogs/api/dto/output.blog.dto';
 
 @Injectable()

@@ -1,8 +1,7 @@
 import { CommandHandler } from '@nestjs/cqrs';
 import { InputCreateBlogDto } from '../../api/dto/input.create.blog.dto';
 import { BlogsRepository } from '../../../../blogs/infrastructure/blogs.repository';
-import { DbId } from '../../../../global-types/global.types';
-import { CurrentUserType } from '../../../../auth/api/types/current.user.type';
+import { CurrentUserType, DbId } from '../../../../global-types/global.types';
 
 export class CreateBlogCommand {
   constructor(

@@ -1,6 +1,9 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { DbId, LikeStatus } from '../../../global-types/global.types';
-import { CurrentUserType } from '../../../auth/api/types/current.user.type';
+import {
+  CurrentUserType,
+  DbId,
+  LikeStatus
+} from '../../../global-types/global.types';
 import { CommentsRepository } from '../../infrastructure/comments.repository';
 import { CommentLikesRepository } from '../../../comment-likes/infrastructure/comment.likes.repository';
 import { CommentsAndLikesRepository } from '../../infrastructure/comments.and.likes.repository';

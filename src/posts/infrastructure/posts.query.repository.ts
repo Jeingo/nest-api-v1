@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IPostModel, Post, PostDocument } from '../domain/entities/post.entity';
 import {
+  CurrentUserType,
   DbId,
   Direction,
   LikeStatus,
@@ -14,7 +15,6 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../../helper/query/query.repository.helper';
-import { CurrentUserType } from '../../auth/api/types/current.user.type';
 import { Blog, IBlogModel } from '../../blogs/domain/entities/blog.entity';
 import {
   IPostLikeModel,

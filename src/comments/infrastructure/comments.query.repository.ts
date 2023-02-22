@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
+  CurrentUserType,
   DbId,
   Direction,
   LikeStatus,
@@ -18,7 +19,6 @@ import {
   getPaginatedType,
   makeDirectionToNumber
 } from '../../helper/query/query.repository.helper';
-import { CurrentUserType } from '../../auth/api/types/current.user.type';
 import { IPostModel, Post } from '../../posts/domain/entities/post.entity';
 import {
   CommentLike,

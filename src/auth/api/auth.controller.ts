@@ -27,7 +27,6 @@ import { InputEmailDto } from './dto/input.email.dto';
 import { InputRecoveryEmailDto } from './dto/input.recovery.email.dto';
 import { InputNewPasswordDto } from './dto/input.newpassword.dto';
 import { CurrentUser } from '../../helper/get-decorators/current.user.decorator';
-import { CurrentUserType } from './types/current.user.type';
 import { Types } from 'mongoose';
 import { JwtAuthGuard } from '../infrastructure/guards/jwt.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
@@ -43,6 +42,7 @@ import { SetNewPasswordCommand } from '../application/use-cases/set.new.password
 import { CreateSessionCommand } from '../../sessions/application/use-cases/create.session.use.case';
 import { UpdateSessionCommand } from '../../sessions/application/use-cases/update.session.use.case';
 import { RemoveSessionCommand } from '../../sessions/application/use-cases/remove.session.use.case';
+import { CurrentUserType } from '../../global-types/global.types';
 
 @Controller('auth')
 export class AuthController {
