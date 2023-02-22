@@ -2,9 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration/configuration';
-import { IConfigType } from './configuration/configuration';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { Blog, BlogSchema } from './blogs/domain/entities/blog.entity';
 import { Post, PostSchema } from './posts/domain/entities/post.entity';
 import { User, UserSchema } from './users/domain/entities/user.entity';
@@ -97,8 +95,6 @@ import { BloggerUsersQueryRepository } from './blogger/users/infrastructure/blog
 import { BloggerBanUserUseCase } from './blogger/users/application/use-cases/blogger.ban.user.user.case';
 import { BanBlogUseCase } from './superadmin/blogs/application/use-cases/ban.blog.use.case';
 
-const configService = new ConfigService<IConfigType>();
-
 const useCases = [
   RegistrationUserUseCase,
   ConfirmEmailUseCase,
@@ -190,9 +186,12 @@ const controllers = [
       load: [configuration],
       isGlobal: true
     }),
-    MongooseModule.forRoot(configService.get('MONGO_URL'), {
-      dbName: configService.get('DB_NAME')
-    }),
+    MongooseModule.forRoot(
+      process.env.MONGO_URL || 'mongodb://127.0.0.1:27017',
+      {
+        dbName: process.env.DB_NAME || 'service'
+      }
+    ),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },
@@ -202,7 +201,10 @@ const controllers = [
       { name: PostLike.name, schema: PostLikeSchema },
       { name: CommentLike.name, schema: CommentLikeSchema }
     ]),
-    ThrottlerModule.forRoot(),
+    ThrottlerModule.forRoot({
+      ttl: parseInt(process.env.THROTTLE_TTL, 10),
+      limit: parseInt(process.env.THROTTLE_LIMIT, 10)
+    }),
     PassportModule,
     CqrsModule
   ],
@@ -214,10 +216,6 @@ const controllers = [
     ...decorators,
     ...strategies,
     ...useCases
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard
-    // }
   ]
 })
 export class AppModule {}

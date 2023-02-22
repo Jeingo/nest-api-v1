@@ -18,7 +18,7 @@ import { OutputAccessTokenDto } from './dto/output.token.dto';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { IConfigType } from '../../configuration/configuration';
-import { Throttle } from '@nestjs/throttler';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 import { OutputUserMeDto } from './dto/output.user.me.dto';
 import { InputRegistrationUserDto } from './dto/input.registration.user.dto';
@@ -44,9 +44,6 @@ import { CreateSessionCommand } from '../../sessions/application/use-cases/creat
 import { UpdateSessionCommand } from '../../sessions/application/use-cases/update.session.use.case';
 import { RemoveSessionCommand } from '../../sessions/application/use-cases/remove.session.use.case';
 
-const limit = 5;
-const ttl = 10;
-
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -56,7 +53,7 @@ export class AuthController {
     private readonly commandBus: CommandBus
   ) {}
 
-  @Throttle(limit, ttl)
+  @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(
@@ -130,7 +127,7 @@ export class AuthController {
     );
   }
 
-  @Throttle(limit, ttl)
+  @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration')
   async registration(@Body() registrationUserDto: InputRegistrationUserDto) {
@@ -140,7 +137,7 @@ export class AuthController {
     return;
   }
 
-  @Throttle(limit, ttl)
+  @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-confirmation')
   async registrationConfirmation(
@@ -150,7 +147,7 @@ export class AuthController {
     return;
   }
 
-  @Throttle(limit, ttl)
+  @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-email-resending')
   async registrationEmailResending(@Body() emailDto: InputEmailDto) {
@@ -158,7 +155,7 @@ export class AuthController {
     return;
   }
 
-  @Throttle(limit, ttl)
+  @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('password-recovery')
   async passwordRecovery(@Body() recoveryEmailDto: InputRecoveryEmailDto) {
@@ -168,7 +165,7 @@ export class AuthController {
     return;
   }
 
-  @Throttle(limit, ttl)
+  @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('new-password')
   async newPassword(@Body() newPasswordDto: InputNewPasswordDto) {

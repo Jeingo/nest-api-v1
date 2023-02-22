@@ -10,11 +10,13 @@ import { useContainer } from 'class-validator';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService<IConfigType>);
-  app.enableCors();
+
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  app.enableCors();
+  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.use(cookieParser());
+
   await app.listen(configService.get('port'));
 }
 bootstrap();

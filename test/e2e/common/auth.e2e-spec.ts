@@ -159,7 +159,7 @@ describe('AuthController (e2e)', () => {
         .expect(HttpStatus.NO_CONTENT);
     });
   });
-  describe.skip('8 POST /auth/login: (429)', () => {
+  describe('8 POST /auth/login: (429)', () => {
     it('8.1 POST /auth/login: should return 429 after 5 request in 10 seconds ', async () => {
       for (let i = 0; i < 5; i++) {
         await request(app).post('/auth/login').send(correctLogin);
