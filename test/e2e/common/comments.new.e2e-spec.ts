@@ -53,7 +53,9 @@ describe('CommentsController new (e2e)', () => {
 
   describe(`1 GET ${CommentsPath}/id:`, () => {
     it(`1.1 should return 404 if comment don't exist`, async () => {
-      await request(app).get(CommentsPath).expect(HttpStatus.NOT_FOUND);
+      await request(app)
+        .get(CommentsPath + '/999')
+        .expect(HttpStatus.NOT_FOUND);
     });
     it(`1.2 should return 200 and comments by id`, async () => {
       const user = createUser();

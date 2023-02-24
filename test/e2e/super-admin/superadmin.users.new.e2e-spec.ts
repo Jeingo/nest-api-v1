@@ -1,12 +1,21 @@
 import { setConfigNestApp } from '../../configuration.test';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { superAdminUsersPath } from '../../helper/paths-to-endpoints/paths';
+import {
+  BlogsPath,
+  CommentsPath,
+  PostsPath,
+  superAdminUsersPath
+} from '../../helper/paths-to-endpoints/paths';
 import {
   superAdminLogin,
   superAdminPassword
 } from '../../helper/auth/basic.auth';
-import { createUser, saveUser } from '../../helper/factories/users.factory';
+import {
+  createUser,
+  loginAndGetPairToken,
+  saveUser
+} from '../../helper/factories/users.factory';
 import { OutputSuperAdminUserDto } from '../../../src/superadmin/users/api/dto/outputSuperAdminUserDto';
 import { PaginatedType } from '../../../src/global-types/global.types';
 import { incorrectUser } from '../../stubs/users.stub';
@@ -15,8 +24,13 @@ import {
   errorsMessageForIncorrectUser
 } from '../../stubs/error.stub';
 import { badBanInfo, banInfo } from '../../stubs/superadmin.stub';
+import { saveBlog } from '../../helper/factories/blogs.factory';
+import { savePost } from '../../helper/factories/posts.factory';
+import { saveComment } from '../../helper/factories/comments.factory';
+import { OutputPostDto } from '../../../src/posts/api/dto/output.post.dto';
+import { OutputBlogDto } from '../../../src/blogs/api/dto/output.blog.dto';
 
-describe('BloggerBlogsController new (e2e)', () => {
+describe('SuperAdminUsersController new (e2e)', () => {
   let configuredNesApp: INestApplication;
   let app: any;
 
@@ -193,6 +207,11 @@ describe('BloggerBlogsController new (e2e)', () => {
     it(`4.3 should return 204 with correct data`, async () => {
       const user = createUser();
       const userId = await saveUser(app, user);
+      const pairToken = await loginAndGetPairToken(app, user);
+      const blogId = await saveBlog(app, pairToken.accessToken);
+      const postId = await savePost(app, pairToken.accessToken, blogId);
+      const commentId = await saveComment(app, pairToken.accessToken, postId);
+
       await request(app)
         .put(superAdminUsersPath + '/' + userId + '/ban')
         .auth(superAdminLogin, superAdminPassword)
@@ -221,6 +240,25 @@ describe('BloggerBlogsController new (e2e)', () => {
           }
         ]
       });
+      const response2 = await request(app).get(PostsPath).expect(HttpStatus.OK);
+      expect(response2.body).toEqual<PaginatedType<OutputPostDto>>({
+        pagesCount: 0,
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+        items: []
+      });
+      const response3 = await request(app).get(BlogsPath).expect(HttpStatus.OK);
+      expect(response3.body).toEqual<PaginatedType<OutputBlogDto>>({
+        pagesCount: 0,
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+        items: []
+      });
+      await request(app)
+        .get(CommentsPath + '/' + commentId)
+        .expect(HttpStatus.NOT_FOUND);
     });
   });
 });
