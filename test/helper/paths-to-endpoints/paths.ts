@@ -19,3 +19,4 @@ export const bloggerUsersPath = '/blogger/users';
 export const PostsPath = '/posts';
 export const BlogsPath = '/blogs';
 export const CommentsPath = '/comments';
+export const SecurityPath = '/security/devices';
