@@ -14,3 +14,6 @@ export const authRegistrationEmailResendingPath =
   authPath + '/registration-email-resending';
 
 export const bloggerBlogsPath = '/blogger/blogs';
+export const bloggerUsersPath = '/blogger/users';
+
+export const PostsPath = '/posts';
