@@ -17,3 +17,4 @@ export const bloggerBlogsPath = '/blogger/blogs';
 export const bloggerUsersPath = '/blogger/users';
 
 export const PostsPath = '/posts';
+export const BlogsPath = '/blogs';
