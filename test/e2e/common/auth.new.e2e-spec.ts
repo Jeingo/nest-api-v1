@@ -33,6 +33,8 @@ import {
   incorrectEmailForResending,
   incorrectNewPassword
 } from '../../stubs/auth.stub';
+import { OutputAccessTokenDto } from '../../../src/auth/api/dto/output.token.dto';
+import { OutputUserMeDto } from '../../../src/auth/api/dto/output.user.me.dto';
 
 describe('AuthController new (e2e)', () => {
   let configuredNesApp: INestApplication;
@@ -78,7 +80,7 @@ describe('AuthController new (e2e)', () => {
           password: user.password
         })
         .expect(HttpStatus.OK);
-      expect(response.body).toEqual({
+      expect(response.body).toEqual<OutputAccessTokenDto>({
         accessToken: expect.any(String)
       });
       expect(response.headers['set-cookie'][0].split(';')[0]).toEqual(
@@ -98,7 +100,7 @@ describe('AuthController new (e2e)', () => {
         .get(authMePath)
         .set(authHeader, bearerAccessToken(pairToken.accessToken))
         .expect(HttpStatus.OK);
-      expect(response.body).toEqual({
+      expect(response.body).toEqual<OutputUserMeDto>({
         email: user.email,
         login: user.login,
         userId: userId
