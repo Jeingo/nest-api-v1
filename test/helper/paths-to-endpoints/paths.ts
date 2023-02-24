@@ -1,4 +1,5 @@
 export const superAdminUsersPath = '/sa/users';
+export const superAdminBlogsPath = '/sa/blogs';
 
 export const authPath = '/auth';
 export const authLoginPath = authPath + '/login';
