@@ -12,3 +12,5 @@ export const authRegistrationConfirmationPath =
   authPath + '/registration-confirmation';
 export const authRegistrationEmailResendingPath =
   authPath + '/registration-email-resending';
+
+export const bloggerBlogsPath = '/blogger/blogs';

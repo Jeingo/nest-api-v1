@@ -37,6 +37,7 @@ import { RemovePostCommand } from '../application/use-cases/remove.post.use.case
 import { QueryComments } from '../../../comments/api/types/query.comments.type';
 import { BloggerCommentsQueryRepository } from '../infrastructure/blogger.comments.query.repository';
 import { BloggerPostsQueryRepository } from '../infrastructure/blogger.posts.query.repository';
+import { OutputBloggerCommentsDto } from './dto/output.blogger.comments.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('blogger/blogs')
@@ -135,7 +136,7 @@ export class BloggerBlogsController {
   async findAllComments(
     @Query() query: QueryComments,
     @CurrentUser() user: CurrentUserType
-  ) {
+  ): Promise<PaginatedType<OutputBloggerCommentsDto>> {
     return await this.bloggerCommentsQueryRepository.getAllForBlogger(
       query,
       user
