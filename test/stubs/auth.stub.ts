@@ -9,3 +9,8 @@ export const incorrectEmailForResending = {
 export const badEmailForResending = {
   email: 'bad-email^gmail.com'
 };
+
+export const incorrectNewPassword = {
+  newPassword: '123',
+  recoveryCode: ''
+};

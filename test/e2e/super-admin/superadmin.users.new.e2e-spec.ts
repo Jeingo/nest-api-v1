@@ -16,7 +16,7 @@ import {
 } from '../../stubs/error.stub';
 import { badBanInfo, banInfo } from '../../stubs/superadmin.stub';
 
-describe('BloggerBlogsController (e2e)', () => {
+describe('BloggerBlogsController new (e2e)', () => {
   let configuredNesApp: INestApplication;
   let app: any;
 
